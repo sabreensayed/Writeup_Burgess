@@ -1,0 +1,264 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathabx}
+\usepackage{nicefrac}
+\usepackage{verbatim}
+\usepackage{mathtools}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+
+\newcommand{\ignore}[1]{}
+
+\title{Deriving Burgess's Bound on the Distribution of Quadratic Non-Residues}
+\author{
+  Sabreen Syed\\
+  \multicolumn{1}{p{.7\textwidth}}{\centering\emph{Department of Computer Science and Engineering\\
+  Indian Institute of Technology Kanpur, India}}}
+\date{July 2017}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+Let us take a quadratic equation $ax^2+bx+c=0$ with coefficients in a finite field, $\mathbb{F}_p$, and $a\neq0$, where $p$ is an odd prime. We would like to know if there exist any roots of the equation. It is equivalent to an equation $x^2+bx+c=0$ by multiplying both sides by $a^{-1}$, the multiplicative inverse of $a$. Solving,
+$$x^2+bx+c=0$$
+$$x^2+bx+2^{-2}b^{2}+c=2^{-2}b^{2}$$
+$$x^2+2^{-1}bx+2^{-1}bx+2^{-2}b^{2}=2^{-2}b^{2}-c$$
+$$(x+2^{-1}b)^2=2^{-2}b^{2}-c$$
+%$$x=-2^{-1}b+\sqrt{2^{-2}b^{2}-c}$$
+
+$2^{-2}b^{2}-c$ is called the discriminant, $D$, of the equation. The existence of a member of $\mathbb{F}_p$, say $y$, such that $y^2=D$, determines whether the equation has a solution. If such a $y$ exists, $-2^{-1}b+y$ is a solution of the equation, and if it does not exist, the equation cannot have a solution. In $\mathbb{F}_p$, such a $y$ need not exist for every $D\in\mathbb{F}_p$.
+
+We say $a\in\mathbb{F}_p$ is a quadratic residue modulo $p$, if there exists $z\in \mathbb{F}_p$ satisfying $z^2=a$. We see that since $(p-x)^2\equiv(-x)^2\equiv x^2\textrm{  }(mod\textrm{ }p)$, $x$ and its additive inverse have the same square in $\mathbb{F}_p$. The additive inverse of an element in $\mathbb{F}_p$ is itself only if $-x=x \Rightarrow x=0$, in which case $x^2=0$. Thus, there are at least 2 distinct elements in $1\ldots p-1$ which map to each quadratic residue in $1\ldots p-1$, and thus at most half of $1\ldots p-1$ are quadratic residues. Now if $x^2\equiv y^2 \textrm{ }(mod\textrm{ } p)$, then $(x-y)(x+y)\equiv 0\textrm{ }(mod\textrm{ } p)$. Thus, $x-y\divides p$ or $x+y\divides p$ $\Rightarrow x\equiv \pm y \textrm{ } (mod\textrm{ } p)$, which means only additive inverses can have the same square modulo $p$. Thus, exactly half of $1$ to $p-1$ are quadratic residues. Whether an element of $\mathbb{F}_p$ is a quadratic residue or not, can be determined as in \cite{burton}, which we will not delve into.
+
+In order to find the square root of a quadratic residue in $\mathbb{F}_p$ using the Tonelli-Shank's algorithm \cite{tonelli} to solve the quadratic equation in $\mathbb{F}_p$, we need to find a quadratic non-residue $mod\text{ }p$. Our focus in this document is on finding a quadratic non-residue for large prime $p$. One method for finding a quadratic non-residue could be randomly selecting an element of $\mathbb{F}_p$ and determining if it is a quadratic residue. This method will be successful with probability $\nicefrac{1}{2}$. However, in the worst case, we need to check $\frac{p-1}{2}+1$ elements to get a quadratic non-residue by this method, and thus there is no guaranteed upper bound lesser than $O(p)$ on the time taken, using this method.
+ 
+We approach the problem of reducing the worst case time complexity guided by an intuition, that the proximity of two numbers is not a conspicuously governing factor affecting the sameness of them being quadratic residues\ignore{, without it affecting the correctness of the result}, and it would thus presumably be random enough to check a contiguous set of numbers for quadratic non-residues. We shall determine an upper bound on the longest interval of continuous residues or continuous non-residues modulo odd prime $p$, which will guarantee an upper bound on the count of numbers to be tested for being quadratic residues. Before 1957, the best result was a $O(p^{\nicefrac{1}{2}})$ bound on the longest such interval, based on a result found by Polya \cite{polya} and Vinogradov \cite{vinogradov} independently. Burgess \cite{burgess} in 1957 proved an $O(p^{\nicefrac{1}{4}+\delta})$ bound.
+
+In this document, Burgess's bound is explained. We will first prove the $O(p^{1/2})$ bound, after which we will look at the improvement made by Burgess and prove his bound.
+
+\section{Preliminaries}
+
+To facilitate computation on the property of a number being a quadratic residue mod odd prime $p$, we introduce the function $\chi_p$ on $\mathbb{F}_p$, or the residue classes of $p$, to denote if a number is a quadratic residue mod $p$. It is defined as:
+
+\[
+    \chi_p(x)=\left\{
+                \begin{array}{ll}
+                  0\textrm{, if }x=0\\
+                  1\textrm{, if $x$ is a quadratic residue mod $p$ and $x\neq 0$}\\
+                  -1\textrm{, if $x$ is a quadratic non-residue mod $p$}\\
+                \end{array}
+              \right.
+  \]
+  Now, an important property of $\chi_p$ is that it is multiplicative, i.e. $\chi_p(y)\chi_p(z)=\chi_p(yz), \forall y,z\in \mathbb{F}_p$. This can be shown as follows:
+\begin{itemize}
+    \item If $y= 0$ or $z= 0 $, $yz= 0 $. Hence, $\chi_p(y)\chi_p(z)=0=\chi_p(yz)$. We assume $y\neq 0 \neq z $ for the rest of the cases.
+    
+    \item If $\chi_p(y)=\chi_p(z)=1$, $y= a^2 $ and $z= b^2 $ for some $a,b\in 1..p-1$. Hence, $yz= a^2 b^2 $, and thus $\chi_p(yz)= 1= \chi_p(y) \chi_p(z)$
+    
+    \item If exactly one of $y$ and $z$ is a quadratic non-residue, say $y$, so $\chi_p(y)=-1$. Then assume, for the sake of contradiction, $\chi_p(yz)=1$. Then,
+    $$yz= a^2  \textrm{ for some }a\in 1..p-1$$
+    $$\text{Given, }z= b^2  \textrm{ for some }b\in 1..p-1$$
+    $$\Rightarrow y = a^2 (b^{-1})^2 = (ab^{-1})^2 $$
+    which is a contradiction to $\chi_p(y)=-1$. Hence, $\chi_p(yz)= -1 =\chi_p(y) \chi_p(z)$.
+    
+    \item Let $\chi_p(y)=\chi_p(z)=-1$. We know from above that if $c\in 1..p-1$ is a quadratic residue mod $p$, then $yc$ is a quadratic non-residue mod $p$. Now,  $yd\neq yf\Longleftrightarrow d\neq f \textrm{, { }}d,f\in 1..p-1$. Thus, all possible values of $yc$, $c$ any quadratic residue, exhaust all the $\frac{p-1}{2}$ non-residues in $0..p-1$. Therefore $yz$ has to be a quadratic residue, since $z$ is a non-residue.\\
+    $\therefore \chi_p(yz)=1=\chi_p(y)\chi_p(z)$
+\end{itemize}
+%
+Having defined $\chi_p$, we state Lemma 1 from \cite{burgess}, which is an important result exhibiting the low correlation between the distribution of values a square-free polynomial takes in $\mathbb{F}_p$, and the distribution of quadratic residues.
+%
+\begin{lemma}
+Let $f(x)$ be a monic square-free polynomial, with coefficients from $\mathbb{Z}$, reducible into linear factors with degree $\nu$. Then,
+$$\sum\limits_{x=0}^{p-1}\chi_p(f(x))\leq (\nu -1)p^{\nicefrac{1}{2}}$$
+\end{lemma}
+%
+The sum of $\chi_p$ values in an interval determines the general density of quadratic residues and non-residues in it. The sum would cancel out to small magnitudes if the densities were nearly equal, or be closer in magnitude to the size of the interval if not. Thus, lemma 1 essentially tells us that a square free polynomial over $\mathbb{F}_p$ would evaluate to roughly equal number of quadratic residues and non-residues over $\mathbb{F}_p$. We deduce lemma 2 in the next section by constructing an appropriate polynomial exploiting lemma 1 for our purpose of finding low bounds on the number of continuous quadratic residues or continuous non-residues.
+%
+\section{\text{Lemma} 2}
+%
+Let us consider the sum of $\chi_p$ values in an interval of size $h$.
+
+$$S_h(x)=\sum\limits_{n=0}^{h-1}\chi_p(x+n)$$
+
+Given Lemma 1, which sums $\chi_p$ values over the entire interval $0$ to $p-1$, we would like to construct a square-free polynomial which would help put a limit on the sum of $\chi_p$ values in any interval of size $h$. We do this by expanding the sum $\sum\limits_{x=0}^{p-1}(S_h(x))^{2r}$, and separating the perfect-square polynomials from the rest of the polynomials thus obtained. The even power $2r$ ensures that each interval contributes only with its positive magnitude to the entire sum. Analysing the sum:
+
+$$(S_h(x))^{2r}= \bigg(\sum\limits_{n=0}^{h-1}\chi_p(x+n)\bigg)^{\mathclap{2r}} =\sum\limits_{m_1=1}^h\sum\limits_{m_2=1}^h...\sum\limits_{\mathclap{m_{2r}=1}}^h\chi_p(x+m_1)\chi_p(x+m_2)...\chi_p(x+m_{2r})$$
+$$\sum\limits_{x=0}^{p-1}(S_h(x))^{2r}=\sum\limits_{x=0}^{p-1}\sum\limits_{m_1=1}^h\sum\limits_{m_2=1}^h...\sum\limits_{m_{2r}=1}^h\chi_p(x+m_1)\chi_p(x+m_2)..\chi_p(x+m_{2r})$$
+\begin{equation} \label{sumpoly}
+\sum\limits_{x=0}^{p-1}(S_h(x))^{2r}=\sum\limits_{m_1=1}^h\sum\limits_{m_2=1}^h...\sum\limits_{m_{2r}=1}^h\sum\limits_{x=0}^{p-1}\chi_p((x+m_1)(x+m_2)..(x+m_{2r}))
+\end{equation}
+
+In accordance with Lemma 1, we need to separate the perfect square polynomials forming the sum from the rest. To achieve this, we separate the ordered sequences or `tuples' in (\ref{sumpoly}) formed by the values which $m_1, m_2...m_{2r}$ take in $0$ through $h$, into two sets. The first set is formed by those tuples which contain an even count of each number in them, while the second contains the rest of the tuples. Each tuple in the first set corresponds to a perfect square polynomial formed, and each perfect square polynomial to a tuple in the first set. The second set similarly exactly corresponds to the rest the of polynomials, on which Lemma 1 can be applied. We now calculate the contribution of each set to the overall sum:\\
+Set 1: There are $\frac{(2r)!}{r!}$ ways to choose pairs of positions in a tuple. There are $h^{r}$ ways of filling them with values from $1$ to $h$. So there are less than $(2r)^r h^{r}$ such polynomials. Since the maximum value contributed to the sum of $\chi_p$ values from each such polynomial is at most $1$, the contribution of this set over all $p$ values of $x$ is at most $(2r)^r h^{r}p$.\\
+Set 2: Since there are $h^{2r}$ polynomials in all, trivially at most $h^{2r}$ are not perfect square polynomials. These polynomials are of the form:
+$$(x+s_1)^{e_1}(x+s_2)^{o_2}...(x+s_k)^{e_k}$$
+Where $s_i, i\in 1...k$ are distinct members of the tuple corresponding to the polynomial and $e_i$ and $o_i$ are even or odd powers respectively of the $i^{th}$ term. Now, $\chi\big((x+s_1)^{e_1}(x+s_2)^{o_2}...(x+s_k)^{e_k}\big)$ evaluates the same as $\chi\big((x+s_2)^{o_2}...(x+s_{k'})^{o_{k'}}\big)$ (taking all odd-powered factors) for all except at most $r$ values of $x$ (corresponding to the even-powered factors evaluating to $0$). Thus, their contribution to the sum is not more than $h^{2r}(p^{\nicefrac{1}{2}}(2r-1)+r)$. 
+\\
+We state lemma 2, which directly follows from what we have calculated so far.
+%
+\begin{lemma}
+Let $S_h(x)=\sum\limits_{n=1}^{h}\chi_p(x+n)$. Then,
+\begin{equation} \label{lemma2}
+\sum\limits_{x=0}^{p-1}(S_h(x))^{2r}\leq h^{r}(2r)^{r}p+h^{2r}r(2p^{\nicefrac{1}{2}}+1)
+\end{equation}
+\end{lemma}
+%
+Now, we prove the $O(p^{\nicefrac{1}{2}})$ bound on the longest interval of continuous quadratic residues or of quadratic non-residues. We will show that if the $O(p^{\nicefrac{1}{2}})$ bound is not true, then LHS of (\ref{lemma2}) grows faster with $p$ than the RHS, creating a contradiction.\\
+Let the longest interval of quadratic residues or of quadratic non-residues be given by $h$ for a given $p$. Thus, $\lvert S_h(z)\rvert=h$ for some $z\in \mathbb{F}_p$. Consider the LHS of (\ref{lemma2}) in that case. As $\lvert S_h(x+k)\rvert \geq \lvert S_h(x)\rvert-2k$,
+\begin{equation} \label{intervcontr}
+\sum\limits_{x=0}^{p-1}(S_h(x))^{2r}\geq\sum\limits_{x=z}^{z+\lfloor\nicefrac{h}{4}\rfloor}\lvert S_h(x)\geq h^{2r}+(h-2)^{2r}+...+(h-2\lfloor\nicefrac{h}{4}\rfloor)^{2r} \geq \frac{h^{2r+1}}{2^{2r+2}}
+\end{equation}
+Thus, we can say from (\ref{lemma2}) and (\ref{intervcontr}):
+$$ \frac{h^{2r+1}}{2^{2r+2}} \leq h^{r}(2r)^{r}p+h^{2r}r(2p^{\nicefrac{1}{2}}+1)$$
+Now we set $r=1$ and divide both sides by $h^{2r}$. We get:
+\begin{equation} \label{contreq}
+\frac{h}{2^{4}} \leq 2h^{-1}p+(2p^{\nicefrac{1}{2}}+1)
+\end{equation}
+Now assume $h>33p^{\nicefrac{1}{2}}$. The LHS of (\ref{contreq}) then is greater than $(2+\frac{1}{16})p^{\nicefrac{1}{2}}$. However the RHS is bounded above by $(2+\frac{2}{33})p^{\nicefrac{1}{2}}+1$, which is less than the lower limit of the LHS for large enough $p$. Thus, a contradiction occurs with respect to the inequality. Hence, $h\leq 33p^{\nicefrac{1}{2}}$ for large enough $p$ , and thus $h\in O(p^{\nicefrac{1}{2}})$.
+%
+\section{\text{Lemma} 3}
+%
+Since $\mathbb{F}_p$ is a field and $\chi_p$ is multiplicative, the distribution of quadratic residues and non-residues in an interval, say from $N+1$ to $N+H$, is the same as or the inverse of $\frac{N+1}{q}$, $\frac{N+2}{q}$ \ldots $\frac{N+H}{q}$ (i.e. $(N+1)q^{-1}...(N+H)q^{-1}$), where $q\in\mathbb{F}_p$. These quotients, as we will see, are spread throughout $0...p$ as thin slices of thickness about $\nicefrac{H}{q}$ occurring at regular gaps of roughly size $\nicefrac{p}{q}$ for a small interval size $H$. Thus, we can relate the $\chi_p$ values of the interval to values of $\mathbb{F}_p$ elements outside it. We would like to increase outside numbers related this way by using different values of $q$. Lemma 3 does this by proving we can find many such non-intersecting slices spread throughout $\mathbb{F}_p$.
+
+If the slices formed by quotienting are assumed to be of negligible width due to a small $H$, the gaps between the slices can be seen as blocks arranged adjacently throughout $\mathbb{F}_p$, and thus the slices act as block edges. We take two co-prime values of $q$, say $q_1$ and $q_2$. Now consider the gaps between slices by quotienting for both $q_1$ and $q_2$ throughout $\mathbb{F}_p$. The `blocks' for $q_1$ and $q_2$ are relatively sized by a factor of $\frac{q_2}{q_1}$ which is an irreducible fraction. Thus if a slice for $q_1$ and a slice for $q_2$ both coincided at a point, they would only coincide again after $q_1$ of the blocks for $q_1$ and $q_2$ of the blocks for $q_2$, i.e. after $p$ numbers. Thus, the slices can only coincide once for a pair of co-prime $q$. Thus for a many co-prime $q$, we can have a large number of non-intersecting slices. Lemma 3 formally states and proves this phenomenon.
+%
+\begin{lemma}
+Given a set of $Q$ distinct natural numbers, whose general member is given by $q$, which are pairwise co-prime to each other, and any natural numbers $N$ and $H$ such that:
+\begin{equation} \label{lemma3cond}
+2Hq<p
+\end{equation}
+Let us denote by $I(q,t)$ the real interval
+$$\frac{N+tp}{q} \leq z \leq \frac{N+H+tp}{q}$$
+Then it is possible to associate with each $q$ a set $T(q)\subseteq \{0,1,\ldots q-1\}$ of size at least $q-Q$, such that $\forall q \forall t\in T(q)$, $I(q,t)$ are disjoint.
+\end{lemma}
+\textit{Proof:}\\
+For a fixed $q$, $I(q,t)$ are disjoint as $H<p$. Now, for a pair of different values of $q$, say $q_1$ and $q_2$, let $I(q_1,t_1)$ and $I(q_2,t_2)$ intersect. Then we can say:
+$$\frac{N+t_1p}{q_1} \leq \frac{N+H+t_2p}{q_2}$$
+$$\&\text{ }\frac{N+t_2p}{q_2} \leq \frac{N+H+t_1p}{q_1}$$
+$$\Rightarrow N(q_2-q_1)+(t_1q_2-t_2q_1)p\leq Hq_2<\frac{1}{2}p$$
+$$\Rightarrow N(q_1-q_2)+(t_2q_1-t_1q_2)p\leq Hq_1<\frac{1}{2}p$$
+$$\Rightarrow N(q_2-q_1)-\frac{1}{2}p < (t_2q_1-t_1q_2)p <N(q_2-q_1)+\frac{1}{2}p$$
+Since not more than a single multiple of $p$ can occur in a range of size less than $p$, $t_2q_1-t_1q_2$ can take only one value. Because $q_1$ and $q_2$ are co-prime and $0\leq t_1 \leq q_1$ and $0\leq t_2 \leq q_2$, there is only one pair of $t_1$ and $t_2$ values for a unique $t_2q_1-t_1q_2$. This is because for a unique valuation of $t_2q_1-t_1q_2$, the difference in the valuation of the first term must be same as that of the second term for different values of $t_2$. The values of $t_2q_1$ will be multiples of $q_1$, and for the difference in two such values to be the same as two values of $t_1q_2$, a multiple of $q_2$, the least possible difference can be the l.c.m $q_1q_2$, which cannot occur from given range of $t_1$ and $t_2$.
+
+Hence, for each $q$, there are at least $q-Q$ values of $t\in \{0,1,\ldots q-1\}$ such that $I(q,t)$ are disjoint from all other intervals associated with all $q$.
+
+We now proceed to prove the $O(p^{\nicefrac{1}{4}+\delta})$ bound on the least quadratic residue.
+%
+\section{$O(p^{\nicefrac{1}{4}+\delta})$ bound}
+%
+We will prove the bound on the least quadratic non-residue by means of contradiction as follows: Say there exists an interval of all quadratic residues or all non-residues in $\mathbb{F}_p$, for all large enough $p$, of size $H>p^{\nicefrac{1}{4}+\delta}$. We can relate the $\chi_p$ values of the interval with many non-intersecting smaller intervals (`slices') spread throughout $\mathbb{F}_p$ by dividing the values of the interval by pairwise co-prime numbers by lemma 3. We can then deduce the minimum possible contribution to $\sum\limits_{x=0}^{p-1}S_h(x)$ by these slices for an appropriate $h$, and then see if lemma 2 holds. This will lead to a contradiction, establishing the result.
+
+Say $H>p^{\nicefrac{1}{4}+\delta}$ for some $\delta>0$, and $\Big \lvert \sum\limits_{x=N+1}^{N+H}\chi_p(x)\Big \rvert=H$. We know that for $H>cp^{\nicefrac{1}{2}}$, where $c$ is some constant, there can be no interval of all quadratic residues or all non-residues. Thus, we assume $H\leq cp^{\nicefrac{1}{2}}$\\
+We take the pair-wise co-prime numbers $q$ required for the application of lemma 3 to be the primes in the range:
+$$\frac{p^{\nicefrac{1}{4}}}{2} \leq q \leq p^{\nicefrac{1}{4}}$$
+This satisfies the constraint in (\ref{lemma3cond}) for large enough $p$. The number of primes $q$ is given by $Q=\pi(p^{\nicefrac{1}{4}})-\pi(\frac{p^{\nicefrac{1}{4}}}{2})=o(p^{\nicefrac{1}{4}})$ by the prime number theorem. Now, restating the assumption:
+$$\bigg \lvert\sum\limits_{x=N+1}^{N+H}\chi_p(x)\bigg \rvert=H$$
+For a fixed $x$, $x+tp$ is divisible by $q$ for exactly one value of $t\in\{0,1,...q-1\}$. Also $\chi(x+tp)=\chi(x)$. Thus:
+$$\bigg \lvert\sum\limits_{x=N+1}^{N+H}\chi_p(x)\bigg \rvert=\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{\substack{x=N+1\\x+tp\divides q}}^{N+H}\chi_p(x+tp)\bigg \rvert=H$$
+Since $x+tp\divides q$, thus $x+tp=qz$ for some $z\in\mathbb{Z}$, $\Rightarrow z=\frac{x+tp}{q}$.\\
+For $N+1\leq x \leq N+H$, we see that all such $z$ are the integer values in $I(q,t)$ for the corresponding values of $t$ such that $x+tp\divides q$.
+$$\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{\substack{x=N+1\\x+tp\divides q}}^{N+H} \chi_p \Big(\frac{x+tp}{q}.q\Big)\bigg \rvert=H$$
+$$\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{z\in I(q,t)}\chi_p(z.q)\bigg \rvert=H$$
+$$\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{z\in I(q,t)}\chi_p(z)\chi_p(q)\bigg \rvert=H$$
+$$\sum\limits_{t=0}^{t=q-1}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_p(z)\chi_p(q)\bigg \rvert \geq H$$
+$$\sum_q\sum\limits_{t=0}^{t=q-1}\bigg \lvert\chi_p(q)\sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert \geq HQ$$
+$$\sum_q\bigg \lvert\chi_p(q)\bigg\rvert\sum\limits_{t=0}^{t=q-1}\bigg\lvert\sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert \geq HQ$$
+$$\sum_q\sum\limits_{t=0}^{t=q-1}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert \geq HQ$$
+$$\sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert+\sum_q\sum\limits_{\substack{t=0\\t\not \in T(q)}}^{q-1}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert \geq HQ$$
+Now,
+$$\sum_q\sum\limits_{\substack{t=0\\t\not \in T(q)}}^{q-1}\bigg\lvert\sum\limits_{z\in I(q,t) }\chi_p(z)\bigg \rvert \leq \sum\limits_q Q\bigg\lceil\frac{H}{q}\bigg\rceil \leq \sum\limits_q Q\frac{2H}{q} < 4Q^2 Hp^{\nicefrac{-1}{4}}$$
+since $\sum\limits_q q^{-1} < Q.\Big(\frac{p^{\nicefrac{1}{4}}}{2}\Big)^{-1}$. Thus,
+$$\sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert > HQ - 4Q^2 Hp^{\nicefrac{1}{4}}=HQ(1-4Qp^{\nicefrac{-1}{4}})>\frac{HQ}{2}$$
+for large enough $p$, since $Q=o(p^{\nicefrac{1}{4}})$.\\
+Thus,
+\begin{equation} \label{sliceineq}
+\sum\limits_{m=0}^{h-1}\sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert = h \sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert > \frac{HhQ}{2}
+\end{equation}
+Now,
+$$\sum\limits_{\mathclap {z\in I(q,t)}}\chi_p(z+m)\geq \sum\limits_{\mathclap{z\in I(q,t)}}\chi_p(z)-2m$$
+$$\sum\limits_{m=0}^{h-1}\sum\limits_{z\in I(q,t)}\chi_p(z+m)\geq \sum\limits_{m=0}^{h-1}\sum\limits_{z\in I(q,t)}\chi_p(z)-2 \sum\limits_{m=0}^{h-1}m$$
+$$\sum\limits_{z\in I(q,t)}\sum\limits_{m=0}^{h-1}\chi_p(z+m)\geq h\sum\limits_{\mathclap{z\in I(q,t)}}\chi_p(z)-h^2$$
+$$\bigg \lvert\sum\limits_{z\in I(q,t)} \sum\limits_{m=0}^{h-1}\chi_p(z+m) \bigg \rvert \geq \bigg \lvert h\sum\limits_{\mathclap{z\in I(q,t)}}\chi_p(z)-h^2 \bigg \rvert$$
+$$\sum\limits_{z\in I(q,t)}\bigg \lvert \sum\limits_{m=0}^{h-1}\chi_p(z+m) \bigg \rvert \geq h\bigg \lvert \sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert-h^2 $$
+$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\bigg \lvert \sum\limits_{m=0}^{h-1}\chi_p(z+m) \bigg \rvert \geq h\sum_q\sum\limits_{t\in T(q)}\bigg \lvert \sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert-Qp^{\nicefrac{1}{4}}h^2$$
+since the number of the intervals given by lemma 3, $I(q,t)$, are less than $Qp^{\nicefrac{1}{4}}$. So from (\ref{sliceineq})
+$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\bigg \lvert \sum\limits_{m=0}^{h-1}\chi_p(z+m) \bigg \rvert > \frac{HhQ}{2}-Qp^{\nicefrac{1}{4}} h^2=Qh\big(\frac{H}{2}-hp^{\nicefrac{1}{4}}\big)$$
+Taking $h<\frac{1}{4}p^{\nicefrac{-1}{4}}H$, and using the terminology from lemma 2,
+$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h(z) \rvert > \frac{HhQ}{4}$$
+Using Holder's inequality,
+$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h(z) \rvert \leq \bigg ( \sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h(z) \rvert^{2r} \bigg )^{\nicefrac{1}{2r}}\bigg ( \sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}1 \bigg )^{1-\nicefrac{1}{2r}}$$
+$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h(z) \rvert^{2r} \geq \bigg ( \sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h(z) \rvert \bigg )^{2r} \bigg ( \sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}1 \bigg )^{-(2r-1)}$$
+$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h(z) \rvert^{2r} > \Big( \frac{HhQ}{4}\Big)^{2r}\Big ( Qp^{\nicefrac{1}{4}}.2.\frac{H}{p^{\nicefrac{1}{4}}}\Big )^{-(2r-1)}$$
+$$\sum\limits_{z=0}^{p-1}\lvert S_h(z) \rvert^{2r}>\Big(\frac{1}{8}\Big)^{2r}HQh^{2r}$$
+From lemma 2,
+$$(2r)^{r}h^{r}p+h^{2r}r(2p^{\nicefrac{1}{2}}+1)>\Big(\frac{1}{8}\Big)^{2r}HQh^{2r}$$
+For large enough $p$, the second term of the LHS diminishes compared to the RHS as $HQ\geq \frac{p^{\nicefrac{1}{2}+\delta}}{4\log p}$. Now, we take $h=\left \lfloor \frac{1}{5}p^{\nicefrac{-1}{4}}H \right \rfloor$. Since $h \geq \frac{1}{5}p^{\delta}$, we take $r>\delta^{-1}$, which results in the first term of the LHS diminishing with respect to the RHS.
+Thus, we have arrived at a contradiction. Our assumption that $\Big \lvert \sum\limits_{x=N+1}^{N+H}\chi_p(x)\Big \rvert=H$ was wrong, hence the first quadratic non-residue is less than $p^{\nicefrac{1}{4}+\delta}$ for any $\delta>0$.
+
+%Since $\sum\limits_{z\in I(q,t)}\lvert\chi_p(z+m)\rvert \geq \sum\limits_{z\in I(q,t)}\lvert\chi_p(z)\rvert-2m$,
+%$$\sum\limits_{m=0}^{h-1}\sum_q\bigg \lvert\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\chi_p(z+m)\bigg \rvert > \frac{HhQ}{2}-\frac{2h(h-1)}{2} > \frac{HhQ}{2}-h^2$$
+%Since 
+%Now, since all $z$ in the left hand side of the inequality are distinct, 
+
+
+%We take the co-prime numbers required, which divide as slices which we earlier said we would show
+\begin{comment}
+YOUR CLASSMATE MUST UNDERSTAND IT
+
+Introduction `
+﻿-Consider the roots of the equation ax^2+bx+c=0, where a, b, c \in F_p.We would like to know if such an equation has a root at all.
+-x=..... in the field.
+-Such a result is used in....
+-Exactly half of 0-p-1 are residues
+-Can randomly select and test, however, an assured bound is needed, so we study the distribution of residues
+-Vinagradov prved p1/2 on which burgess's p1/4 improved.
+
+Lemma 1
+The density of blah blah blah and blih blih blih. Given by result Lemma 1 (stated)
+
+Lemma 2
+Given Lemma 1, we would like to construct a square-free polynomial which would somehow put a limit on the number of opposite value of kais in an interval. We construct one such by sum over x of (sh(x))^2r.
+No wsince blah blah blih bluh blih...as explained to Sir
+
+Proof of p^1/2 bound
+
+
+Lemma 3
+(N+tp)/q to (N+H+tp)/q Finding the correlation between this and other values of the legendre symbol in the range. 
+\end{comment}
+
+\begin{thebibliography}{9}
+
+\bibitem{burton}
+David M. Burton, \textit{Elementary Number Theory},
+McGraw Hill, 2012.
+
+\bibitem{tonelli}
+S. Lindhurst, \textit{An analysis of Shanks's algorithm for computing square roots in finite fields},
+CRM Proceedings and Lecture Notes, Vol. 19 (1999) pp. 231–242.
+
+\bibitem{polya} 
+G. Polya,
+\textit{``{\"U}ber die Verteilung der quadratischen Eeste und Nichtreste''},
+G{\"o}ttinger Nachrichten (1918), 21-29.
+ 
+\bibitem{vinogradov} 
+I. M. Vinogradov,
+\textit{``Sur la distribution des r{\'e}sidus et des non-r{\'e}sidus des puissances ''},
+Journal Physico-Math. Soc. Univ. Perm, No. 1 (1918), 94-96.
+ 
+\bibitem{burgess} 
+ D. A. Burgess,
+\textit{The distribution of quadratic residues and non-residues},
+Mathematika 4 (1957), 106-112.
+
+\end{thebibliography}
+
+
+
+\end{document}

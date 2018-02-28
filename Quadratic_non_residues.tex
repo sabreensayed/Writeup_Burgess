@@ -36,14 +36,14 @@
 %
 \chapter{Qualitative Analysis}
 %Aim: Introduce Weil's Theorem and then Lemma 2. Give a basic qualitative proof of the p^{1/2} bound and the Burgess bound for quadratic residues, and extend the result to a general residue. Generalise the S_h^{2r} result to the sum of qudratic residues of quadratic polynomial for a subset, explain if the p^{1/2} bound can be made in an interval and explain why further extensions cannot be made to p^{1/4+\delta}
-In the previous chapter, we introduced Dirichlet characters given by $\chi$ and deduced some of their properties. One of their properties observed was that the global sum of a character is 0.  We now state Lemma 1 derived from Weil's theorem, which is an important result exhibiting the low correlation between the distribution of values a polynomial takes in $\mathbb{F}_p$, and the distribution of quadratic residues.
+In the previous chapter, we introduced Dirichlet characters given by $\chi$ and deduced some of their properties. One of their properties observed was that the global sum of a character is 0.  We now state Lemma 1 from \cite{burgess}, which is an important result exhibiting the low correlation between the distribution of values a square-free polynomial takes in $\mathbb{F}_p$, and the distribution of quadratic residues.
 %
 \begin{lemma}
-\cite{burgess}Let $f(x)$ be a monic polynomial not a perfect $d^{th}$ power, with coefficients from $\mathbb{Z}$, reducible into linear factors with degree $\nu$. Then,
-$$\Big\lvert\sum\limits_{x=0}^{p-1}\chi_d(f(x))\Big\rvert\leq (\nu -1)p^{\nicefrac{1}{2}}$$
+Let $f(x)$ be a monic square-free polynomial, with coefficients from $\mathbb{Z}$, reducible into linear factors with degree $\nu$. Then,
+$$\sum\limits_{x=0}^{p-1}\chi_p(f(x))\leq (\nu -1)p^{\nicefrac{1}{2}}$$
 \end{lemma}
 %
-The sum of $\chi_2$ values in an interval determines the general density of quadratic residues and non-residues in it. The sum would cancel out to small magnitudes if the densities were nearly equal, or be closer in magnitude to the size of the interval if not. Thus, lemma 1 essentially tells us that a square free polynomial over $\mathbb{F}_p$ would evaluate to roughly equal number of quadratic residues and non-residues over $\mathbb{F}_p$. We deduce lemma 2 in the next section by constructing an appropriate polynomial exploiting lemma 1 for our purpose of finding low bounds on the number of continuous quadratic residues or continuous non-residues.
+The sum of $\chi_p$ values in an interval determines the general density of quadratic residues and non-residues in it. The sum would cancel out to small magnitudes if the densities were nearly equal, or be closer in magnitude to the size of the interval if not. Thus, lemma 1 essentially tells us that a square free polynomial over $\mathbb{F}_p$ would evaluate to roughly equal number of quadratic residues and non-residues over $\mathbb{F}_p$. We deduce lemma 2 in the next section by constructing an appropriate polynomial exploiting lemma 1 for our purpose of finding low bounds on the number of continuous quadratic residues or continuous non-residues.
 %
 \section{A useful global sum}
 %

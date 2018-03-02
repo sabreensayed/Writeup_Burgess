@@ -33,31 +33,89 @@
 %
 \section{Interval sums of quadratic residues}
 %
-%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Qualitative Analysis}
 %Aim: Introduce Weil's Theorem and then Lemma 2. Give a basic qualitative proof of the p^{1/2} bound and the Burgess bound for quadratic residues, and extend the result to a general residue. Generalise the S_h^{2r} result to the sum of qudratic residues of quadratic polynomial for a subset, explain if the p^{1/2} bound can be made in an interval and explain why further extensions cannot be made to p^{1/4+\delta}
-In the previous chapter, we introduced Dirichlet characters given by $\chi$ and deduced some of their properties. One of their properties observed was that the global sum of a character is 0.  We now state Lemma 1 from \cite{burgess}, which is an important result exhibiting the low correlation between the distribution of values a square-free polynomial takes in $\mathbb{F}_p$, and the distribution of quadratic residues.
+ The starting point for our analysis is Lemma 1 derived from Weil's theorem, which is an important result exhibiting the low correlation between the distribution of values a square-free polynomial takes in $\mathbb{F}_p$, and the distribution of quadratic residues.
 %
 \begin{lemma}
-Let $f(x)$ be a monic square-free polynomial, with coefficients from $\mathbb{Z}$, reducible into linear factors with degree $\nu$. Then,
-$$\sum\limits_{x=0}^{p-1}\chi_p(f(x))\leq (\nu -1)p^{\nicefrac{1}{2}}$$
+\cite{burgess}Let $f(x)$ be a monic square-free polynomial, with coefficients from $\mathbb{Z}$, reducible into linear factors with degree $\nu$. Then,
+$$\sum\limits_{x=0}^{p-1}\chi_2(f(x))\leq (\nu -1)p^{\nicefrac{1}{2}}$$
 \end{lemma}
 %
-The sum of $\chi_p$ values in an interval determines the general density of quadratic residues and non-residues in it. The sum would cancel out to small magnitudes if the densities were nearly equal, or be closer in magnitude to the size of the interval if not. Thus, lemma 1 essentially tells us that a square free polynomial over $\mathbb{F}_p$ would evaluate to roughly equal number of quadratic residues and non-residues over $\mathbb{F}_p$. We deduce lemma 2 in the next section by constructing an appropriate polynomial exploiting lemma 1 for our purpose of finding low bounds on the number of continuous quadratic residues or continuous non-residues.
+The sum of $\chi_2$ values in an interval determines the general density of quadratic residues and non-residues in it. The sum would cancel out to small magnitudes if the densities were nearly equal, or be closer in magnitude to the size of the interval if not. Thus, lemma 1 essentially tells us that a square free polynomial over $\mathbb{F}_p$ would evaluate to roughly equal number of quadratic residues and non-residues over $\mathbb{F}_p$. We deduce lemma 2 in the next section by constructing an appropriate polynomial exploiting lemma 1 for our purpose of finding low bounds on the number of continuous quadratic residues or continuous non-residues.
 %
-\section{A useful global sum}
 %
-\section{The $p^{\nicefrac{1}{2}}$ bound}
+\section{A useful global sum and the $O(p^{\nicefrac{1}{2}})$ bound}
+Let us consider the sum of $\chi_2$ values in an interval of size $h$.
+
+$$S_h(x)=\sum\limits_{n=0}^{h-1}\chi_2(x+n)$$
+
+Given Lemma 1, which sums $\chi_2$ values of a polynomial over the entire interval $0$ to $p-1$, we would like to construct a square-free polynomial which would help put a limit on the sum of $\chi_2$ values in any interval of size $h$. We do this by expanding the sum $\sum\limits_{x=0}^{p-1}(S_h(x))^{2r}$:
+
+$$(S_h(x))^{2r}= \bigg(\sum\limits_{n=0}^{h-1}\chi_2(x+n)\bigg)^{\mathclap{2r}} =\sum\limits_{m_1=1}^h\sum\limits_{m_2=1}^h...\sum\limits_{\mathclap{m_{2r}=1}}^h\chi_2(x+m_1)\chi_2(x+m_2)...\chi_2(x+m_{2r})$$
+$$\sum\limits_{x=0}^{p-1}(S_h(x))^{2r}=\sum\limits_{x=0}^{p-1}\sum\limits_{m_1=1}^h\sum\limits_{m_2=1}^h...\sum\limits_{m_{2r}=1}^h\chi_2(x+m_1)\chi_2(x+m_2)..\chi_2(x+m_{2r})$$
+\begin{equation} \label{sumpoly}
+\sum\limits_{x=0}^{p-1}(S_h(x))^{2r}=\sum\limits_{m_1=1}^h\sum\limits_{m_2=1}^h...\sum\limits_{m_{2r}=1}^h\sum\limits_{x=0}^{p-1}\chi_2((x+m_1)(x+m_2)..(x+m_{2r}))
+\end{equation}
+
+To use lemma 1, we need to separate the perfect square polynomials forming the sum from the rest. To achieve this, we separate the ordered sequences or `tuples' in (\ref{sumpoly}), $(m_1, m_2...m_{2r})$, into two sets based on the multiplicity of distinct values in the tuple:
+\begin{itemize}
+  \item Set 1: Those tuples which contain an even count of each number in them. This set forms a bijection with every perfect square polynomial contributing. Since there are $\frac{(2r)!}{r!}$ ways to choose pairs of positions in a tuple and there are $h^{r}$ ways of filling them with values from $1$ to $h$, so there are less than $(2r)^r h^{r}$ such polynomials. Since the maximum value contributed to the sum of $\chi_2$ values from each such polynomial is at most $1$, the contribution to the sum over all $p$ values of $x$ is at most $(2r)^r h^{r}p$.
+  \item Set 2: The rest of the tuples, which similarly corresponding the leftover polynomials exactly. Since there are $h^{2r}$ polynomials in all, trivially at most $h^{2r}$ are not perfect square polynomials. These polynomials are of the form:
+  $$(x+s_1)^{e_1}(x+s_2)^{o_2}...(x+s_k)^{e_k}$$
+  Where $s_i, i\in 1...k$ are distinct members of the tuple corresponding to the polynomial and $e_i$ and $o_i$ are even or odd powers respectively of the $i^{th}$ term. Now, $\chi\big((x+s_1)^{e_1}(x+s_2)^{o_2}...(x+s_k)^{e_k}\big)$ evaluates the same as $\chi\big((x+s_2)^{o_2}...(x+s_{k'})^{o_{k'}}\big)$ (taking all odd-powered factors) for all except at most $r$ values of $x$ (corresponding to the even-powered factors evaluating to $0$). Thus, their contribution to the sum is not more than $h^{2r}(p^{\nicefrac{1}{2}}(2r-1)+r)$.
+\end{itemize}
+%
+We state lemma 2, which directly follows from what we have calculated so far.
+%
+\begin{lemma}
+Let $S_h(x)=\sum\limits_{n=1}^{h}\chi_2(x+n)$. Then,
+\begin{equation} \label{lemma2}
+\sum\limits_{x=0}^{p-1}(S_h(x))^{2r}\leq h^{r}(2r)^{r}p+h^{2r}r(2p^{\nicefrac{1}{2}}+1)
+\end{equation}
+\end{lemma}
+%%
+\subsection{The $O(p^{\nicefrac{1}{2}})$ bound}
+To prove the $O(p^{\nicefrac{1}{2}})$ bound on the longest interval of continuous quadratic residues or of quadratic non-residues, we show that if the $O(p^{\nicefrac{1}{2}})$ bound is not true, then LHS of (\ref{lemma2}) grows faster with $p$ than the RHS, creating a contradiction.\\
+Let the longest interval of quadratic residues or of quadratic non-residues be given by $h$ for a given $p$. Thus, $\lvert S_h(z)\rvert=h$ for some $z\in \mathbb{F}_p$. Consider the LHS of (\ref{lemma2}) in that case. As $\lvert S_h(x+k)\rvert \geq \lvert S_h(x)\rvert-2k$,
+\begin{equation} \label{intervcontr}
+\sum\limits_{x=0}^{p-1}(S_h(x))^{2r}\geq\sum\limits_{x=z}^{z+\lfloor\nicefrac{h}{4}\rfloor}\lvert S_h(x)\rvert^{2r} \geq h^{2r}+(h-2)^{2r}+...+(h-2\lfloor\nicefrac{h}{4}\rfloor)^{2r} \geq \frac{h^{2r+1}}{2^{2r+2}}
+\end{equation}
+Thus, we can say from (\ref{lemma2}) and (\ref{intervcontr}):
+$$ \frac{h^{2r+1}}{2^{2r+2}} \leq h^{r}(2r)^{r}p+h^{2r}r(2p^{\nicefrac{1}{2}}+1)$$
+Now we set $r=1$ and divide both sides by $h^{2r}$. We get:
+\begin{equation} \label{contreq}
+\frac{h}{2^{4}} \leq 2h^{-1}p+(2p^{\nicefrac{1}{2}}+1)
+\end{equation}
+which has a disparity in the growth of the LHS and the RHS with respect to the inequality. This manifests itself for $h>33p^{\nicefrac{1}{2}}$: the LHS of (\ref{contreq}) then is greater than $(2+\frac{1}{16})p^{\nicefrac{1}{2}}$, but the RHS is bounded above by $(2+\frac{2}{33})p^{\nicefrac{1}{2}}+1$, which is less than the lower limit of the LHS for large enough $p$. Hence, $h\leq 33p^{\nicefrac{1}{2}}$ for large enough $p$ , and thus $h\in O(p^{\nicefrac{1}{2}})$.
+%
+%
+\section{The amplification of an interval}
+We saw in the previous section how we split an interval in $\mathbb{F}_p$ of size $O(p^{\nicefrac{1}{2}})$ into smaller sliding intervals and used lemma 2 to obtain the bound. What we do in this section is one step further: we show that an interval is equivalent to several small intervals in terms of the number of qudratic residues and non-residues in it. This would be useful to further amplify the contribution of an interval when applying lemma 2.
+
+We construct small intervals by multiplying the interval by $q^{-1}$, resulting in the elements $(N+1)q^{-1}...(N+H)q^{-1}$ of $\mathbb{F}_p$. Take a general resulting element:
+
+$$(N+k)q^{-1}=(N+nq+r)q^{-1}=Nq^{-1}+rq^{-1}+n$$
+where $k=nq+r$ and $0\leq r<q$ in $\mathbb{Z}$
+
+
+The small intervals constructed are equivalent by the principle that multiplying an interval from $N+1$ to $N+H$ by a an element of $\mathbb{F}_p$, say $q$ preserves or swaps the original cardilnality of quadratic residues and non-residues, since $\chi_2((N+k)q)=\chi_2(q) \chi_2(N+k)$
+%
 %
 \section{The $p^{\nicefrac{1}{4}+\delta}$ bound}
+
+%
 %
 \section{Extension to general characters}
 %
+%
 \section{Extensions to quadratic functions}
+%
 %
 \section{Problems with attempts at further generalisation}
 %
-%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Quantitative Analysis}
 %Aim:
 \section{Energy}

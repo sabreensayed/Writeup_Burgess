@@ -24,18 +24,18 @@
 \maketitle
 
 \chapter{Introduction}
-%Aim: Make the reader aware about the applications of the topics covered, give brief summary of existing results, and equip reader with the preleminaries to read the rest of the paper.
+%Aim: Make the reader aware about the applications of the topics covered, give brief summary of existing results, and equip reader with the preliminaries to read the rest of the paper.
 %
 \section{Symbols and conventions}
 %Character is
 %
-\section{Preleminaries}
+\section{Preliminaries}
 %
 \section{Interval sums of quadratic residues}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Qualitative Analysis}
-%Aim: Introduce Weil's Theorem and then Lemma 2. Give a basic qualitative proof of the p^{1/2} bound and the Burgess bound for quadratic residues, and extend the result to a general residue. Generalise the S_h^{2r} result to the sum of qudratic residues of quadratic polynomial for a subset, explain if the p^{1/2} bound can be made in an interval and explain why further extensions cannot be made to p^{1/4+\delta}
+%Aim: Introduce Weil's Theorem and then Lemma 2. Give a basic qualitative proof of the p^{1/2} bound and the Burgess bound for quadratic residues, and extend the result to a general residue. Generalise the S_h^{2r} result to the sum of quadratic residues of quadratic polynomial for a subset, explain if the p^{1/2} bound can be made in an interval and explain why further extensions cannot be made to p^{1/4+\delta}
  The starting point for our analysis is Lemma 1 derived from Weil's theorem, which is an important result exhibiting the low correlation between the distribution of values a square-free polynomial takes in $\mathbb{F}_p$, and the distribution of quadratic residues.
 %
 \begin{lemma}
@@ -92,15 +92,42 @@ which has a disparity in the growth of the LHS and the RHS with respect to the i
 %
 %
 \section{The amplification of an interval}
-We saw in the previous section how we split an interval in $\mathbb{F}_p$ of size $O(p^{\nicefrac{1}{2}})$ into smaller sliding intervals and used lemma 2 to obtain the bound. What we do in this section is one step further: we show that an interval is equivalent to several small intervals in terms of the number of qudratic residues and non-residues in it. This would be useful to further amplify the contribution of an interval when applying lemma 2.
+We saw in the previous section how we split an interval in $\mathbb{F}_p$ of size $O(p^{\nicefrac{1}{2}})$ into smaller sliding intervals and used lemma 2 to obtain the bound. What we do in this section is one step further: we show that an interval is equivalent to several small intervals in terms of the number of quadratic residues and non-residues in it. This would be useful to further amplify the contribution of an interval when applying lemma 2.
 
-We construct small intervals by multiplying the interval by $q^{-1}$, resulting in the elements $(N+1)q^{-1}...(N+H)q^{-1}$ of $\mathbb{F}_p$. Take a general resulting element:
+We construct small intervals by multiplying an interval $N,N+1,...N+H$ by $q^{-1}$, resulting in the elements $Nq^{-1}...(N+H)q^{-1}$ of $\mathbb{F}_p$. Take a general resulting element:
 
 $$(N+k)q^{-1}=(N+nq+r)q^{-1}=Nq^{-1}+rq^{-1}+n$$
 where $k=nq+r$ and $0\leq r<q$ in $\mathbb{Z}$
 
+There are $q$ values of $Nq^{-1}+rq^{-1}$, one for each $r$. To each $Nq^{-1}+rq^{-1}$, we add consecutive values of $n$ starting from $0$ to $\frac{\lfloor H-r\rfloor}{q}$ to obtain each resulting element of $Nq^{-1}...(N+H)q^{-1}$, which results in $q$ small intervals. These intervals are disjoint because distinct $(N+k)$ result in different values of $(N+k)q^{-1}$.
 
-The small intervals constructed are equivalent by the principle that multiplying an interval from $N+1$ to $N+H$ by a an element of $\mathbb{F}_p$, say $q$ preserves or swaps the original cardilnality of quadratic residues and non-residues, since $\chi_2((N+k)q)=\chi_2(q) \chi_2(N+k)$
+\begin{comment}
+   Now, how do we arithmetically calculate the exact values of an interval $(N+r)q^{-1},(N+r)q^{-1}+1...(N+r)q^{-1}+\frac{\lfloor H-r\rfloor}{q}$? Since we are dealing with elements in $\mathbb{F}_p$, $N+r\equiv N+r+tp (mod\text{ }p), t\in \mathbb{Z}$. For exactly one $t\in\{0, 1, q-1\}$ for each $r$, $N+r+tp\divides q$, which makes $\frac{N+r+tp}{q}$ an integer. Thus the intervals translate to integers between
+\end{comment}
+
+The small intervals constructed are equivalent due the fact that multiplying the interval by $q^{-1}$, preserves or swaps the original cardinality of quadratic residues and non-residues, since $\chi_2((N+k)q^{-1})=\chi_2(q^{-1})\chi_2(N+k)$, and $\chi_2(q^{-1})$ is a constant. We now prove an important theorem which solidifies the effect of the amplification.
+%
+\begin{lemma}
+Given a set of $Q$ distinct natural numbers, whose general member is given by $q$, which are pairwise co-prime to each other, and any natural numbers $N$ and $H$ such that:
+\begin{equation} \label{lemma3cond}
+2Hq<p
+\end{equation}
+Let us denote by $I(q,t)$ the real interval
+$$\frac{N+tp}{q} \leq z \leq \frac{N+H+tp}{q}$$
+Then it is possible to associate with each $q$ a set $T(q)\subseteq \{0,1,\ldots q-1\}$ of size at least $q-Q$, such that $\forall q \forall t\in T(q)$, $I(q,t)$ are disjoint.
+\end{lemma}
+\textit{Proof:}\\
+For a fixed $q$, $I(q,t)$ are disjoint as $H<p$. Now, for a pair of different values of $q$, say $q_1$ and $q_2$, let $I(q_1,t_1)$ and $I(q_2,t_2)$ intersect. Then we can say:
+$$\frac{N+t_1p}{q_1} \leq \frac{N+H+t_2p}{q_2}$$
+$$\&\text{ }\frac{N+t_2p}{q_2} \leq \frac{N+H+t_1p}{q_1}$$
+$$\Rightarrow N(q_2-q_1)+(t_1q_2-t_2q_1)p\leq Hq_2<\frac{1}{2}p$$
+$$\Rightarrow N(q_1-q_2)+(t_2q_1-t_1q_2)p\leq Hq_1<\frac{1}{2}p$$
+$$\Rightarrow N(q_2-q_1)-\frac{1}{2}p < (t_2q_1-t_1q_2)p <N(q_2-q_1)+\frac{1}{2}p$$
+Since not more than a single multiple of $p$ can occur in a range of size less than $p$, $t_2q_1-t_1q_2$ can take only one value. Because $q_1$ and $q_2$ are co-prime and $0\leq t_1 \leq q_1$ and $0\leq t_2 \leq q_2$, there is only one pair of $t_1$ and $t_2$ values for a unique $t_2q_1-t_1q_2$. This is because for a unique valuation of $t_2q_1-t_1q_2$, the difference in the valuation of the first term must be same as that of the second term for different values of $t_2$. The values of $t_2q_1$ will be multiples of $q_1$, and for the difference in two such values to be the same as two values of $t_1q_2$, a multiple of $q_2$, the least possible difference can be the l.c.m $q_1q_2$, which cannot occur from given range of $t_1$ and $t_2$.
+
+Hence, for each $q$, there are at least $q-Q$ values of $t\in \{0,1,\ldots q-1\}$ such that $I(q,t)$ are disjoint from all other intervals associated with all $q$.
+
+We now proceed to prove the $O(p^{\nicefrac{1}{4}+\delta})$ bound on the least quadratic residue.
 %
 %
 \section{The $p^{\nicefrac{1}{4}+\delta}$ bound}
@@ -120,5 +147,32 @@ The small intervals constructed are equivalent by the principle that multiplying
 %Aim:
 \section{Energy}
 %
+%
+\begin{thebibliography}{9}
+
+\bibitem{burgess}
+ D. A. Burgess,
+\textit{The distribution of quadratic residues and non-residues},
+Mathematika 4 (1957), 106-112.
+
+\bibitem{burton}
+David M. Burton, \textit{Elementary Number Theory},
+McGraw Hill, 2012.
+
+\bibitem{tonelli}
+S. Lindhurst, \textit{An analysis of Shanks's algorithm for computing square roots in finite fields},
+CRM Proceedings and Lecture Notes, Vol. 19 (1999) pp. 231–242.
+
+\bibitem{polya}
+G. Polya,
+\textit{``{\"U}ber die Verteilung der quadratischen Eeste und Nichtreste''},
+G{\"o}ttinger Nachrichten (1918), 21-29.
+
+\bibitem{vinogradov}
+I. M. Vinogradov,
+\textit{``Sur la distribution des r{\'e}sidus et des non-r{\'e}sidus des puissances ''},
+Journal Physico-Math. Soc. Univ. Perm, No. 1 (1918), 94-96.
+
+\end{thebibliography}
 %
 \end{document}

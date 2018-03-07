@@ -9,6 +9,8 @@
 \usepackage{mathtools}
 \newtheorem{lemma}{Lemma}
 \newtheorem{theorem}{Theorem}
+\newtheorem*{claim*}{Claim}
+\newenvironment{claimproof}[1]{\par\noindent\underline{Proof:}\space#1}{\hfill $\diamond$ \vspace{3mm} \par}
 
 \newcommand{\ignore}[1]{}
 
@@ -76,7 +78,7 @@ Let $S_h(x)=\sum\limits_{n=1}^{h}\chi_2(x+n)$. Then,
 \end{equation}
 \end{lemma}
 %%
-\subsection{The $O(p^{\nicefrac{1}{2}})$ bound}
+\subsection*{The $O(p^{\nicefrac{1}{2}})$ bound}
 To prove the $O(p^{\nicefrac{1}{2}})$ bound on the longest interval of continuous quadratic residues or of quadratic non-residues, we show that if the $O(p^{\nicefrac{1}{2}})$ bound is not true, then LHS of (\ref{lemma2}) grows faster with $p$ than the RHS, creating a contradiction.\\
 Let the longest interval of quadratic residues or of quadratic non-residues be given by $h$ for a given $p$. Thus, $\lvert S_h(z)\rvert=h$ for some $z\in \mathbb{F}_p$. Consider the LHS of (\ref{lemma2}) in that case. As $\lvert S_h(x+k)\rvert \geq \lvert S_h(x)\rvert-2k$,
 \begin{equation} \label{intervcontr}
@@ -95,20 +97,15 @@ which has a disparity in the growth of the LHS and the RHS with respect to the i
 We saw in the previous section how we split an interval in $\mathbb{F}_p$ of size $O(p^{\nicefrac{1}{2}})$ into smaller sliding intervals and used lemma 2 to obtain the bound. What we do in this section is one step further: we show that an interval is equivalent to several small intervals in terms of the number of quadratic residues and non-residues in it. This would be useful to further amplify the contribution of an interval when applying lemma 2.
 
 We construct small intervals by multiplying an interval $N,N+1,...N+H$ by $q^{-1}$, resulting in the elements $Nq^{-1}...(N+H)q^{-1}$ of $\mathbb{F}_p$. Take a general resulting element:
-
 $$(N+k)q^{-1}=(N+nq+r)q^{-1}=Nq^{-1}+rq^{-1}+n$$
 where $k=nq+r$ and $0\leq r<q$ in $\mathbb{Z}$
 
-There are $q$ values of $Nq^{-1}+rq^{-1}$, one for each $r$. To each $Nq^{-1}+rq^{-1}$, we add consecutive values of $n$ starting from $0$ to $\frac{\lfloor H-r\rfloor}{q}$ to obtain each resulting element of $Nq^{-1}...(N+H)q^{-1}$, which results in $q$ small intervals. These intervals are disjoint because distinct $(N+k)$ result in different values of $(N+k)q^{-1}$.
-
-\begin{comment}
-   Now, how do we arithmetically calculate the exact values of an interval $(N+r)q^{-1},(N+r)q^{-1}+1...(N+r)q^{-1}+\frac{\lfloor H-r\rfloor}{q}$? Since we are dealing with elements in $\mathbb{F}_p$, $N+r\equiv N+r+tp (mod\text{ }p), t\in \mathbb{Z}$. For exactly one $t\in\{0, 1, q-1\}$ for each $r$, $N+r+tp\divides q$, which makes $\frac{N+r+tp}{q}$ an integer. Thus the intervals translate to integers between
-\end{comment}
+There are $q$ values of $Nq^{-1}+rq^{-1}$, one for each $r$. To each $Nq^{-1}+rq^{-1}$, we add consecutive values of $n$ starting from $0$ to $\nicefrac{\lfloor H-r\rfloor}{q}$ to obtain each resulting element of $\{Nq^{-1}...(N+H)q^{-1}\}$, which results in $q$ small intervals. These intervals are disjoint because distinct $(N+k)$ result in different values of $(N+k)q^{-1}$. Now, how do we arithmetically calculate the exact values of an interval $(N+r)q^{-1},(N+r)q^{-1}+1,...(N+r)q^{-1}+\lfloor\nicefrac{H-r}{q}\rfloor$? Since we are dealing with elements in $\mathbb{F}_p$, $N+r\equiv N+r+tp (mod\text{ }p), t\in \mathbb{Z}$. For exactly one $t\in\{0, 1, q-1\}$ for each $r$, $N+r+tp\divides q$, which makes $\nicefrac{(N+r+tp)}{q}$ an integer. Thus the intervals translate to integers between $\nicefrac{(N+r+tp)}{q}$ and $\nicefrac{(N+r+tp+H-r)}{q}$ for each value of $r$ with the corresponding value of $t$ which makes $N+r+tp\divides q$, i.e. integers between $\nicefrac{N+tp}{q}$ and $\nicefrac{(N+tp+H)}{q}$ for all $t\in\{0,1,...q-1\}$.
 
 The small intervals constructed are equivalent due the fact that multiplying the interval by $q^{-1}$, preserves or swaps the original cardinality of quadratic residues and non-residues, since $\chi_2((N+k)q^{-1})=\chi_2(q^{-1})\chi_2(N+k)$, and $\chi_2(q^{-1})$ is a constant. We now prove an important theorem which solidifies the effect of the amplification.
 %
 \begin{lemma}
-Given a set of $Q$ distinct natural numbers, whose general member is given by $q$, which are pairwise co-prime to each other, and any natural numbers $N$ and $H$ such that:
+\cite{burgess}Given a set of $Q$ distinct natural numbers, whose general member is given by $q$, which are pairwise co-prime to each other, and any natural numbers $N$ and $H$ such that:
 \begin{equation} \label{lemma3cond}
 2Hq<p
 \end{equation}
@@ -116,16 +113,31 @@ Let us denote by $I(q,t)$ the real interval
 $$\frac{N+tp}{q} \leq z \leq \frac{N+H+tp}{q}$$
 Then it is possible to associate with each $q$ a set $T(q)\subseteq \{0,1,\ldots q-1\}$ of size at least $q-Q$, such that $\forall q \forall t\in T(q)$, $I(q,t)$ are disjoint.
 \end{lemma}
-\textit{Proof:}\\
+\begin{proof}
+For a given $q$, say $q_o$, consecutive $I(q_o,t)$ differ by $\nicefrac{p}{q_o}$ in their starting points, and have a width of $\nicefrac{H}{q_o}$. Since $H<p$, $I(q_o,t)$ are disjoint. The $I(q_o,t)$ are in fact very narrow compared to the difference between their starting points, by a factor of less than $\nicefrac{1}{2q_o}$. We can thus consider the gaps between interval starting points as equal-width `blocks' of size $\nicefrac{p}{q_o}$, with the intervals as fringes of width $\nicefrac{H}{q_o}$. We make the following claim about two sets of blocks:
+%
+\begin{claim*}
+  Let $r$ and $s$ be two co-prime numbers. From a point, say $y$, on the real line, lay blocks of size $r$ in the positive direction of the real axis to create points spaced by a gap of $r$. Similarly, from $y$, lay blocks of size $s$ in the positive direction. Then the first points which coincide are after $s$ blocks of size $r$ and $r$ blocks of size $s$.
+\end{claim*}
+\begin{claimproof}
+  Since, $r$ and $s$ are co-prime, $gcd(r,s)=rs$. If, for the sake of contradiction, say $u<s$ blocks of size $r$ was the first coinciding point, then $ur\divides s\Rightarrow gcd(r,s) \leq ur < rs$, which is a contradiction.
+\end{claimproof}
+%
+Now take two values of $q$, $q_1$ and $q_2$. The gap between intervals \ignore {clarify convention earlier} given by $I(q_1,t)$ for consecutive values of $t$ is $\nicefrac{p}{q_1}$, while the gap between intervals given by $I(q_2,t)$ for consecutive values of $t$ is $\nicefrac{p}{q_2}$. Let us scale the real line by multiplying it by $\nicefrac{q_1q_2}{p}$. The resulting gap blocks on this are then $q_2$ and $q_1$ respectively. Thus the point they first coincide are after $q_1$ blocks of $I(q_1,t)$ and $q_2$ blocks of $I(q_2,t)$. Thus in the unscaled real line, the first point which coincides is after a length of $p$. Since the overlapping region of $[\nicefrac{N}{q_1},\nicefrac{N+(q_1)}{q_1})$ and $[\nicefrac{N}{q_2},\nicefrac{N+(q_2)}{q_2})$ is not greater than $p$, there is only one point which coincides.
+
+%The starting $I(q_o,t)$ are spread over an interval of size $p$, evenly spaced by $\nicefrac{p}{q_o}$
+\begin{comment}
 For a fixed $q$, $I(q,t)$ are disjoint as $H<p$. Now, for a pair of different values of $q$, say $q_1$ and $q_2$, let $I(q_1,t_1)$ and $I(q_2,t_2)$ intersect. Then we can say:
 $$\frac{N+t_1p}{q_1} \leq \frac{N+H+t_2p}{q_2}$$
-$$\&\text{ }\frac{N+t_2p}{q_2} \leq \frac{N+H+t_1p}{q_1}$$
+$$\text{and}\text{ }\frac{N+t_2p}{q_2} \leq \frac{N+H+t_1p}{q_1}$$
 $$\Rightarrow N(q_2-q_1)+(t_1q_2-t_2q_1)p\leq Hq_2<\frac{1}{2}p$$
 $$\Rightarrow N(q_1-q_2)+(t_2q_1-t_1q_2)p\leq Hq_1<\frac{1}{2}p$$
 $$\Rightarrow N(q_2-q_1)-\frac{1}{2}p < (t_2q_1-t_1q_2)p <N(q_2-q_1)+\frac{1}{2}p$$
 Since not more than a single multiple of $p$ can occur in a range of size less than $p$, $t_2q_1-t_1q_2$ can take only one value. Because $q_1$ and $q_2$ are co-prime and $0\leq t_1 \leq q_1$ and $0\leq t_2 \leq q_2$, there is only one pair of $t_1$ and $t_2$ values for a unique $t_2q_1-t_1q_2$. This is because for a unique valuation of $t_2q_1-t_1q_2$, the difference in the valuation of the first term must be same as that of the second term for different values of $t_2$. The values of $t_2q_1$ will be multiples of $q_1$, and for the difference in two such values to be the same as two values of $t_1q_2$, a multiple of $q_2$, the least possible difference can be the l.c.m $q_1q_2$, which cannot occur from given range of $t_1$ and $t_2$.
 
 Hence, for each $q$, there are at least $q-Q$ values of $t\in \{0,1,\ldots q-1\}$ such that $I(q,t)$ are disjoint from all other intervals associated with all $q$.
+\end{comment}
+\end{proof}
 
 We now proceed to prove the $O(p^{\nicefrac{1}{4}+\delta})$ bound on the least quadratic residue.
 %

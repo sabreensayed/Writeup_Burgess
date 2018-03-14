@@ -123,7 +123,9 @@ For a given $q$, say $q_o$, consecutive $I(q_o,t)$ differ by $\nicefrac{p}{q_o}$
   Since, $r$ and $s$ are co-prime, $gcd(r,s)=rs$. If, for the sake of contradiction, say $u<s$ blocks of size $r$ was the first coinciding point, then $ur\divides s\Rightarrow gcd(r,s) \leq ur < rs$, which is a contradiction.
 \end{claimproof}
 %
-Now take two values of $q$, $q_1$ and $q_2$. The gap between intervals \ignore {clarify convention earlier} given by $I(q_1,t)$ for consecutive values of $t$ is $\nicefrac{p}{q_1}$, while the gap between intervals given by $I(q_2,t)$ for consecutive values of $t$ is $\nicefrac{p}{q_2}$. Let us scale the real line by multiplying it by $\nicefrac{q_1q_2}{p}$. The resulting gap blocks on this are then $q_2$ and $q_1$ respectively. Thus the point they first coincide are after $q_1$ blocks of $I(q_1,t)$ and $q_2$ blocks of $I(q_2,t)$. Thus in the unscaled real line, the first point which coincides is after a length of $p$. Since the overlapping region of $[\nicefrac{N}{q_1},\nicefrac{N+(q_1)}{q_1})$ and $[\nicefrac{N}{q_2},\nicefrac{N+(q_2)}{q_2})$ is not greater than $p$, there is only one point which coincides.
+Now take two values of $q$, $q_1$ and $q_2$, and without loss of generality assume $q_1<q_2$,. The gap between intervals \ignore {clarify convention earlier} given by $I(q_1,t)$ for consecutive values of $t$ is $\nicefrac{p}{q_1}$, while the gap between intervals given by $I(q_2,t)$ for consecutive values of $t$ is $\nicefrac{p}{q_2}$. Let us scale the real line by multiplying it by $\nicefrac{q_1q_2}{p}$. The resulting gap blocks on this are then $q_2$ and $q_1$ respectively. Thus the point they first coincide are after $q_1$ blocks of $I(q_1,t)$ and $q_2$ blocks of $I(q_2,t)$. Thus in the unscaled real line, the unit blocks become of size $\nicefrac{p}{q_1q_2}$ and the first point which coincides is after a length of $p$. Since the overlapping region of $[\nicefrac{N}{q_1},\nicefrac{N+pq_1}{q_1})$ and $[\nicefrac{N}{q_2},\nicefrac{N+pq_2}{q_2})$ is not greater than $p$, there is only one point which coincides. With the fringes (actual intervals) of maximum width $\nicefrac{H}{q_1}$ lesser than the least possible seperation between intervals $\nicefrac{p}{q_1q_2}$, the fringes cannot intersect anywhere else as well.
+
+Hence, for each $q$, there are at least $q-Q$ values of $t\in \{0,1,\ldots q-1\}$ such that $I(q,t)$ are disjoint from all other intervals associated with all $q$.
 
 %The starting $I(q_o,t)$ are spread over an interval of size $p$, evenly spaced by $\nicefrac{p}{q_o}$
 \begin{comment}
@@ -143,7 +145,55 @@ We now proceed to prove the $O(p^{\nicefrac{1}{4}+\delta})$ bound on the least q
 %
 %
 \section{The $p^{\nicefrac{1}{4}+\delta}$ bound}
-
+We will prove the bound on the least quadratic non-residue by means of contradiction. Say $H>p^{\nicefrac{1}{4}+\delta}$ for some $\delta>0$, and $\Big \lvert \sum\limits_{x=N+1}^{N+H}\chi_p(x)\Big \rvert=H$. We know that for $H>cp^{\nicefrac{1}{2}}$, where $c$ is some constant, there can be no interval of all quadratic residues or all non-residues. Thus, we assume $H\leq cp^{\nicefrac{1}{2}}$\\
+We take the pair-wise co-prime numbers $q$ required for the application of lemma 3 to be the primes in the range:
+$$\frac{p^{\nicefrac{1}{4}}}{2} \leq q \leq p^{\nicefrac{1}{4}}$$
+This satisfies the constraint in (\ref{lemma3cond}) for large enough $p$. The number of primes $q$ is given by $Q=\pi(p^{\nicefrac{1}{4}})-\pi(\frac{p^{\nicefrac{1}{4}}}{2})=o(p^{\nicefrac{1}{4}})$ by the prime number theorem. Now, restating the assumption:
+$$\bigg \lvert\sum\limits_{x=N+1}^{N+H}\chi_p(x)\bigg \rvert=H$$
+We proceed to transform this interval into several smaller intervals as discussed in the previous section. For a fixed $x$, $x+tp$ is divisible by $q$ for exactly one value of $t\in\{0,1,...q-1\}$. Also $\chi(x+tp)=\chi(x)$. Thus:
+$$\bigg \lvert\sum\limits_{x=N+1}^{N+H}\chi_p(x)\bigg \rvert=\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{\substack{x=N+1\\x+tp\divides q}}^{N+H}\chi_p(x+tp)\bigg \rvert=H$$
+Since $x+tp\divides q$, thus $x+tp=qz$ for some $z\in\mathbb{Z}$, $\Rightarrow z=\frac{x+tp}{q}$.\\
+For $N+1\leq x \leq N+H$, we see that all such $z$ are the integer values in $I(q,t)$ according to lemma 3 for the corresponding values of $t$ such that $x+tp\divides q$.
+$$\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{\substack{x=N+1\\x+tp\divides q}}^{N+H} \chi_p \Big(\frac{x+tp}{q}.q\Big)\bigg \rvert=H$$
+$$\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{z\in I(q,t)}\chi_p(z.q)\bigg \rvert=H$$
+$$\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{z\in I(q,t)}\chi_p(z)\chi_p(q)\bigg \rvert=H$$
+$$\sum\limits_{t=0}^{t=q-1}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_p(z)\chi_p(q)\bigg \rvert \geq H$$
+$$\sum_q\sum\limits_{t=0}^{t=q-1}\bigg \lvert\chi_p(q)\sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert \geq HQ$$
+$$\sum_q\bigg \lvert\chi_p(q)\bigg\rvert\sum\limits_{t=0}^{t=q-1}\bigg\lvert\sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert \geq HQ$$
+$$\sum_q\sum\limits_{t=0}^{t=q-1}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert \geq HQ$$
+Seperating the possibly overlapping intervals from the disjoint intervals:
+\begin{equation} \label{seperation}
+\sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert+\sum_q\sum\limits_{\substack{t=0\\t\not \in T(q)}}^{q-1}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert \geq HQ
+\end{equation}
+Now,
+\begin{equation} \label{overlapping}
+\sum_q\sum\limits_{\substack{t=0\\t\not \in T(q)}}^{q-1}\bigg\lvert\sum\limits_{z\in I(q,t) }\chi_p(z)\bigg \rvert \leq \sum\limits_q Q\bigg\lceil\frac{H}{q}\bigg\rceil \leq \sum\limits_q Q\frac{2H}{q} < 4Q^2 Hp^{\nicefrac{-1}{4}}
+\end{equation}
+since $\sum\limits_q q^{-1} < Q.\Big(\frac{p^{\nicefrac{1}{4}}}{2}\Big)^{-1}$. Using \ref{seperation} and \ref{overlapping},
+$$\sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert > HQ - 4Q^2 Hp^{\nicefrac{1}{4}}=HQ(1-4Qp^{\nicefrac{-1}{4}})>\frac{HQ}{2}$$
+\begin{equation} \label{sliceineq}
+\sum\limits_{m=0}^{h-1}\sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert = h \sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert > \frac{HhQ}{2}
+\end{equation}
+for large enough $p$, since $Q=o(p^{\nicefrac{1}{4}})$. Now we would like to use the contribution of the disjoint intervals in \ref{sliceineq} in applying lemma 2, by considering sliding window sums of size $h$. For this, we calculate an estimate of the sum obtained for one interval:
+$$\sum\limits_{\mathclap {z\in I(q,t)}}\chi_p(z+m)\geq \sum\limits_{\mathclap{z\in I(q,t)}}\chi_p(z)-2m$$
+$$\sum\limits_{m=0}^{h-1}\sum\limits_{z\in I(q,t)}\chi_p(z+m)\geq \sum\limits_{m=0}^{h-1}\sum\limits_{z\in I(q,t)}\chi_p(z)-2 \sum\limits_{m=0}^{h-1}m$$
+$$\sum\limits_{z\in I(q,t)}\sum\limits_{m=0}^{h-1}\chi_p(z+m)\geq h\sum\limits_{\mathclap{z\in I(q,t)}}\chi_p(z)-h^2$$
+$$\bigg \lvert\sum\limits_{z\in I(q,t)} \sum\limits_{m=0}^{h-1}\chi_p(z+m) \bigg \rvert \geq \bigg \lvert h\sum\limits_{\mathclap{z\in I(q,t)}}\chi_p(z)-h^2 \bigg \rvert$$
+$$\sum\limits_{z\in I(q,t)}\bigg \lvert \sum\limits_{m=0}^{h-1}\chi_p(z+m) \bigg \rvert \geq h\bigg \lvert \sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert-h^2 $$
+$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\bigg \lvert \sum\limits_{m=0}^{h-1}\chi_p(z+m) \bigg \rvert \geq h\sum_q\sum\limits_{t\in T(q)}\bigg \lvert \sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert-Qp^{\nicefrac{1}{4}}h^2$$
+since the number of the intervals given by lemma 3, $I(q,t)$, are less than $Qp^{\nicefrac{1}{4}}$. So from (\ref{sliceineq})
+$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\bigg \lvert \sum\limits_{m=0}^{h-1}\chi_p(z+m) \bigg \rvert > \frac{HhQ}{2}-Qp^{\nicefrac{1}{4}} h^2=Qh\big(\frac{H}{2}-hp^{\nicefrac{1}{4}}\big)$$
+Taking $h<\frac{1}{4}p^{\nicefrac{-1}{4}}H$, and using the terminology from lemma 2,
+$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h(z) \rvert > \frac{HhQ}{4}$$
+Using Holder's inequality,
+$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h(z) \rvert \leq \bigg ( \sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h(z) \rvert^{2r} \bigg )^{\nicefrac{1}{2r}}\bigg ( \sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}1 \bigg )^{1-\nicefrac{1}{2r}}$$
+$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h(z) \rvert^{2r} \geq \bigg ( \sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h(z) \rvert \bigg )^{2r} \bigg ( \sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}1 \bigg )^{-(2r-1)}$$
+$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h(z) \rvert^{2r} > \Big( \frac{HhQ}{4}\Big)^{2r}\Big ( Qp^{\nicefrac{1}{4}}.2.\frac{H}{p^{\nicefrac{1}{4}}}\Big )^{-(2r-1)}$$
+$$\sum\limits_{z=0}^{p-1}\lvert S_h(z) \rvert^{2r}>\Big(\frac{1}{8}\Big)^{2r}HQh^{2r}$$
+From lemma 2,
+$$(2r)^{r}h^{r}p+h^{2r}r(2p^{\nicefrac{1}{2}}+1)>\Big(\frac{1}{8}\Big)^{2r}HQh^{2r}$$
+For large enough $p$, the second term of the LHS diminishes compared to the RHS as $HQ\geq \frac{p^{\nicefrac{1}{2}+\delta}}{4\log p}$. Now, we take $h=\left \lfloor \frac{1}{5}p^{\nicefrac{-1}{4}}H \right \rfloor$. Since $h \geq \frac{1}{5}p^{\delta}$, we take $r>\delta^{-1}$, which results in the first term of the LHS diminishing with respect to the RHS.
+Thus, we have arrived at a contradiction. Our assumption that $\Big \lvert \sum\limits_{x=N+1}^{N+H}\chi_p(x)\Big \rvert=H$ was wrong, hence the first quadratic non-residue is less than $p^{\nicefrac{1}{4}+\delta}$ for any $\delta>0$.
 %
 %
 \section{Extension to general characters}
@@ -160,6 +210,7 @@ We now proceed to prove the $O(p^{\nicefrac{1}{4}+\delta})$ bound on the least q
 \section{Energy}
 %
 %
+\section{}
 \begin{thebibliography}{9}
 
 \bibitem{burgess}

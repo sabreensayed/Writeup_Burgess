@@ -8,6 +8,7 @@
 \usepackage{verbatim}
 \usepackage{mathtools}
 \newtheorem{lemma}{Lemma}
+\newtheorem*{lemma*}{Lemma}
 \newtheorem{theorem}{Theorem}
 \newtheorem*{claim*}{Claim}
 \newenvironment{claimproof}[1]{\par\noindent\underline{Proof:}\space#1}{\hfill $\diamond$ \vspace{3mm} \par}
@@ -27,6 +28,8 @@
 
 \chapter{Introduction}
 %Aim: Make the reader aware about the applications of the topics covered, give brief summary of existing results, and equip reader with the preliminaries to read the rest of the paper.
+%\chi is multiplicative character
+%\chi has modulus p unless otherwise stated
 %
 \section{Symbols and conventions}
 %Character is
@@ -72,7 +75,7 @@ To use lemma 1, we need to separate the perfect square polynomials forming the s
 %
 We state lemma 2, which directly follows from what we have calculated so far.
 %
-\begin{lemma}
+\begin{lemma} \label{lemma2statement}
 Let $S_h(x)=\sum\limits_{n=1}^{h}\chi_2(x+n)$. Then,
 \begin{equation} \label{lemma2}
 \sum\limits_{x=0}^{p-1}(S_h(x))^{2r}\leq h^{r}(2r)^{r}p+h^{2r}r(2p^{\nicefrac{1}{2}}+1)
@@ -103,7 +106,7 @@ where $k=nq+r$ and $0\leq r<q$ in $\mathbb{Z}$
 
 There are $q$ values of $Nq^{-1}+rq^{-1}$, one for each $r$. To each $Nq^{-1}+rq^{-1}$, we add consecutive values of $n$ starting from $0$ to $\nicefrac{\lfloor H-r\rfloor}{q}$ to obtain each resulting element of $\{Nq^{-1}...(N+H)q^{-1}\}$, which results in $q$ small intervals. These intervals are disjoint because distinct $(N+k)$ result in different values of $(N+k)q^{-1}$. Now, how do we arithmetically calculate the exact values of an interval $(N+r)q^{-1},(N+r)q^{-1}+1,...(N+r)q^{-1}+\lfloor\nicefrac{H-r}{q}\rfloor$? Since we are dealing with elements in $\mathbb{F}_p$, $N+r\equiv N+r+tp (mod\text{ }p), t\in \mathbb{Z}$. For exactly one $t\in\{0, 1, q-1\}$ for each $r$, $N+r+tp\divides q$, which makes $\nicefrac{(N+r+tp)}{q}$ an integer. Thus the intervals translate to integers between $\nicefrac{(N+r+tp)}{q}$ and $\nicefrac{(N+r+tp+H-r)}{q}$ for each value of $r$ with the corresponding value of $t$ which makes $N+r+tp\divides q$, i.e. integers between $\nicefrac{N+tp}{q}$ and $\nicefrac{(N+tp+H)}{q}$ for all $t\in\{0,1,...q-1\}$.
 
-The small intervals constructed are equivalent due the fact that multiplying the interval by $q^{-1}$, preserves or swaps the original cardinality of quadratic residues and non-residues, since $\chi_2((N+k)q^{-1})=\chi_2(q^{-1})\chi_2(N+k)$, and $\chi_2(q^{-1})$ is a constant. We now prove an important lemma which solidifies the effect of the amplification.
+The small intervals constructed are equivalent due the fact that multiplying the interval by $q^{-1}$, preserves or swaps the original cardinality of quadratic residues and non-residues, since $\chi((N+k)q^{-1})=\chi(q^{-1})\chi(N+k)$, and $\chi(q^{-1})$ is a constant. We now prove an important lemma which solidifies the effect of the amplification.
 %
 \begin{lemma}
 \cite{burgess}Given a set of $Q$ distinct natural numbers, whose general member is given by $q$, which are pairwise co-prime to each other, and any natural numbers $N$ and $H$ such that:
@@ -146,44 +149,44 @@ We now proceed to prove the $O(p^{\nicefrac{1}{4}+\delta})$ bound on the least q
 %
 %
 \section{The $p^{\nicefrac{1}{4}+\delta}$ bound}
-We will prove the bound on the least quadratic non-residue by means of contradiction. Say $H>p^{\nicefrac{1}{4}+\delta}$ for some $\delta>0$, and $\Big \lvert \sum\limits_{x=N+1}^{N+H}\chi_p(x)\Big \rvert=H$. We know that for $H>cp^{\nicefrac{1}{2}}$, where $c$ is some constant, there can be no interval of all quadratic residues or all non-residues. Thus, we assume $H\leq cp^{\nicefrac{1}{2}}$\\
+We will prove the bound on the least quadratic non-residue by means of contradiction. Say $H>p^{\nicefrac{1}{4}+\delta}$ for some $\delta>0$, and $\Big \lvert \sum\limits_{x=N+1}^{N+H}\chi_2(x)\Big \rvert=H$. We know that for $H>cp^{\nicefrac{1}{2}}$, where $c$ is some appropriate constant, there can be no interval of all quadratic residues or all non-residues. Thus, we assume $H\leq cp^{\nicefrac{1}{2}}$\\
 We take the pair-wise co-prime numbers $q$ required for the application of lemma 3 to be the primes in the range:
 $$\frac{p^{\nicefrac{1}{4}}}{2} \leq q \leq p^{\nicefrac{1}{4}}$$
 This satisfies the constraint in (\ref{lemma3cond}) for large enough $p$. The number of primes $q$ is given by $Q=\pi(p^{\nicefrac{1}{4}})-\pi(\frac{p^{\nicefrac{1}{4}}}{2})=o(p^{\nicefrac{1}{4}})$ by the prime number theorem. Now, restating the assumption:
-$$\bigg \lvert\sum\limits_{x=N+1}^{N+H}\chi_p(x)\bigg \rvert=H$$
+$$\bigg \lvert\sum\limits_{x=N+1}^{N+H}\chi_2(x)\bigg \rvert=H$$
 We proceed to transform this interval into several smaller intervals as discussed in the previous section. For a fixed $x$, $x+tp$ is divisible by $q$ for exactly one value of $t\in\{0,1,...q-1\}$. Also $\chi(x+tp)=\chi(x)$. Thus:
-$$\bigg \lvert\sum\limits_{x=N+1}^{N+H}\chi_p(x)\bigg \rvert=\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{\substack{x=N+1\\x+tp\divides q}}^{N+H}\chi_p(x+tp)\bigg \rvert=H$$
+$$\bigg \lvert\sum\limits_{x=N+1}^{N+H}\chi_2(x)\bigg \rvert=\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{\substack{x=N+1\\x+tp\divides q}}^{N+H}\chi_2(x+tp)\bigg \rvert=H$$
 Since $x+tp\divides q$, thus $x+tp=qz$ for some $z\in\mathbb{Z}$, $\Rightarrow z=\frac{x+tp}{q}$.\\
 For $N+1\leq x \leq N+H$, we see that all such $z$ are the integer values in $I(q,t)$ according to lemma 3 for the corresponding values of $t$ such that $x+tp\divides q$.
-$$\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{\substack{x=N+1\\x+tp\divides q}}^{N+H} \chi_p \Big(\frac{x+tp}{q}.q\Big)\bigg \rvert=H$$
-$$\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{z\in I(q,t)}\chi_p(z.q)\bigg \rvert=H$$
-$$\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{z\in I(q,t)}\chi_p(z)\chi_p(q)\bigg \rvert=H$$
-$$\sum\limits_{t=0}^{t=q-1}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_p(z)\chi_p(q)\bigg \rvert \geq H$$
-$$\sum_q\sum\limits_{t=0}^{t=q-1}\bigg \lvert\chi_p(q)\sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert \geq HQ$$
-$$\sum_q\bigg \lvert\chi_p(q)\bigg\rvert\sum\limits_{t=0}^{t=q-1}\bigg\lvert\sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert \geq HQ$$
-$$\sum_q\sum\limits_{t=0}^{t=q-1}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert \geq HQ$$
+$$\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{\substack{x=N+1\\x+tp\divides q}}^{N+H} \chi_2 \Big(\frac{x+tp}{q}.q\Big)\bigg \rvert=H$$
+$$\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{z\in I(q,t)}\chi_2(z.q)\bigg \rvert=H$$
+$$\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{z\in I(q,t)}\chi_2(z)\chi_2(q)\bigg \rvert=H$$
+$$\sum\limits_{t=0}^{t=q-1}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_2(z)\chi_2(q)\bigg \rvert \geq H$$
+$$\sum_q\sum\limits_{t=0}^{t=q-1}\bigg \lvert\chi_2(q)\sum\limits_{z\in I(q,t)}\chi_2(z)\bigg \rvert \geq HQ$$
+$$\sum_q\bigg \lvert\chi_2(q)\bigg\rvert\sum\limits_{t=0}^{t=q-1}\bigg\lvert\sum\limits_{z\in I(q,t)}\chi_2(z)\bigg \rvert \geq HQ$$
+$$\sum_q\sum\limits_{t=0}^{t=q-1}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_2(z)\bigg \rvert \geq HQ$$
 Seperating the possibly overlapping intervals from the disjoint intervals:
 \begin{equation} \label{seperation}
-\sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert+\sum_q\sum\limits_{\substack{t=0\\t\not \in T(q)}}^{q-1}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert \geq HQ
+\sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_2(z)\bigg \rvert+\sum_q\sum\limits_{\substack{t=0\\t\not \in T(q)}}^{q-1}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_2(z)\bigg \rvert \geq HQ
 \end{equation}
 Now,
 \begin{equation} \label{overlapping}
-\sum_q\sum\limits_{\substack{t=0\\t\not \in T(q)}}^{q-1}\bigg\lvert\sum\limits_{z\in I(q,t) }\chi_p(z)\bigg \rvert \leq \sum\limits_q Q\bigg\lceil\frac{H}{q}\bigg\rceil \leq \sum\limits_q Q\frac{2H}{q} < 4Q^2 Hp^{\nicefrac{-1}{4}}
+\sum_q\sum\limits_{\substack{t=0\\t\not \in T(q)}}^{q-1}\bigg\lvert\sum\limits_{z\in I(q,t) }\chi_2(z)\bigg \rvert \leq \sum\limits_q Q\bigg\lceil\frac{H}{q}\bigg\rceil \leq \sum\limits_q Q\frac{2H}{q} < 4Q^2 Hp^{\nicefrac{-1}{4}}
 \end{equation}
 since $\sum\limits_q q^{-1} < Q.\Big(\frac{p^{\nicefrac{1}{4}}}{2}\Big)^{-1}$. Using \ref{seperation} and \ref{overlapping},
-$$\sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert > HQ - 4Q^2 Hp^{\nicefrac{1}{4}}=HQ(1-4Qp^{\nicefrac{-1}{4}})>\frac{HQ}{2}$$
+$$\sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_2(z)\bigg \rvert > HQ - 4Q^2 Hp^{\nicefrac{1}{4}}=HQ(1-4Qp^{\nicefrac{-1}{4}})>\frac{HQ}{2}$$
 \begin{equation} \label{sliceineq}
-\sum\limits_{m=0}^{h-1}\sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert = h \sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert > \frac{HhQ}{2}
+\sum\limits_{m=0}^{h-1}\sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_2(z)\bigg \rvert = h \sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_2(z)\bigg \rvert > \frac{HhQ}{2}
 \end{equation}
 for large enough $p$, since $Q=o(p^{\nicefrac{1}{4}})$. Now we would like to use the contribution of the disjoint intervals in \ref{sliceineq} in applying lemma 2, by considering sliding window sums of size $h$. For this, we calculate an estimate of the sum obtained for one interval:
-$$\sum\limits_{\mathclap {z\in I(q,t)}}\chi_p(z+m)\geq \sum\limits_{\mathclap{z\in I(q,t)}}\chi_p(z)-2m$$
-$$\sum\limits_{m=0}^{h-1}\sum\limits_{z\in I(q,t)}\chi_p(z+m)\geq \sum\limits_{m=0}^{h-1}\sum\limits_{z\in I(q,t)}\chi_p(z)-2 \sum\limits_{m=0}^{h-1}m$$
-$$\sum\limits_{z\in I(q,t)}\sum\limits_{m=0}^{h-1}\chi_p(z+m)\geq h\sum\limits_{\mathclap{z\in I(q,t)}}\chi_p(z)-h^2$$
-$$\bigg \lvert\sum\limits_{z\in I(q,t)} \sum\limits_{m=0}^{h-1}\chi_p(z+m) \bigg \rvert \geq \bigg \lvert h\sum\limits_{\mathclap{z\in I(q,t)}}\chi_p(z)-h^2 \bigg \rvert$$
-$$\sum\limits_{z\in I(q,t)}\bigg \lvert \sum\limits_{m=0}^{h-1}\chi_p(z+m) \bigg \rvert \geq h\bigg \lvert \sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert-h^2 $$
-$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\bigg \lvert \sum\limits_{m=0}^{h-1}\chi_p(z+m) \bigg \rvert \geq h\sum_q\sum\limits_{t\in T(q)}\bigg \lvert \sum\limits_{z\in I(q,t)}\chi_p(z)\bigg \rvert-Qp^{\nicefrac{1}{4}}h^2$$
+$$\sum\limits_{\mathclap {z\in I(q,t)}}\chi_2(z+m)\geq \sum\limits_{\mathclap{z\in I(q,t)}}\chi_2(z)-2m$$
+$$\sum\limits_{m=0}^{h-1}\sum\limits_{z\in I(q,t)}\chi_2(z+m)\geq \sum\limits_{m=0}^{h-1}\sum\limits_{z\in I(q,t)}\chi_2(z)-2 \sum\limits_{m=0}^{h-1}m$$
+$$\sum\limits_{z\in I(q,t)}\sum\limits_{m=0}^{h-1}\chi_2(z+m)\geq h\sum\limits_{\mathclap{z\in I(q,t)}}\chi_2(z)-h^2$$
+$$\bigg \lvert\sum\limits_{z\in I(q,t)} \sum\limits_{m=0}^{h-1}\chi_2(z+m) \bigg \rvert \geq \bigg \lvert h\sum\limits_{\mathclap{z\in I(q,t)}}\chi_2(z)-h^2 \bigg \rvert$$
+$$\sum\limits_{z\in I(q,t)}\bigg \lvert \sum\limits_{m=0}^{h-1}\chi_2(z+m) \bigg \rvert \geq h\bigg \lvert \sum\limits_{z\in I(q,t)}\chi_2(z)\bigg \rvert-h^2 $$
+$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\bigg \lvert \sum\limits_{m=0}^{h-1}\chi_2(z+m) \bigg \rvert \geq h\sum_q\sum\limits_{t\in T(q)}\bigg \lvert \sum\limits_{z\in I(q,t)}\chi_2(z)\bigg \rvert-Qp^{\nicefrac{1}{4}}h^2$$
 since the number of the intervals given by lemma 3, $I(q,t)$, are less than $Qp^{\nicefrac{1}{4}}$. So from (\ref{sliceineq})
-$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\bigg \lvert \sum\limits_{m=0}^{h-1}\chi_p(z+m) \bigg \rvert > \frac{HhQ}{2}-Qp^{\nicefrac{1}{4}} h^2=Qh\big(\frac{H}{2}-hp^{\nicefrac{1}{4}}\big)$$
+$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\bigg \lvert \sum\limits_{m=0}^{h-1}\chi_2(z+m) \bigg \rvert > \frac{HhQ}{2}-Qp^{\nicefrac{1}{4}} h^2=Qh\big(\frac{H}{2}-hp^{\nicefrac{1}{4}}\big)$$
 Taking $h<\frac{1}{4}p^{\nicefrac{-1}{4}}H$, and using the terminology from lemma 2,
 $$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h(z) \rvert > \frac{HhQ}{4}$$
 Using Holder's inequality,
@@ -194,7 +197,7 @@ $$\sum\limits_{z=0}^{p-1}\lvert S_h(z) \rvert^{2r}>\Big(\frac{1}{8}\Big)^{2r}HQh
 From lemma 2,
 $$(2r)^{r}h^{r}p+h^{2r}r(2p^{\nicefrac{1}{2}}+1)>\Big(\frac{1}{8}\Big)^{2r}HQh^{2r}$$
 For large enough $p$, the second term of the LHS diminishes compared to the RHS as $HQ\geq \frac{p^{\nicefrac{1}{2}+\delta}}{4\log p}$. Now, we take $h=\left \lfloor \frac{1}{5}p^{\nicefrac{-1}{4}}H \right \rfloor$. Since $h \geq \frac{1}{5}p^{\delta}$, we take $r>\delta^{-1}$, which results in the first term of the LHS diminishing with respect to the RHS.
-Thus, we have arrived at a contradiction. Our assumption that $\Big \lvert \sum\limits_{x=N+1}^{N+H}\chi_p(x)\Big \rvert=H$ was wrong, hence the first quadratic non-residue is less than $p^{\nicefrac{1}{4}+\delta}$ for any $\delta>0$.
+Thus, we have arrived at a contradiction. Our assumption that $\Big \lvert \sum\limits_{x=N+1}^{N+H}\chi_2(x)\Big \rvert=H$ was wrong, hence the first quadratic non-residue is less than $p^{\nicefrac{1}{4}+\delta}$ for any $\delta>0$.
 %
 %
 \section{Extension to general characters}
@@ -203,16 +206,21 @@ Thus, we have arrived at a contradiction. Our assumption that $\Big \lvert \sum\
 %Anlaogous proof of lemma 2 (but complete), without too deep an explanation, extend the o(p^1/2) simply
 %
 %Literally the same p^(1/4) section with extra modulus symbols. Very compact proof
-Now we consider a natural extension of what we have proven so far: extending the result to general characters. Although a more general form of lemma 1 for general characters exists, a possible impediment in reapplying the former proof technique is dealing with the complex numbers involved in general characters. But as it turns out, we can easily extend the previously used techniques and theorems in the complex domain to obtain the same results for a general character.
+Now we consider a natural extension of what we have proven so far: extending the result to general characters, i.e. finding an upper bound on the largest interval of elements in which a character assumes the same value. Although a more general form of lemma 1 for general characters exists, a possible impediment in reapplying the former proof technique is dealing with the complex numbers involved in general characters. But as it turns out, we can easily extend the previously used techniques and theorems in the complex domain to obtain the same results for a general character.
 
 The generalised form of lemma 1 for any character is:
-\begin{lemma}
+\begin{lemma} \label{lemma4}
 \cite{schmidt}Let $\chi$ be a non-trivial character of order $d$. Let $f(x)$ be a polynomial which is not a perfect $d^{th}$ power, with coefficients from $\mathbb{Z}$. Let $f(x)$ have $\nu$ distinct zeroes. Then,
 $$\Big\lvert\sum\limits_{x=0}^{p-1}\chi(f(x))\Big\rvert\leq (\nu -1)p^{\nicefrac{1}{2}}$$
 \end{lemma}
 We henceforth assume $d \divides p-1$, because since $\chi^{d}(x)=1$ and $\chi(x^{p-1})=\chi^{p-1}(x)=1$ for $x\neq0$, $\chi^{gcd(d,p-1)}(x)=1$ for $x=\neq0$, and hence any character of order $d$ is also a character of order $gcd(d,p-1)$, and hence we consider $gcd(d,p-1)$ as the character order.
-We now use lemma 4 to derive an equivalent form of lemma 2. Again, we define
-$$S_h(x)=\sum\limits_{n=0}^{h-1}\chi(x+n)$$
+We now use lemma \ref{lemma4} to derive lemma \ref{lemma2statement} for a general character.
+%%
+\subsection{Proving Lemma \ref{lemma2statement} for a General Character}
+We define
+\begin{equation} \label{definesh}
+S_h(x)=\sum\limits_{n=0}^{h-1}\chi(x+n)
+\end{equation}
 We then expand the sum $\lvert S_h(x)\rvert^{2r}$:
 $$\lvert S_h(x)\rvert^{2r}= \Big\lvert\sum\limits_{n=0}^{h-1}\chi(x+n)\Big\rvert^{2r}= \Big(\sum\limits_{n=0}^{h-1}\chi(x+n)\Big)^r\Big(\overline{\sum\limits_{n=0}^{h-1}\chi(x+n)}\Big)^r$$
 %\vspace*{-\baselineskip}
@@ -237,20 +245,75 @@ $$=\sum\limits_{m_1=1}^h\sum\limits_{m_2=1}^h...\sum\limits_{\mathclap{m_{2r}=1}
 \sum_{x=0}^{p-1}\lvert S_h(x)\rvert^{2r}= \sum\limits_{m_1=1}^h\sum\limits_{m_2=1}^h...\sum\limits_{m_{2r}=1}^h
 \sum_{x=0}^{p-1}\chi\Big(\prod_{i=1}^r(x+m_i)\prod_{i=r+1}^{2r}(x+m_{i})^{p-2}\Big)
 \end{equation}
-In equation \ref{generaltuple}, we must seperate the perfect $d^{th}$ power polynomials from the rest. We do this, again as in the case of quadratic character, by examining the tuples formed by $(m_1, m_2...m_{2r})$. Now since $d \divides p-1\Rightarrow \gcd(d, p-2)=1$, no less than a power of $d$ of $(x+m)^{p-2}$ will form a perfect $d^{th}$ power. Thus a tuple represents a a perfect $d^{th}$ power polynomial if each element occuring in $m_1, m_2...m_{r}$ is paired with an occurence of the same element in $m_{r+1}, m_{r+2}...m_{2r}$, and the rest of the occurences of elements in $m_1, m_2...m_{r}$ are in a multiple of $d$, as well the rest of the occurences of elements in $m_{r+1}, m_{r+2}...m_{2r}$ are in a multiple of $d$. Thus the total number of such polynomials is:
+In equation \ref{generaltuple}, we must seperate the perfect $d^{th}$ power polynomials from the rest. We do this, again as in the case of quadratic character, by examining the tuples formed by $(m_1, m_2...m_{2r})$. Now since $d \divides p-1\Rightarrow \gcd(d, p-2)=1$, no less than a power of $d$ of $(x+m)^{p-2}$ will form a perfect $d^{th}$ power. Thus a tuple represents a perfect $d^{th}$ power polynomial if each element occuring in $m_1, m_2...m_{r}$ is paired with an occurence of the same element in $m_{r+1}, m_{r+2}...m_{2r}$, and the rest of the occurences of elements in $m_1, m_2...m_{r}$ are in a multiple of $d$, as well the rest of the occurences of elements in $m_{r+1}, m_{r+2}...m_{2r}$ are in a multiple of $d$. Thus the total number of such polynomials is:
 $$\sum_{k=1}^{\lfloor\nicefrac{r}{d}\rfloor}\Bigg(\frac{\binom{r}{d}\binom{r-d}{d}...\binom{r-(k-1)d}{d}}{k!}\Bigg)^2\frac{\binom{r-kd}{1}^2\binom{r-kd-1}{1}^2...\binom{1}{1}^2}{(r-kd)!}h^{2k+r-kd}$$
 \[
 \leq (r!)^2 h^{r}\sum_{k=1}^{\lfloor\nicefrac{r}{d}\rfloor}\max_k \frac{1}{(d!)^{2k}(r-kd)!(k!)^2} \leq \frac{r}{d}.(r!)^2 h^{r} \leq r^{2r}h^r
 \]
 Thus, these polynomials contribute at most $r^{2r}h^rp$ to the sum in \ref{generaltuple}.
 The total no. of the rest of the polynomials is trivially at most $h^{2r}$. Thus, these contribute at most $h^{2r}(2r-1)p^{\nicefrac{1}{2}}$. Hence, we arrive at the following lemma:
-\begin{lemma} \label{genlemma2}
+\begin{lemma*}
 Let $S_h(x)=\sum\limits_{n=1}^{h}\chi(x+n)$. Then,
-\begin{equation} \label{lemma5}
-\sum\limits_{x=0}^{p-1}\lvert S_h(x)\rvert^{2r}\leq h^{r}(2r)^{r}p+2h^{2r}rp^{\nicefrac{1}{2}}
+\begin{equation} \label{lemma2gen}
+\sum\limits_{x=0}^{p-1}\lvert S_h(x)\rvert^{2r}\leq h^{r}(2r)^{r}p+2h^{2r}rp^{\nicefrac{1}{2}}\leq h^{r}(2r)^{r}p+h^{2r}r(2p^{\nicefrac{1}{2}}+1)
 \end{equation}
-\end{lemma}
-
+\end{lemma*}
+Now, we can derive the $O(p^{\nicefrac{1}{2}})$ and $p^{\nicefrac{1}{4}+\delta}$ bounds for general characters almost identical to the method for quadratic residues. We derive the $O(p^{\nicefrac{1}{2}})$ bound first, followed by the $p^{\nicefrac{1}{4}+\delta}$ bound, both by mimicking most steps with minor adjustments in assumptions and reasoning.%% refine.
+%%
+\subsection{The $O(p^{\nicefrac{1}{2}})$ bound for a general character}
+We prove the bound of $O(p^{\nicefrac{1}{2}})$ on the largest interval of elements in $\mathbb{F}_p$ on which $\chi$ assumes the same value. We arrive at the result by contradiction as in the case of quadratic characters. Let the largest interval of elements in $\mathbb{F}_p$, on which $\chi$ assumes the same value, be given by $h$. Then, using the definition in equation \ref{definesh}, $\lvert S_h(z)\rvert=h$. Then we can say,
+\begin{equation} \label{intervcontrgen}
+\sum\limits_{x=0}^{p-1}\lvert S_h(x)\rvert^{2r}\geq\sum\limits_{x=z}^{z+\lfloor\nicefrac{h}{4}\rfloor}\lvert S_h(x)\rvert^{2r} \geq h^{2r}+(h-2)^{2r}+...+(h-2\lfloor\nicefrac{h}{4}\rfloor)^{2r} \geq \frac{h^{2r+1}}{2^{2r+2}}
+\end{equation}
+as $\lvert S_h(x+k)\rvert \geq \lvert S_h(x)\rvert-2k$. Then from equations \ref{lemma2gen} and \ref{intervcontrgen}:
+$$ \frac{h^{2r+1}}{2^{2r+2}} \leq h^{r}(2r)^{r}p+h^{2r}r(2p^{\nicefrac{1}{2}}+1)$$
+Take $r=1$ and divide both sides by $h^{2r}$. We get:
+\begin{equation} \label{contreq}
+\frac{h}{2^{4}} \leq 2h^{-1}p+(2p^{\nicefrac{1}{2}}+1)
+\end{equation}
+which is a contradiction for $h>cp^{\nicefrac{1}{2}}$, for some constant $c$, for large enough $p$. Thus, $h\in O(p^{\nicefrac{1}{2}})$.
+%%
+\subsection{The $p^{\nicefrac{1}{4}+\delta}$ bound for a general character}
+We prove again by contradiction, the $p^{\nicefrac{1}{4}+\delta}$ bound, for any $\delta>0$, on the largest interval of elements in $\mathbb{F}_p$ on which $\chi$ assumes the same value. Say $H>p^{\nicefrac{1}{4}+\delta}$ for some $\delta>0$, and $\Big \lvert \sum\limits_{x=N+1}^{N+H}\chi(x)\Big \rvert=H$. We know that for $H>cp^{\nicefrac{1}{2}}$, where $c$ is some appropriate constant, there can be no interval of all quadratic residues or all non-residues. Thus, we assume $H\leq cp^{\nicefrac{1}{2}}$\\
+We take the pair-wise co-prime numbers $q$ re2quired for the application of lemma 3 to be the primes in the range:
+$$\frac{p^{\nicefrac{1}{4}}}{2} \leq q \leq p^{\nicefrac{1}{4}}$$
+This satisfies the constraint in (\ref{lemma3cond}) for large enough $p$. The number of primes $q$ is given by $Q=\pi(p^{\nicefrac{1}{4}})-\pi(\frac{p^{\nicefrac{1}{4}}}{2})=o(p^{\nicefrac{1}{4}})$ by the prime number theorem. Now proceeding with the proof:
+\[\bigg \lvert\sum\limits_{x=N+1}^{N+H}\chi(x)\bigg \rvert=\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{\substack{x=N+1\\x+tp\divides q}}^{N+H}\chi(x+tp)\bigg \rvert=H \]
+$$\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{\substack{x=N+1\\x+tp\divides q}}^{N+H} \chi \Big(\frac{x+tp}{q}.q\Big)\bigg \rvert=H$$
+$$\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{z\in I(q,t)}\chi(z)\chi(q)\bigg \rvert=H$$
+$$\sum\limits_{t=0}^{t=q-1}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi(z)\chi(q)\bigg \rvert \geq H$$
+$$\sum_q\sum\limits_{t=0}^{t=q-1}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi(z)\bigg \rvert \geq HQ$$
+\begin{equation} \label{seperationgen}
+\sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi(z)\bigg \rvert+\sum_q\sum\limits_{\substack{t=0\\t\not \in T(q)}}^{q-1}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi(z)\bigg \rvert \geq HQ
+\end{equation}
+Now,
+\begin{equation} \label{overlappinggen}
+\sum_q\sum\limits_{\substack{t=0\\t\not \in T(q)}}^{q-1}\bigg\lvert\sum\limits_{z\in I(q,t) }\chi(z)\bigg \rvert < 4Q^2 Hp^{\nicefrac{-1}{4}}
+\end{equation}
+Using \ref{seperationgen} and \ref{overlappinggen},
+$$\sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi(z)\bigg \rvert >\frac{HQ}{2}$$
+\begin{equation}
+\sum\limits_{m=0}^{h-1}\sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi(z)\bigg \rvert > \frac{HhQ}{2}
+\end{equation} \label{sliceineqgen}
+for large enough $p$. Now, we have
+$$\sum\limits_{\mathclap {z\in I(q,t)}}\chi(z+m)= \sum\limits_{\mathclap{z\in I(q,t)}}\chi(z) + \sum\limits_{i=1}^m\chi(b_i)-\sum\limits_{i=1}^m\chi(d_i)$$
+where $b_i$ and $d_i$ are some elements of $\mathbb{F}_p$. This implies
+$$\sum\limits_{m=0}^{h-1}\sum\limits_{z\in I(q,t)}\chi(z+m)= \sum\limits_{m=0}^{h-1}\sum\limits_{z\in I(q,t)}\chi(z) + \sum\limits_{m=0}^{h-1}\Big(\sum\limits_{i=1}^m\chi(b_i)-\sum\limits_{i=1}^m\chi(d_i)\Big)$$
+$$\Bigg\lvert\sum\limits_{m=0}^{h-1}\sum\limits_{z\in I(q,t)}\chi(z+m)\Bigg\rvert= \Bigg\lvert\sum\limits_{m=0}^{h-1} \sum\limits_{z\in I(q,t)}\chi(z) + \sum\limits_{m=0}^{h-1}\Big(\sum\limits_{i=1}^m\chi(b_i)-\sum\limits_{i=1}^m \chi(d_i)\Big)\Bigg\rvert$$
+$$\Bigg\lvert\sum\limits_{m=0}^{h-1}\sum\limits_{z\in I(q,t)}\chi(z+m)\Bigg\rvert \geq h\big\lvert\sum\limits_{\mathclap{ z\in I(q,t)}}\chi(z)\big\rvert -\Bigg\lvert\sum\limits_{m=0}^{h-1}\Big(\sum\limits_{i=1}^m\chi(b_i)-\sum\limits_{i=1}^m \chi(d_i)\Big)\Bigg\rvert$$
+$$\sum\limits_{m=0}^{h-1}\Bigg\lvert\sum\limits_{z\in I(q,t)}\chi(z+m)\Bigg\rvert \geq h\big\lvert\sum\limits_{\mathclap{ z\in I(q,t)}}\chi(z)\big\rvert -\Bigg\lvert\sum\limits_{m=0}^{h-1}2m\Bigg\rvert \geq h\big\lvert\sum\limits_{\mathclap{z\in I(q,t)}}\chi(z)\big\rvert -h^2$$
+$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\bigg \lvert \sum\limits_{m=0}^{h-1}\chi(z+m) \bigg \rvert \geq h\sum_q\sum\limits_{t\in T(q)}\bigg \lvert \sum\limits_{z\in I(q,t)}\chi(z)\bigg \rvert-Qp^{\nicefrac{1}{4}}h^2$$
+So from equation \ref{sliceineqgen}
+$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\bigg \lvert \sum\limits_{m=0}^{h-1}\chi(z+m) \bigg \rvert > Qh\big(\frac{H}{2}-hp^{\nicefrac{1}{4}}\big)$$
+Taking $h<\frac{1}{4}p^{\nicefrac{-1}{4}}H$, and using the terminology from \ref{definesh},
+$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h(z) \rvert > \frac{HhQ}{4}$$
+Using Holder's inequality,
+$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h(z) \rvert \leq \bigg ( \sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h(z) \rvert^{2r} \bigg )^{\nicefrac{1}{2r}}\bigg ( \sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}1 \bigg )^{1-\nicefrac{1}{2r}}$$
+$$\sum\limits_{z=0}^{p-1}\lvert S_h(z) \rvert^{2r}> \sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h(z) \rvert^{2r}> \Big(\frac{1}{8}\Big)^{2r}HQh^{2r}$$
+From lemma 2,
+$$(2r)^{r}h^{r}p+h^{2r}r(2p^{\nicefrac{1}{2}}+1)>\Big(\frac{1}{8}\Big)^{2r}HQh^{2r}$$
+For large enough $p$, the second term of the LHS diminishes compared to the RHS as $HQ\geq \frac{p^{\nicefrac{1}{2}+\delta}}{4\log p}$. Now, we take $h=\left \lfloor \frac{1}{5}p^{\nicefrac{-1}{4}}H \right \rfloor$. Since $h \geq \frac{1}{5}p^{\delta}$, we take $r>\delta^{-1}$, which results in the first term of the LHS diminishing with respect to the RHS.
+Thus, we have arrived at a contradiction. Our assumption that $\Big \lvert \sum\limits_{x=N+1}^{N+H}\chi(x)\Big \rvert=H$ was wrong, hence the largest interval of elements of $\mathbb{F}_p$ on which $\chi$ assumes the same value is less than $p^{\nicefrac{1}{4}+\delta}$ for any $\delta>0$.
 %
 %
 \section{Extensions to quadratic arguments of $\chi$}

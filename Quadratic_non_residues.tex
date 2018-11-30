@@ -15,7 +15,9 @@
 \newtheorem{theorem}{Theorem}
 \newtheorem*{theorem*}{Theorem}
 \newtheorem*{claim*}{Claim}
-\newenvironment{claimproof}[1]{\par\noindent\underline{Proof:}\space#1}{\hfill $\diamond$ \vspace{3mm} \par}
+\newtheorem*{aim*}{Aim}
+\newenvironment{claimproof}[1]{\vspace{2.5mm}\par\noindent\underline{Proof:}\space#1}{\hfill $\diamond$ \vspace{2.5mm} \par}
+\newenvironment{aimsol}[1]{\vspace{2.5mm}\par\noindent\underline{Solution:}\space#1}{\hfill $\diamond$ \vspace{2.5mm} \par}
 
 \newcommand{\ignore}[1]{}
 
@@ -41,6 +43,7 @@
 %holder's inequality
 %euclids method
 %triangle inequality
+%gcd of polynomials
 %
 \section{Symbols and conventions}
 %Character is
@@ -452,7 +455,48 @@ Thus, we have arrived at a contradiction. Our assumption that $\Big \lvert \sum\
 \end{proof}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Extensions to polynomial arguments of $\chi$}
+\chapter{Extensions to quadratic functions of intervals}
+In this chapter, we describe a solution to a subproblem of factorizing polynomials in finite fields\ignore{a practically relevant problem}, the worst-case complexity of which can be bounded by extending the the scope of lemma \ref{lemma2statement}. We will also look at why theorem \ref{thm:p4bound} cannot be extended to improve the solution.
+%
+%
+\section{The problem and a solution}
+%
+Factorizing polynomials in finite fields, while being an interesting problem on its own, is also a relevant problem  to many areas, like coding theory and cryptography. A basic subproblem of it is factorizing a univariate quadratic polynomial in $\mathbb{F}_p$. We now formally describe this problem.
+%
+\begin{aim*}
+Given a quadratic univariate polynomial $f(x)=ax^2+bx+c$, $a\neq 0$ with $a,b,c\in\mathbb{F}_p$, determine both its (non-constant) factors $(x+d)$ and $(x+e)$ such that $f(x)=a(x+d)(x+e)$, if such factors exist.
+\end{aim*}
+%
+Since checking for square factors of quadratic polynomials can easily be done by checking if $b^2=2^{2}ac$, for the rest of the chapter we only consider the aim of factorizing square-free polynomials.\ignore{We next describe a method to achieve this.}
+
+Say $f(x)$ is completely factorizable in $\mathbb{F}_p$ with factors $(x+d)$ and $(x+e)$. Since the $\gcd$ of two polynomials can be calculated in $\log d_e$ time, where $d_e$ is the maximum of the degrees of both polynomials, so calculating the $\gcd$ of $f(x)$ and a polynomial (say represented generically by $g_e(x)$) with known factors can be an efficient method of testing if $f(x)$ contains any of the known factors. Thus, if we were to take some $g_e(x)$ having exactly one of $(x+d)$ and $(x+e)$ as a factor, say in this case the factor $(x+d)$, then
+\[\gcd(f(x),g_e(x))=(x+d)\]
+and thus we can easily factorise $f(x)$ by dividing it by $(x+d)$ using polynomial long division. Along that line, we consider the polynomial $x^{\frac{p-1}{2}}-1$. It is of small size ($O(1)$), while having as factors exactly half of the set $\{(x+1),(x+2),...(x+p-1)\}$, i.e. precisely those $(x+i), i\in \mathbb{F}_p$ such that $i$ is a quadratic residue mod $p$ because for $j\in\mathbb{F}_p$:
+$$j^{\frac{p-1}{2}}=1 \Leftrightarrow j\text{ is a quadratic residue}$$
+Thus taking its $\gcd$ with any quadratic polynomial takes low memory as well as time, with an intuitively good chance of exactly one factor of the quadratic polynomial as the $\gcd$. We now detail an initial solution to acheive our aim:
+\begin{aimsol}
+Let $g(x)=x^{\frac{p-1}{2}}-1$. Compute the $\gcd$ of $f(x)$ and $g(x)$. If the result is a linear polynomial, say $(x+k)$, then $f(x)$ can easily be factorised by plynomial division. If, however, the result is not a linear polynomial, and is instead constant or quadratic, we apply a trick: We compute the $\gcd$ of $g(x)$ and $f(x+1)$. If $f(x)$ is factorisable with factors $(x+d)$ and $(x+e)$, then $f(x+1)$ has factors $(x+d+1)$ and $(x+e+1)$. The factors of $f(x+1)$ are, thus, (generally) different from the factors of $f(x)$.
+
+Thus, despite the $\gcd$ of $g(x)$ and $f(x)$ not being linear, the $\gcd$ of $g(x)$ and $f(x+1)$ may be a linear polynomial. If it is not linear again, we reapply our trick repeatedly to increment the argument of polynomial function $f$ by constant $1$ at each application, till we obtain an $i\in\mathbb{F}_p$ such that the $\gcd$ of $g(x)$ and $f(x+i)$ is a linear polynomial. We then factorize $f(x+i)$ using its $\gcd$ with $g(x)$, to obtain the factors say $(x+d_i)$ and $(x+e_i)$ of $f(x+i)$ such that $f(x+i)=a(x+d_i)(x+e_i)$. Then $f(x)=a(x-i+d_i)(x-i+e_i)$, and thus the factors of $f(x)$ are $(x+e_i-i)$ and $(x+d_i-i)$.
+
+However, if we are unable to obtain such an $i$ that the $\gcd$ of $g(x)$ and $f(x+i)$ is a linear polynomial throughout $\mathbb{F}_p$, we conclude that $f(x)$ is irreducible in $\mathbb{F}_p$.
+\end{aimsol}
+%
+The worst-case time complexity of the above solution is $O(p\log p)$, which is worse than if we had simply divided $f(x)$ by each possible linear factor. However, if we we prove an upper bound on the size of $i$ such that $\gcd$ of $g(x)$ and $f(x+i)$ is a linear polynomial if $f(x)$ is factorizable, we can drastically improve the worst-case time complexity, since if no such $i$ is found in the solution uptil the upper bound, we can safely conclude it is irreducible.
+
+If $f(x)$ is factorisable into factors $(x+d)$ and $(x+e)$, the $i$ obtained is equal to the least $j$ such that $f(x+j)$ and $g(x)$ have a linear $\gcd$, i.e. the least $j$ such that $f(x+j)$ has exactly one factor, say $(x+d+j)$, which is a factor of  $g(x)$. This means that $d+i$ is a quadratic residue while $e+i$ is not, and also that each pair of $(d+j)$ and $(e+j)$ have the same quadratic residuosity for the same $j$ when $0\leq j<i$. Hence, for $0\leq j<i$, $\chi_2((d+j)(e+j))=1$, while $\chi_2((d+i)(e+i))=-1$ (we ignore cases where $\chi_2((d+j)(e+j))=0$, as they can be easily eliminated before computing the $\gcd$ for each $f(x+j)$). Hence the 
+%we want to obtain an upper bound on the value of
+%We obtain such a bound in the next section.
+%
+%
+\section{}
+%
+
+%
+%Given a quadratic univariate square-free polynomial in $x$, $f(x)=ax^2+bx+c$ with $a,b,c\in\mathbb{F}_p$,
+%
+%We now prove the following claim about the time complexity of a method to factorize such polynomials which can be bounded
+%We next describe a method of factorizing square-free quadratic univariate polynomials in $\mathbb{F}_p$.
 %
 %
 \section{Problems with attempts at further generalisation}

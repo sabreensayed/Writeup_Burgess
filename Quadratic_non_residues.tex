@@ -247,12 +247,16 @@ This satisfies the constraint in (\ref{lemma3cond}) for large enough $p$. The nu
 \bigg \lvert\sum\limits_{x=N+1}^{N+H}\chi_2(x)\bigg \rvert=H
 \end{equation}
 In the next few steps, we proceed to transform the interval in eq. \ref{eq:p4assum} into several smaller intervals as discussed in the previous section. For a fixed $x$, $x+tp$ is divisible by $q$ for exactly one value of $t\in\{0,1,...q-1\}$. Also $\chi(x+tp)=\chi(x)$. Thus:
-$$\bigg \lvert\sum\limits_{x=N+1}^{N+H}\chi_2(x)\bigg \rvert=\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{\substack{x=N+1\\x+tp\divides q}}^{N+H}\chi_2(x+tp)\bigg \rvert=H$$
+\[
+\bigg \lvert\sum\limits_{x=N+1}^{N+H}\chi_2(x)\bigg \rvert=\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{\substack{x=N+1\\x+tp\divides q}}^{N+H}\chi_2(x+tp)\bigg \rvert=H
+\]
 Since $q\divides x+tp$, thus $x+tp=qz$ for some $z\in\mathbb{Z}$, $\Rightarrow z=\frac{x+tp}{q}$.\\
 For $N+1\leq x \leq N+H$, we see that all such corresponding $z$ obtained are the integer values in $I(q,t)$ according to lemma 3, $t$ being the corresponding values such that $q \divides x+tp$.
 $$\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{\substack{x=N+1\\q\divides x+tp}}^{N+H} \chi_2 \Big(\frac{x+tp}{q}.q\Big)\bigg \rvert=H$$
 $$\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{z\in I(q,t)}\chi_2(z.q)\bigg \rvert=H$$
-$$\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{z\in I(q,t)}\chi_2(z)\chi_2(q)\bigg \rvert=H$$
+\begin{equation} \label{chapter3refeq}
+\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{z\in I(q,t)}\chi_2(z)\chi_2(q)\bigg \rvert=H
+\end{equation}
 Now, since $\lvert a\rvert + \lvert b\rvert \geq \lvert a+b \rvert$
 $$\sum\limits_{t=0}^{t=q-1}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_2(z)\chi_2(q)\bigg \rvert \geq H$$
 $$\sum_q\sum\limits_{t=0}^{t=q-1}\bigg \lvert\chi_2(q)\sum\limits_{z\in I(q,t)}\chi_2(z)\bigg \rvert \geq HQ$$
@@ -456,12 +460,12 @@ Thus, we have arrived at a contradiction. Our assumption that $\Big \lvert \sum\
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Extensions to quadratic functions of intervals}
-In this chapter, we describe a solution to a subproblem of factorizing polynomials in finite fields\ignore{a practically relevant problem}, the worst-case complexity of which can be bounded by extending the the scope of lemma \ref{lemma2statement}. We will also look at why theorem \ref{thm:p4bound} cannot be extended to improve the solution.
+In this chapter, we describe a solution to a subproblem of factorizing polynomials in finite fields\ignore{a practically relevant problem}, the worst-case complexity of which can be bounded by extending the scope of lemma \ref{lemma2statement}. We will also look at why theorem \ref{thm:p4bound} cannot be extended to improve the solution.
 %
 %
 \section{The problem and a solution}
 %
-Factorizing polynomials in finite fields, while being an interesting problem on its own, is also a relevant problem  to many areas, like coding theory and cryptography. A basic subproblem of it is factorizing a univariate quadratic polynomial in $\mathbb{F}_p$. We now formally describe this problem.
+Factorizing polynomials in finite fields, while being an interesting problem on its own, is also a relevant problem to many areas, like coding theory and cryptography. A basic subproblem of it is factorizing a univariate quadratic polynomial in $\mathbb{F}_p$. We now formally describe this problem.
 %
 \begin{aim*}
 Given a quadratic univariate polynomial $f(x)=ax^2+bx+c$, $a\neq 0$ with $a,b,c\in\mathbb{F}_p$, determine both its (non-constant) factors $(x+d)$ and $(x+e)$ such that $f(x)=a(x+d)(x+e)$, if such factors exist.
@@ -482,24 +486,67 @@ Thus, despite the $\gcd$ of $g(x)$ and $f(x)$ not being linear, the $\gcd$ of $g
 However, if we are unable to obtain such an $i$ that the $\gcd$ of $g(x)$ and $f(x+i)$ is a linear polynomial throughout $\mathbb{F}_p$, we conclude that $f(x)$ is irreducible in $\mathbb{F}_p$.
 \end{aimsol}
 %
-The worst-case time complexity of the above solution is $O(p\log p)$, which is worse than if we had simply divided $f(x)$ by each possible linear factor. However, if we we prove an upper bound on the size of $i$ such that $\gcd$ of $g(x)$ and $f(x+i)$ is a linear polynomial if $f(x)$ is factorizable, we can drastically improve the worst-case time complexity, since if no such $i$ is found in the solution uptil the upper bound, we can safely conclude it is irreducible.
+The worst-case time complexity of the above solution is $O(p\log p)$, which is worse than if we had simply divided $f(x)$ by each possible linear factor. However, if we prove an upper bound on the size of $i$ such that $\gcd$ of $g(x)$ and $f(x+i)$ is a linear polynomial if $f(x)$ is factorizable, we can drastically improve the worst-case time complexity, since if no such $i$ is found in the solution uptil the upper bound, we can safely conclude it is irreducible.
 
-If $f(x)$ is factorisable into factors $(x+d)$ and $(x+e)$, the $i$ obtained is equal to the least $j$ such that $f(x+j)$ and $g(x)$ have a linear $\gcd$, i.e. the least $j$ such that $f(x+j)$ has exactly one factor, say $(x+d+j)$, which is a factor of  $g(x)$. This means that $d+i$ is a quadratic residue while $e+i$ is not, and also that each pair of $(d+j)$ and $(e+j)$ have the same quadratic residuosity for the same $j$ when $0\leq j<i$. Hence, for $0\leq j<i$, $\chi_2((d+j)(e+j))=1$, while $\chi_2((d+i)(e+i))=-1$ (we ignore cases where $\chi_2((d+j)(e+j))=0$, as they can be easily eliminated before computing the $\gcd$ for each $f(x+j)$). Hence the 
-%we want to obtain an upper bound on the value of
-%We obtain such a bound in the next section.
+%claim and proof good
+If $f(x)$ is factorisable into factors $(x+d)$ and $(x+e)$, the $i$ obtained is equal to the least $j$ such that $f(x+j)$ and $g(x)$ have a linear $\gcd$, i.e. the least $j$ such that $f(x+j)$ has exactly one factor, say $(x+d+j)$, which is a factor of  $g(x)$. This means that $d+i$ is a quadratic residue while $e+i$ is not, and also that each pair of $(d+j)$ and $(e+j)$ have the same quadratic residuosity for the same $j$ when $0\leq j<i$. Hence, for $0\leq j<i$, $\chi_2((d+j)(e+j))=1$, while $\chi_2((d+i)(e+i))=-1$ (we ignore cases where $\chi_2((d+j)(e+j))=0$, as they can be easily eliminated before computing the $\gcd$ for each $j$). Thus, an upper bound on $i$ translates to an upper bound on the length of an interval (with general element say $y$) in $\mathbb{F}_p$ such that $\chi((q+y)(r+y))=1$ for some $q,r\in \mathbb{F}_p$. We obtain such a (non-trivial) bound using the lemma proved in the next section.
 %
 %
-\section{}
+\section{Lemma 2 extended}
 %
+Our aim is to find an upper bound on the maximum length of an interval, say $I$, in $\mathbb{F}_p$, such that $\chi_2((y+q)(y+r))=1 \text{ }\forall y\in I$ for some $q,r\in \mathbb{F}_p$. For this, we proceed in a similar manner as for finding the longest interval of quadratic residues or non-residues, intuitively due to lemma \ref{lemma4} being applicable to any square-free polynomial. We are able prove an extended version of lemma \ref{lemma2statement} for quadratic functions of intervals:
+%
+\begin{lemma} \label{lemma5statement}
+Let $f(x)=(x+a)(x+b)$ be a square-free polynomial, where $a,b\in \mathbb{F}_p$,and let $S_h(x)=\sum\limits_{n=1}^{h} \chi_2(f(x+n))$, where $h<p$. Then,
+\begin{equation} \label{lemma5}
+\sum\limits_{x=0}^{p-1}\lvert S_h(x)\rvert ^{2r}\leq h^{r}(2r)^{r}p+h^{2r}r(4p^{\nicefrac{1}{2}}+1)
+\end{equation}
+\end{lemma}
+\begin{proof}
+We procede in a fashion very similar to lemma \ref{lemma2statement}.
+\[S_h(x)=\sum\limits_{n=1}^{h} \chi_2\big(f(x+n)\big)\]
+\[(S_h(x))^{2r}=\Bigg(\sum\limits_{n=1}^{h} \chi_2\big(f(x+n)\big)\Bigg)^{2r}\]
+\[=\sum\limits_{m_1=1}^h\sum\limits_{m_2=1}^h...\sum\limits_{\mathclap{m_{2r}=1}}^h\chi_2\big(f(x+m_1)\big)\chi_2\big(f(x+m_2)\big)...\chi_2\big(f(x+m_{2r})\big)\]
+\[\sum\limits_{x=0}^{p-1}(S_h(x))^{2r} = \sum\limits_{x=0}^{p-1}\sum\limits_{m_1=1}^h\sum\limits_{m_2=1}^h... \sum\limits_{\mathclap{m_{2r}=1}}^h\chi_2\big(f(x+m_1)f(x+m_2)...f(x+m_{2r})\big)\]
+\[=\sum\limits_{x=0}^{p-1}\sum\limits_{m_1=1}^h\sum\limits_{m_2=1}^h... \sum\limits_{\mathclap{m_{2r}=1}}^h\chi_2\big((x+m_1+a)(x+m_1+b)...(x+m_{2r}+a)(x+m_{2r}+b)\big)\]
 
+
+To evaluate this sum we follow the dichotomy procedure used in the proof of lemma \ref{lemma2statement}. We first determine which values of the tuple $(m_1, m_2,...m_{2r})$ (which correspond bijectively to the polynomial $F(x)=\prod_{k=1}^{2r}f(x+m_k)$ represented inside the summation) represent a perfect square: Since the polynomial representation $(x+m_1+a) (x+m_1+b) ... (x+m_{2r}+a) (x+m_{2r}+b)$ of $F(x)$ is completely factorised, it will be a square when each distinct factor occurs with an even power.
+
+We now determine how many tuples represent a perfect square: Say a tuple $(t_1, t_2,...,t_{2r})$ represents a perfect square. Say there are $s$ pairs of $t_i$ and $t_j$, both being elements in the multiset\footnotemark $\{t_1, t_2,...,t_{2r}\}$ (each element in all pairs is a different multiset element, i.e. at a distinct position in the tuple), such that $t_i=t_j$, where $0\leq s\leq r$. Each pair corresponds to the factors $f(x+t_i)$ and $f(x+t_i)$ of $F(x)$. Since $t_i=t_j$, $f(x+t_i)f(x+t_i)$ is a square, and hence $\frac{F(x}{f(x+t_i)f(x+t_i)})$ is a square.
+
+Now, let the remaining elements of $\{t_1, t_2,...,t_{2r}\}$, after removing all $s$ pairs, be the multiset $T_o$. Then the elements of $T_o$ are all distinct. The factors in $F(x)$ corresponding to the elements of $T_o$ also form a perfect square, say the polynomial $F_T$. But since the elements of $T_o$ are all distinct, a linear factor of $F_T$ (say) $(x+a+t_u)$ can only be equal to one other linear factor of $F_T$, of the form $(x+b+t_v)$, $t_u,t_v\in T_o$, to form the perfect square that is $F_T$.
+Similarly, $(x+a+t_v)$ can only be equal to a (possible) factor $(x+b+t_w)$ of $F_T$, where $t_w=t_v+(a-b)$, thus such a $t_w$ must exist in $T_o$. For pairing $(x+a+t_w)$, we need the existence of $t_w+(a-b)=t_v+2(a-b)$ in $T_o$. Since $a-b \not\divides p$, $t_v, t_v+(a-b), t_v+2(a-b),...t_v+(p-1)(a-b)$ are all distinct and thus form all the elements of $\mathbb{F}_p$, and also have to be in $T_o$ for $F_T$ to be a perfect square. But since $T_o\subseteq \{1,2,...h\}$, this is not possible. Hence if $f(x)$ is a square, elements in multiset $\{t_1, t_2,...,t_{2r}\}$ can be exhaustively paired.
+
+Thus there can be less than $h^r(2r)^r$ tuples which represent perfect squares as calculated in Chapter 2, and thus their contribution to the sum is at most $ph^r(2r)^r$. And there can be trivially $h^{2r}$ tuples for polynomials which are not a perfect square. By lemma \ref{lemma4}, we know that each polynomial contributes at most $(4r-1)p^{\nicefrac{1}{2}}$, and thus the contribution to the sum is at most $h^{2r}(4r-1)p^{\nicefrac{1}{2}}$, and hence lemma \ref{lemma5statement} follows.
+\footnotetext{Multisets are an extension of the concept of sets, the only difference being that a multiset can contain duplicate elements, which hence also contribute to the cardinality. Thus, the multisets $\{a, a, b, b, b\}$ and $\{a, a, a, b, b\}$ are different, while the multisets $\{a, a, b\}$ and $\{a, b, a\}$ are equal.}
+%
+%We first sum count with each possible number of pairs of t which are equal. Then the rest of factors will be equal due to t1+a=t2+b, thus t1-t2=fixed. since if t1+a=t2+ainvolved, means counted already. thus chain forms due to pairing of even one opposite c. which means out of bounds t.
+\begin{comment}
+A factor will occur in an even power when each multiplicative term in the expanded representation (each term has a power of exactly 1) $(x+a+m_1)(x+b+m_1) (x+a+m_2)(x+b+m_2) ...(x+a+m_{2r}) (x+b+m_{2r})$ can be paired with another term, such that both terms evaluate to the same linear polynomial when substituted with the $m$ additive term in them. Say a generic pair of terms is $(x+c_i+m_i)$ and $(x+c_j+m_j)$, where $c_i$ and $c_j$ each stand for whichever of $a$ or $b$ occurs in the respective paired term. The pair can occur in two ways:
+\begin{itemize}
+    \item $c_i=c_j$ and thus $m_i=m_j$, i.e. $(x+a+m_i)=(x+a+m_j)$ or $(x+b+m_i)=(x+b+m_j)$
+    \item $c_i\neq c_j$, and thus $(x+a+m_i)=(x+b+m_j)$ or $(x+b+m_i)=(x+a+m_j)$
+\end{itemize}
+\end{comment}
+\end{proof}
+%
+%
+\section{Conclusion}
+%
+The $O(p^{\nicefrac{1}{2}})$ bound follows from lemma \ref{lemma5statement} using the technique of Chapter 2. We only formally state it:
+\begin{lemma*}
+Given a quadratic character $\chi_2$ modulo prime $p$ and a square-free quadratic polynomial function $f$, let $h$ be the greatest integer such that:
+\[\bigg\lvert\sum\limits_{n=x+1}^{x+h}\chi_2(f(n))\bigg\rvert=h\]
+ for some $x\in\mathbb{F}_p$. Then $h\in O(p^{\nicefrac{1}{2}})$.
+\end{lemma*}
+In other words, the smallest whole number $y$ such $\chi_2((q+y)(r+y))=1$ is in $O(p^{\nicefrac{1}{2}})$, which places an upper bound on our factorisation method.
+We cannot obtain the bound of $O(p^{\nicefrac{1}{4}+\delta})$ as for $\chi_2$ of linear function intervals due to the fact that in e.q. \ref{chapter3refeq}, $\chi_2(z.q)=\chi_2(z)\chi_2(q)$, but if the function on the interval becomes $f(x)$ instead of $x$, then $\chi_2(f(q.z))\neq \chi_2(f(q))\chi_2(f(q))$. Due to this, the proof cannot proceed involving residuosity of a quadratic function of an interval in $\mathbb{F}_p$ as in the case of simply finding the first quadratic residue/non-residue in an interval. In conclusion, we can easily obtain a $O(p^{\nicefrac{1}{2}})$, but since the multiplicity of $\chi(x)$ does not imply multiplicity of $\chi(f(x))$, we cannot translate a given interval into many smaller equivalent intervals using Lemma 3 to obtain a $O(p^{\nicefrac{1}{4}+\delta})$ bound.
 %
 %Given a quadratic univariate square-free polynomial in $x$, $f(x)=ax^2+bx+c$ with $a,b,c\in\mathbb{F}_p$,
 %
 %We now prove the following claim about the time complexity of a method to factorize such polynomials which can be bounded
 %We next describe a method of factorizing square-free quadratic univariate polynomials in $\mathbb{F}_p$.
-%
-%
-\section{Problems with attempts at further generalisation}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Quantitative Analysis}

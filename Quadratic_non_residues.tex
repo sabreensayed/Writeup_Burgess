@@ -26,7 +26,7 @@
   Sabreen Syed\\
   \multicolumn{1}{p{.7\textwidth}}{\centering\emph{Department of Computer Science and Engineering\\
   Indian Institute of Technology Kanpur, India}}}
-\date{July 2018}
+\date{March 2019}
 
 \begin{document}
 %\pagecolor{black!78}
@@ -35,8 +35,8 @@
 \maketitle
 
 \chapter{Introduction}
-%Aim: Make the reader aware about the applications of the topics covered, give brief summary of existing results, and equip reader with the preliminaries to read the rest of the paper.
-%\chi is multiplicative character
+%Aim: Make the reader aware about the applications of the topics covered, give a brief summary of existing results, and equip the reader with the preliminaries to read the rest of the paper.
+%\chi is a multiplicative character
 %\chi has modulus p unless otherwise stated
 %splitting fields if factoring.pdf
 %prime number theorem
@@ -44,6 +44,15 @@
 %euclids method
 %triangle inequality
 %gcd of polynomials
+%extend character definition to all z
+%p is odd prime
+%order in fp
+%add prime number theorem both upper and lower bounds
+%add holders inequality
+%euclids method
+%define interval in f_p
+%q,z rationals ints
+%
 %
 \section{Symbols and conventions}
 %Character is
@@ -55,7 +64,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Qualitative Analysis}
-%Aim: Introduce Weil's Theorem and then Lemma 2. Give a basic qualitative proof of the p^{1/2} bound and the Burgess bound for quadratic residues, and extend the result to a general residue. Generalise the S_h^{2r} result to the sum of quadratic residues of quadratic polynomial for a subset, explain if the p^{1/2} bound can be made in an interval and explain why further extensions cannot be made to p^{1/4+\delta}
+%Aim: Introduce Weil's Theorem and then Lemma 2. Give a basic qualitative proof of the p^{1/2} bound and the Burgess bound for quadratic residues, and extend the result to a general residue. Generalise the S_h^{2r} result to the sum of quadratic residues of the quadratic polynomial for a subset, explain if the p^{1/2} bound can be made in an interval and explain why further extensions cannot be made to p^{1/4+\delta}
 In this chapter, we present a straightforward proof of a weak version of the original result discussed by Burgess in \cite{burgess}. We prove the following theorem:
 \begin{theorem} \label{thm:p4bound}
 Given a quadratic character $\chi_2$ modulo prime $p$, for any $x\in\mathbb{F}_p$ and $H>p^{\nicefrac{1}{4}+\delta}$, where $\delta>0$:
@@ -69,7 +78,7 @@ The starting point for our analysis is lemma 1 derived from Weil's theorem:
 $$\Big\lvert\sum\limits_{x=0}^{p-1}\chi_2(f(x))\Big\rvert\leq (\nu -1)p^{\nicefrac{1}{2}}$$
 \end{lemma}
 %
-Lemma 1 exhibits the low correlation between the distribution of values a square-free polynomial takes in $\mathbb{F}_p$ and the distribution of quadratic residues as follows: The sum of $\chi_2$ values in an interval determines the relative count of quadratic residues and non-residues in it. The sum would cancel out to small magnitudes if the counts were nearly equal, or be closer in magnitude to the size of the interval if not. Thus, lemma 1 essentially tells us that a square free polynomial over $\mathbb{F}_p$ would assume roughly equal number of quadratic residues and non-residues over $\mathbb{F}_p$.
+Lemma 1 exhibits the low correlation between the distribution of values a square-free polynomial takes in $\mathbb{F}_p$ and the distribution of quadratic residues as follows: The sum of $\chi_2$ values in an interval determines the relative count of quadratic residues and non-residues in it. The sum would cancel out to small magnitudes if the counts were nearly equal, or be closer in magnitude to the size of the interval if not. Thus, lemma 1 essentially tells us that a square-free polynomial over $\mathbb{F}_p$ would assume a roughly equal number of quadratic residues and non-residues over $\mathbb{F}_p$.
 
 We deduce lemma 2 in the next section by constructing an appropriate polynomial exploiting lemma 1 for our purpose of finding low bounds on the number of continuous quadratic residues or continuous non-residues.
 %
@@ -473,7 +482,7 @@ Given a quadratic univariate polynomial $f(x)=ax^2+bx+c$, $a\neq 0$ with $a,b,c\
 %
 Since checking for square factors of quadratic polynomials can easily be done by checking if $b^2=2^{2}ac$, for the rest of the chapter we only consider the aim of factorizing square-free polynomials.\ignore{We next describe a method to achieve this.}
 
-Say $f(x)$ is completely factorizable in $\mathbb{F}_p$ with factors $(x+d)$ and $(x+e)$. Since the $\gcd$ of two polynomials can be calculated in $\log d_e$ time, where $d_e$ is the maximum of the degrees of both polynomials, so calculating the $\gcd$ of $f(x)$ and a polynomial (say represented generically by $g_e(x)$) with known factors can be an efficient method of testing if $f(x)$ contains any of the known factors. Thus, if we were to take some $g_e(x)$ having exactly one of $(x+d)$ and $(x+e)$ as a factor, say in this case the factor $(x+d)$, then
+Say $f(x)$ is factorizable in $\mathbb{F}_p$ with factors $(x+d)$ and $(x+e)$. Since the $\gcd$ of two polynomials can be calculated in $\log d_e$ time, where $d_e$ is the maximum of the degrees of both polynomials, so calculating the $\gcd$ of $f(x)$ and a polynomial (say represented generically by $g_e(x)$) with known factors can be an efficient method of testing if $f(x)$ contains any of the known factors. Thus, if we were to take some $g_e(x)$ having exactly one of $(x+d)$ and $(x+e)$ as a factor, say in this case the factor $(x+d)$, then
 \[\gcd(f(x),g_e(x))=(x+d)\]
 and thus we can easily factorise $f(x)$ by dividing it by $(x+d)$ using polynomial long division. Along that line, we consider the polynomial $x^{\frac{p-1}{2}}-1$. It is of small size ($O(1)$), while having as factors exactly half of the set $\{(x+1),(x+2),...(x+p-1)\}$, i.e. precisely those $(x+i), i\in \mathbb{F}_p$ such that $i$ is a quadratic residue mod $p$ because for $j\in\mathbb{F}_p$:
 $$j^{\frac{p-1}{2}}=1 \Leftrightarrow j\text{ is a quadratic residue}$$
@@ -486,15 +495,47 @@ Thus, despite the $\gcd$ of $g(x)$ and $f(x)$ not being linear, the $\gcd$ of $g
 However, if we are unable to obtain such an $i$ that the $\gcd$ of $g(x)$ and $f(x+i)$ is a linear polynomial throughout $\mathbb{F}_p$, we conclude that $f(x)$ is irreducible in $\mathbb{F}_p$.
 \end{aimsol}
 %
-The worst-case time complexity of the above solution is $O(p\log p)$, which is worse than if we had simply divided $f(x)$ by each possible linear factor. However, if we prove an upper bound on the size of $i$ such that $\gcd$ of $g(x)$ and $f(x+i)$ is a linear polynomial if $f(x)$ is factorizable, we can drastically improve the worst-case time complexity, since if no such $i$ is found in the solution uptil the upper bound, we can safely conclude it is irreducible.
+The worst-case time complexity of the above solution is $O(p\log p)$, which is worse than if we had simply divided $f(x)$ by each possible linear factor. However, if we prove an upper bound on the size of $i$ such that $\gcd$ of $g(x)$ and $f(x+i)$ is a linear polynomial if $f(x)$ is factorizable, we can drastically improve the worst-case time complexity, since if no such $i$ is found in the solution till the upper bound, we can safely conclude it is irreducible.
 
 %claim and proof good
-If $f(x)$ is factorisable into factors $(x+d)$ and $(x+e)$, the $i$ obtained is equal to the least $j$ such that $f(x+j)$ and $g(x)$ have a linear $\gcd$, i.e. the least $j$ such that $f(x+j)$ has exactly one factor, say $(x+d+j)$, which is a factor of  $g(x)$. This means that $d+i$ is a quadratic residue while $e+i$ is not, and also that each pair of $(d+j)$ and $(e+j)$ have the same quadratic residuosity for the same $j$ when $0\leq j<i$. Hence, for $0\leq j<i$, $\chi_2((d+j)(e+j))=1$, while $\chi_2((d+i)(e+i))=-1$ (we ignore cases where $\chi_2((d+j)(e+j))=0$, as they can be easily eliminated before computing the $\gcd$ for each $j$). Thus, an upper bound on $i$ translates to an upper bound on the length of an interval (with general element say $y$) in $\mathbb{F}_p$ such that $\chi((q+y)(r+y))=1$ for some $q,r\in \mathbb{F}_p$. We obtain such a (non-trivial) bound using the lemma proved in the next section.
+If $f(x)$ is factorisable into factors $(x+d)$ and $(x+e)$, the $i$ obtained is equal to the least $j$ such that $f(x+j)$ and $g(x)$ have a linear $\gcd$, i.e. the least $j$ such that $f(x+j)$ has exactly one factor, say $(x+d+j)$, which is a factor of  $g(x)$. This means that $d+i$ is a quadratic residue while $e+i$ is not, and also that each pair of $(d+j)$ and $(e+j)$ have the same quadratic residuosity for the same $j$ when $0\leq j<i$. Hence, for $0\leq j<i$, $\chi_2((d+j)(e+j))=1$, while $\chi_2((d+i)(e+i))=-1$ (we ignore cases where $\chi_2((d+j)(e+j))=0$, as they can be easily eliminated before computing the $\gcd$ for each $j$). Thus, an upper bound on $i$ translates to an upper bound on the length of an interval (with general element say $y$) in $\mathbb{F}_p$ such that $\chi((q+y)(r+y))=1$ for some $q,r\in \mathbb{F}_p$. We obtain such a (non-trivial) rudimentary bound in the next section by a method in \cite{shoup}, before we improve the bound by instead extending the scope of lemma \ref{lemma2statement}.
+%
+%
+\section{$O(p^{\nicefrac{1}{2}}\log p)$ bound}
+%
+We describe a straightforward proof of a $p^{\nicefrac{1}{2}}\log p$ upper bound on the longest interval $I$ in $\mathbb{F}_p$ such that a square-free factorizable quadratic polynomial in $\mathbb{F}_p$ evaluates to a quadratic residue throughout $I$ based on a method by Shoup in \cite{shoup}. Precisely:
+\begin{lemma*}
+Given a quadratic character $\chi_2$ modulo prime $p$ and a square-free polynomial $f(x)=(x+a)(x+b)$ in $\mathbb{F}_p[x]$, let $h$ be the greatest integer such that:
+\[\sum\limits_{n=x+1}^{x+h}\chi_2(f(n))=h\]
+ for some $x\in\mathbb{F}_p$. Then $h \in O(p^{\nicefrac{1}{2}}\log p)$.
+\end{lemma*}
+\begin{proof}
+Suppose there is an interval $I$ in $\mathbb{F}_p$, and we are interested in whether $f$ evaluates to quadratic residues $\mod p$ in the entire interval. Since $\chi_2(v)=1$ if $v$ is a residue and $\chi_2(v)=-1$ if $v$ is not, $\nicefrac{(\chi_2(v)+1)}{2}$ evaluates to $1$ or $0$ if $v$ is a quadratic residue or non-residue respectively. Hence, $f$ evaluates entirely to quadratic residues in $I$ if the product $\prod_{i\in I}\nicefrac{(\chi_2(f(i))+1}{2}$ evaluates to $1$, however $f$ evaluates to atleast one quadratic non-resdue in $I$ if the product evaluates to $0$. Hence the number of intervals of size $t$ in $\mathbb{F}_p$ which consist only of quadratic residues is:
+\[ \sum_{x=1}^{p-t}\prod_{i=0}^{t-1}\bigg(\frac{(\chi_2(f(x+i))+1}{2}\bigg) \]
+\[ =2^{-t}\sum_{x=0}^{p-t-1}\prod_{i=1}^{t}(\chi_2((x+a+i)(x+b+i))+1) \]
+\[ =2^{-t}\sum_{x=0}^{p-t-1}\sum_{\substack{(e_1,...,e_{t})\\ \in\{0,1\}^{t}}}\prod_{i=1}^{t} \chi_2\big((x+a+i)(x+b+i)\big)^{e_i} \]
+\begin{equation} \label{eq:e_i}
+=2^{-t}\sum_{\substack{(e_1,...,e_{t})\\ \in\{0,1\}^t}}\sum_{x=0}^{p-t-1}\chi_2\Big(\prod_{i=1}^{t} \big((x+a+i)(x+b+i)\big)^{e_i}\Big)
+\end{equation}
+In the expression in \ref{eq:e_i}, for $\{(e_1,...,e_{t})\}=\{0\}^t$ the expression $\prod_{i=1}^{t} \big((x+a+i)(x+b+i)\big)^{e_i}$ evaluates to $1$, and $\chi(1)=1$. For other values of $(e_1,...,e_{t})$, we show that $\chi_2\Big(\prod_{i=1}^{t} \big((x+a+i)(x+b+i)\big)^{e_i}\Big)$ is never a perfect square: Suppose $l>0$ of the $e_i$'s are $1$ in the tuple $e_1,...,e_t$. Then $\chi_2\Big(\prod_{i=1}^{t} \big((x+a+i)(x+b+i)\big)^{e_i}\Big)$ can only be a perfect square if for distinct $i_1,i_2...i_l\in\{1,2,..t\}$:
+\[ a+i_1=b+i_2,\text{ } a+i_2=b+i_3,\text{ } ... a+i_l=b+i_1,\text{ } \]
+\[ \Rightarrow \sum_{j=1}^{l} (a + i_j)= \sum_{j=1}^{l} (b + i_j) \Rightarrow \sum_{j=1}^{l} a = \sum_{j=1}^{l} b \Rightarrow la = lb \Rightarrow a = b\]
+which is a contradiction to the fact that $f(x)$ is square-free. Hence, \ref{eq:e_i} is equal to:
+\[ =2^{-t}\bigg(\sum_{x=0}^{p-t-1}1+ \sum_{\substack{(e_1,...,e_{t})\in \\ \{0,1\}^t-\{0\}^t}} \sum_{x=0}^{p-t-1} \chi_2\Big(\prod_{i=1}^{t} \big((x+a+i)(x+b+i)\big)^{e_i}\Big)\bigg) \]
+\[ \leq 2^{-t}((p-t)+(2^{t}-1)((2t-1)p^{\nicefrac{1}{2}}+t) \]
+\[ \leq 2^{-t}(p-t)+ (2t-1)p^{\nicefrac{1}{2}}+t \]
+The longest interval possible, in which $f(x)$ evaluates to only quadratic residues, is one which can be made if all the $t$ length intervals occurred consecutively (i.e. the starting points are consecutive). Thus, the longest interval cannot be of length more than $2^{-t}(p-t)+ (2t-1) p^ {\nicefrac {1}{2}} +t+t$. Setting $t=\lceil\nicefrac{(\log p)}{2}\rceil$, this length comes to not more than:
+\[p^{-\nicefrac{1}{2}}(p- \lceil\nicefrac{(\log p)}{2}\rceil)+ (2\lceil\nicefrac{(\log p)}{2}\rceil-1) p^ {\nicefrac {1}{2}} +2\lceil\nicefrac{(\log p)}{2}\rceil\]
+\[ \leq p^ {\nicefrac {1}{2}} - p^ {-\nicefrac {1}{2}} \lceil\nicefrac{(\log p)}{2}\rceil + 2p^ {\nicefrac {1}{2}} \lceil\nicefrac{(\log p)}{2}\rceil - p^ {-\nicefrac {1}{2}} + 2\lceil\nicefrac{(\log p)}{2}\rceil \in O(p^{\nicefrac{1}{2}}\log p) \]
+In the next %section, we improve the bound to $O(p^{\nicefrac{1}{2}}\log p)$.
+
+%Consider the product $\prod_{i\in I}\frac{(1+\chi_2 ()}{2}$
+\end{proof}
 %
 %
 \section{Lemma 2 extended}
 %
-Our aim is to find an upper bound on the maximum length of an interval, say $I$, in $\mathbb{F}_p$, such that $\chi_2((y+q)(y+r))=1 \text{ }\forall y\in I$ for some $q,r\in \mathbb{F}_p$. For this, we proceed in a similar manner as for finding the longest interval of quadratic residues or non-residues, intuitively due to lemma \ref{lemma4} being applicable to any square-free polynomial. We are able prove an extended version of lemma \ref{lemma2statement} for quadratic functions of intervals:
+Our aim is to find an upper bound on the maximum length of an interval, say $I$, in $\mathbb{F}_p$, such that $\chi_2((y+q)(y+r))=1 \text{ }\forall y\in I$ for some $q,r\in \mathbb{F}_p$. For this, we proceed in a similar manner as for finding the longest interval of quadratic residues or non-residues, intuitively due to lemma \ref{lemma4} being applicable to any square-free polynomial. We are able prove an extended version of lemma \ref{lemma2statement} for factorisable square-free quadratic functions of intervals:
 %
 \begin{lemma} \label{lemma5statement}
 Let $f(x)=(x+a)(x+b)$ be a square-free polynomial, where $a,b\in \mathbb{F}_p$,and let $S_h(x)=\sum\limits_{n=1}^{h} \chi_2(f(x+n))$, where $h<p$. Then,
@@ -521,13 +562,15 @@ Similarly, $(x+a+t_v)$ can only be equal to a (possible) factor $(x+b+t_w)$ of $
 Thus there can be less than $h^r(2r)^r$ tuples which represent perfect squares as calculated in Chapter 2, and thus their contribution to the sum is at most $ph^r(2r)^r$. And there can be trivially $h^{2r}$ tuples for polynomials which are not a perfect square. By lemma \ref{lemma4}, we know that each polynomial contributes at most $(4r-1)p^{\nicefrac{1}{2}}$, and thus the contribution to the sum is at most $h^{2r}(4r-1)p^{\nicefrac{1}{2}}$, and hence lemma \ref{lemma5statement} follows.
 \footnotetext{Multisets are an extension of the concept of sets, the only difference being that a multiset can contain duplicate elements, which hence also contribute to the cardinality. Thus, the multisets $\{a, a, b, b, b\}$ and $\{a, a, a, b, b\}$ are different, while the multisets $\{a, a, b\}$ and $\{a, b, a\}$ are equal.}
 %
-%We first sum count with each possible number of pairs of t which are equal. Then the rest of factors will be equal due to t1+a=t2+b, thus t1-t2=fixed. since if t1+a=t2+ainvolved, means counted already. thus chain forms due to pairing of even one opposite c. which means out of bounds t.
+%We first sum count with each possible number of pairs of t which are equal. Then the rest of the factors will be equal due to t1+a=t2+b, thus t1-t2=fixed. since if t1+a=t2+ainvolved, means counted already. thus chain forms due to a pairing of even one opposite c. which means out of bounds t.
 \begin{comment}
 A factor will occur in an even power when each multiplicative term in the expanded representation (each term has a power of exactly 1) $(x+a+m_1)(x+b+m_1) (x+a+m_2)(x+b+m_2) ...(x+a+m_{2r}) (x+b+m_{2r})$ can be paired with another term, such that both terms evaluate to the same linear polynomial when substituted with the $m$ additive term in them. Say a generic pair of terms is $(x+c_i+m_i)$ and $(x+c_j+m_j)$, where $c_i$ and $c_j$ each stand for whichever of $a$ or $b$ occurs in the respective paired term. The pair can occur in two ways:
 \begin{itemize}
     \item $c_i=c_j$ and thus $m_i=m_j$, i.e. $(x+a+m_i)=(x+a+m_j)$ or $(x+b+m_i)=(x+b+m_j)$
     \item $c_i\neq c_j$, and thus $(x+a+m_i)=(x+b+m_j)$ or $(x+b+m_i)=(x+a+m_j)$
 \end{itemize}
+
+add factorizable means completely factorizable in intro
 \end{comment}
 \end{proof}
 %
@@ -536,7 +579,7 @@ A factor will occur in an even power when each multiplicative term in the expand
 %
 The $O(p^{\nicefrac{1}{2}})$ bound follows from lemma \ref{lemma5statement} using the technique of Chapter 2. We only formally state it:
 \begin{lemma*}
-Given a quadratic character $\chi_2$ modulo prime $p$ and a square-free quadratic polynomial function $f$, let $h$ be the greatest integer such that:
+Given a quadratic character $\chi_2$ modulo prime $p$ and a square-free factorizable quadratic polynomial function $f$ in $\mathbb{F}_p$, let $h$ be the greatest integer such that:
 \[\bigg\lvert\sum\limits_{n=x+1}^{x+h}\chi_2(f(n))\bigg\rvert=h\]
  for some $x\in\mathbb{F}_p$. Then $h\in O(p^{\nicefrac{1}{2}})$.
 \end{lemma*}
@@ -587,6 +630,11 @@ Journal Physico-Math. Soc. Univ. Perm, No. 1 (1918), 94-96.
 W. Schmidt,
 \textit{``Equations over finite fields, An elementary approach''},
 Lecture Notes in Math. 536, Springer Verlag, 1976, p. 43
+
+\bibitem{shoup}
+ Victor Shoup,
+\textit{Removing Randomness From Computational Number Theory}, Ph.D. thesis,
+Computer Science Technical Report \#865 (August 1989), University of Wisconsin, Madison.
 
 \end{thebibliography}
 %

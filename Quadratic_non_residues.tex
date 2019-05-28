@@ -9,6 +9,7 @@
 \usepackage{mathtools}
 \usepackage{graphicx}
 \usepackage{xcolor}
+\usepackage[bottom]{footmisc}
 \graphicspath{ {./images/} }
 \newtheorem{lemma}{Lemma}
 \newtheorem*{lemma*}{Lemma}
@@ -21,12 +22,12 @@
 
 \newcommand{\ignore}[1]{}
 
-\title{Deriving Burgess's Bound on the Distribution of Quadratic and Higher Non-Residues}
+\title{Distribution of Quadratic and Higher Residues and Non-Residues over Prime Fields}
 \author{
   Sabreen Syed\\
   \multicolumn{1}{p{.7\textwidth}}{\centering\emph{Department of Computer Science and Engineering\\
   Indian Institute of Technology Kanpur, India}}}
-\date{March 2019}
+\date{May 2019}
 
 \begin{document}
 %\pagecolor{black!78}
@@ -35,52 +36,113 @@
 \maketitle
 
 \chapter{Introduction}
-%Aim: Make the reader aware about the applications of the topics covered, give a brief summary of existing results, and equip the reader with the preliminaries to read the rest of the paper.
-%\chi is a multiplicative character
-%\chi has modulus p unless otherwise stated
-%splitting fields if factoring.pdf
-%prime number theorem
-%holder's inequality
-%euclids method
-%triangle inequality
-%gcd of polynomials
-%extend character definition to all z
-%p is odd prime
-%order in fp
-%add prime number theorem both upper and lower bounds
-%add holders inequality
-%euclids method
-%define interval in f_p
-%q,z rationals ints
+%
+Let us take a quadratic equation $ax^2+bx+c=0$ with coefficients in a finite field, $\mathbb{F}_p$, and $a\neq0$, where $p$ is an odd prime. We would like to know if there exist any roots of the equation. It is equivalent to an equation $x^2+bx+c=0$ by multiplying both sides by $a^{-1}$, the multiplicative inverse of $a$. Solving,
+$$x^2+bx+c=0$$
+$$x^2+bx+2^{-2}b^{2}+c=2^{-2}b^{2}$$
+$$x^2+2^{-1}bx+2^{-1}bx+2^{-2}b^{2}=2^{-2}b^{2}-c$$
+$$(x+2^{-1}b)^2=2^{-2}b^{2}-c$$
+%$$x=-2^{-1}b+\sqrt{2^{-2}b^{2}-c}$$
+
+$2^{-2}b^{2}-c$ is called the discriminant, $D$, of the equation. The existence of a member of $\mathbb{F}_p$, say $y$, such that $y^2=D$, determines whether the equation has a solution. If such a $y$ exists, $-2^{-1}b+y$ is a solution of the equation, and if it does not exist, the equation cannot have a solution. In $\mathbb{F}_p$, such a $y$ need not exist for every $D\in\mathbb{F}_p$. We say $a\in\mathbb{F}_p$ is a quadratic residue modulo $p$, if there exists $z\in \mathbb{F}_p$ satisfying $z^2=a$.
+
+We are concerned, in this thesis, with the distribution of quadratic residues and quadratic non-residues modulo a prime $p$ over the elements in $\mathbb{F}_p$. Apart from the theoretical interest in the matter in and of itself, it also has applications in many practicaly relevant problems. We will specifically tackle the problems of
+\begin{itemize}
+    \item finding a square root of an element in $\mathbb{F}_p$ and
+    \item factorising quadratic polynomials in $\mathbb{F}_p$.
+\end{itemize}
+In this chapter we will explore the background and preliminaries needed for the rest of the thesis.
+
+\subsection*{Deterministic versus probabilistic algorithms}
+
+Let us determine how many elements of $\mathbb{F}_p$ are quadratic residues. We see that since $(p-x)^2\equiv(-x)^2\equiv x^2\textrm{  }(mod\textrm{ }p)$, $x$ and its additive inverse have the same square in $\mathbb{F}_p$. The additive inverse of an element in $\mathbb{F}_p$ is itself only if $-x=x \Rightarrow x=0$, in which case $x^2=0$. Thus, there are at least 2 distinct elements in $1\ldots p-1$ which map to each quadratic residue in $1\ldots p-1$, and thus at most half of $1\ldots p-1$ are quadratic residues.
+
+Now if $x^2\equiv y^2 \textrm{ }(mod\textrm{ } p)$, then $(x-y)(x+y)\equiv 0\textrm{ }(mod\textrm{ } p)$. Thus, $x-y\divides p$ or $x+y\divides p$ $\Rightarrow x\equiv \pm y \textrm{ } (mod\textrm{ } p)$, which means only additive inverses can have the same square modulo $p$. Thus, exactly half of $1$ to $p-1$ are quadratic residues.
+
+As will be explained later in the thesis, the problems of finding a square root and of factorising square-free quadratic polynomials in $\mathbb{F}_p$, are equivalent to finding a quadratic non-residue and to computing a shifted\footnotemark polynomial such that its constant term is a qudratic residue, respectively. Since half of elements in $1$ to $p-1$ are quadratic non-residues, a simple probabilistic approach would be to randomly select an element of $\mathbb{F}_p*$ and check if it is a quadratic non-residue for finding a quadratic non-residue, or computing a random shifted polynomial and check if its constant term is a non-residue for the respective problems. The former will be successful with probability $\nicefrac{1}{2}$. However, in the worst case, we need to check $\frac{p-1}{2}+1$ elements to get a quadratic non-residue by this method, and thus there is no guaranteed upper bound lesser than $O(p)$ on the time taken, using this method. The latter problem will also be successful with an approxipate probability of about $~\nicefrac{1}{2}$, which we will see later in the thesis after we are acquainted with Lemma 1. Thus, we would also like efficient deterministic approaches to the problems because, apart from the theoretical interest in the problems, we would also like to theoretically bound their solving time.
+
+We will explore deterministic approaches to the problems in this thesis. Our overall approach to the problems is seriate: we de-randomise the respective random algorithms by checking consecutive candidates. In the first problem of finding a quadratic non-residue, we check consecutive elements of $\mathbb{F}_p*$ from $1,2,3...$ onwards for a quadratic non residue. For the second problem of computing a shifted polynomial such that its constant term is a qudratic residue, we check the polynomials shifted by $1,2,3..$ onwards to see if their constant terms are quadratic non-residues. This relies on the the null hypothesis for correlation between proximity of numbers and their quadratic residuousity. In any case, it is the most straightforward effeciently computable deterministic pattern, and unless there is reason to consider a non-seriate approach, we consider it good enough for our purposes.
+
+We now move on to preliminaries required for understanding the thesis.
+%
+%
+\section{Preliminaries}
+%Discuss general characters with first demonstrating examples with quadratic ones.
+In this section, we explain concepts which a reader may not be familiar with, which are required for understanding remainder of the thesis. All convention and notation will be covered in the next section, hence this section can be skipped for those who are familiar with the concepts.
+\subsection{Modulo arithmetic}
+A modulo equivalency for integers $a$, $b$ and $c$ is written as
+\[a\equiv b\mod c\]
+which is read as ``$a$ is equivalent to $b$ modulo $c$''. The modulo equivalency is related to arithmetic equality as:
+\[a\equiv b\mod  c \Leftrightarrow a-b = nc\text{ for some }n\in Z\]
+We now list some properties of a modulo equivalencies. We will only prove the property if the proof is not straightforward.
+\begin{enumerate}
+    \item Adding the same integer to both sides of the equivalency upholds the equivalency, i.e. $a\equiv b\mod  c \Rightarrow a+d\equiv b+d\mod  c$
+    \item Multiplying both sides of the equivalency by the same integer upholds the equivalency, i.e. $a\equiv b\mod  c \Rightarrow a.d\equiv b.d\mod  c$
+    \item Exponentiating both sides of the equivalency to the same whole number upholds the equivalency, because
+    \[a\equiv b\mod c \Rightarrow a = b+ nc\text{ for some }n\in Z\]
+    \[\Rightarrow a^d = (b + nc)^d \Rightarrow a^d = b^d + mc \text{ for some }m\in Z\]
+    \[\Rightarrow a^d - b^d = mc \Rightarrow a^d\equiv b^d\mod  c\]
+    \item Dividing both sides by the same number (say $d$) upholds the equivalency, provided both sides are divisible by $d$, and $c$ \& $d$ are co-prime. This is because:
+    \[a\equiv b\mod  c \Rightarrow a-b = nc\text{ for some }n\in Z\]
+    \[\Rightarrow \frac{a-b}{d} = \frac{nc}{d}\]
+    Since $a$ \& $b$ are divisible by $d$, $d\divides a-b \Rightarrow d\divides nc$, and thus ${nc}{d}$ is an integer. Since $c$ \& $d$ are co-prime and have no common factors, $d\divides nc \Rightarrow d \divides n$.  Thus $\nicefrac{n}{d}$ is an integer, and thus $\frac{a-b}{d} = \frac{n}{d}.c \Rightarrow \nicefrac{a}{d}\equiv \nicefrac{b}{d}\mod  c$
+\end{enumerate}
+%
+\subsection{Operations on complex numbers}
+Complex numbers can be geometrically represented on the complex plane. It has two mutually perpendicular axes: the real axis and the imaginary axis. As in figure \ref{fig:complex_plane}, the complex number $z=a+ib$ is represented by the point $a$ units to the right of (or $-a$ units to the left of) the imaginary axis and $b$ units above (or $-b$ units below) the real axis.
+\begin{figure}
+\includegraphics[scale=0.25]{complex_plane}
+\centering
+\caption{Visual representation of the complex plane}
+\label{fig:complex_plane}
+\end{figure}
+We can also associate a vector $\vec{z}$ with the complex number $z$, a vector from the origin to the point represented by $z$. The vector is particularly helpful in visualizing operations on complex numbers. The length of the vector, say $r$, and its counter-clockwise angle with the real axis, say $\theta$, give us the polar representation of $a+ib$ which is $re^{i\theta}$, where $e$ is Euler's constant, since $a=r\cos(\theta)$ and $b=r\sin(\theta)$
+
+We now list how operations on complex numbers can be represented on the complex plane vectors by studying the vectors associated with the complex numbers. The vector associated with a complex number $z$ is given by $\vec{z}$.
+\begin{figure}
+\includegraphics[scale=0.3]{vector_addition}
+\centering
+\caption{Visual representation of complex addition}
+\label{fig:vector_addition}
+\end{figure}
+%
+\begin{enumerate}
+    \item \textit{Modulus}: The modulus of a complex number $z$, given by $\lvert z\rvert$, is the length of $\vec{z}$.
+    \item \textit{Negation}: Negating a complex number $z$ results in a vector with the same magnitude as $\vec{z}$ but with the opposite direction
+    \item \textit{Congugation}: Conjugation of a complex number $a+ib$ results in $a-ib$, and the vector $\vec{a+ib}$ is reflected across the imaginary axis.
+    \item \textit{Addition (and subtraction)}: Adding two complex numbers $z_1$ and $z_2$ is equivalent to placing one vector, say $z_1$ with its tail on the origin, and placing the tail of $z_2$ on the head of $z_1$, as in the figure \ref{fig:vector_addition}, where $z_3 = z_1+z_2$. Subtracting $z_2$ from $z_1$ is just adding $z_1$ and $-z_2$.
+    \item \textit{Multiplicative inversion}: The inverse $z^{-1}$ ($z\neq 0$) of a complex number $z=re^{i\theta}$ is $r^{-1}e^{i(-\theta)}$. Thus $\vec{z^{-1}}$ is a vector with length $r^{-1}$ and angle with real axis $-\theta$, i.e. reflected across the real axis.
+    \item \textit{Multiplication (and division)}: Multiplying two complex numbers $z_1=r_1e^{i\theta_1}$ and $z_2=r_2e^{i\theta_2}$ results in $z_3=r_1r_2e^{i{\theta_1+\theta_2}}$, thus $\vec{z_3}$ is a vector with magnitude the product of the magnitudes of $z_1$ \& $z_2$ and angle with real axis the sum of both angles of  $z_1$ \& $z_2$. Division, $\nicefrac{z_1}{z2},z_2\neq 0$, is just multplying $z_1$ with $z_2^{-1}$.
+\end{enumerate}
+
+
 %
 %
 \section{Symbols and conventions}
 %Character is
 %
-\section{Preliminaries}
-%Discuss general characters with first demonstrating examples with quadratic ones.
 %
 \section{Interval sums of quadratic residues}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Qualitative Analysis}
+\chapter{Upper Bounds on Uniform Character Value Intervals}
 %Aim: Introduce Weil's Theorem and then Lemma 2. Give a basic qualitative proof of the p^{1/2} bound and the Burgess bound for quadratic residues, and extend the result to a general residue. Generalise the S_h^{2r} result to the sum of quadratic residues of the quadratic polynomial for a subset, explain if the p^{1/2} bound can be made in an interval and explain why further extensions cannot be made to p^{1/4+\delta}
 In this chapter, we present a straightforward proof of a weak version of the original result discussed by Burgess in \cite{burgess}. We prove the following theorem:
 \begin{theorem} \label{thm:p4bound}
-Given a quadratic character $\chi_2$ modulo prime $p$, for any $x\in\mathbb{F}_p$ and $H>p^{\nicefrac{1}{4}+\delta}$, where $\delta>0$:
+Given a quadratic character $\chi_2$ modulo prime $p$, for any $H>p^{\nicefrac{1}{4}+\delta}$, where $\delta>0$:
 \[\sum\limits_{n=x+1}^{n+H}\lvert\chi_2(n)\rvert<H\]
-for large enough $p$.
+for any $x\in\mathbb{Z}$, for large enough $p$.
 \end{theorem}
 The starting point for our analysis is lemma 1 derived from Weil's theorem:
 %
 \begin{lemma}
-\cite{burgess}Let $f(x)$ be a monic square-free polynomial, with coefficients from $\mathbb{Z}$, reducible into linear factors with degree $\nu$. Then,
+\textup{\cite{burgess}}Let $f(x)$ be a monic square-free polynomial of degree $\nu$, with coefficients from $\mathbb{Z}$, reducible into linear factors. Then,
 $$\Big\lvert\sum\limits_{x=0}^{p-1}\chi_2(f(x))\Big\rvert\leq (\nu -1)p^{\nicefrac{1}{2}}$$
 \end{lemma}
 %
-Lemma 1 exhibits the low correlation between the distribution of values a square-free polynomial takes in $\mathbb{F}_p$ and the distribution of quadratic residues as follows: The sum of $\chi_2$ values in an interval determines the relative count of quadratic residues and non-residues in it. The sum would cancel out to small magnitudes if the counts were nearly equal, or be closer in magnitude to the size of the interval if not. Thus, lemma 1 essentially tells us that a square-free polynomial over $\mathbb{F}_p$ would assume a roughly equal number of quadratic residues and non-residues over $\mathbb{F}_p$.
+Lemma 1 exhibits the low correlation between the distribution of values a square-free polynomial takes in $\mathbb{F}_p$, and the distribution of quadratic residues, as follows: The sum of $\chi_2$ values in an interval determines the relative count of quadratic residues and non-residues in it. The sum would cancel out to small magnitudes if the counts were nearly equal, or be closer in magnitude to the size of the interval if not. Thus, lemma 1 essentially tells us that a square-free polynomial over $\mathbb{F}_p$ would assume a roughly equal number of quadratic residues and non-residues over $\mathbb{F}_p$.
 
-We deduce lemma 2 in the next section by constructing an appropriate polynomial exploiting lemma 1 for our purpose of finding low bounds on the number of continuous quadratic residues or continuous non-residues.
+We deduce lemma 2 in the next section by constructing an appropriate polynomial exploiting lemma 1 for our purpose of finding low upper bounds on the number of continuous quadratic residues or continuous non-residues.
 %
 %
 \section{A useful global sum and the $O(p^{\nicefrac{1}{2}})$ bound}
@@ -88,18 +150,18 @@ Let us consider the sum of $\chi_2$ values in an interval of size $h$.
 
 $$S_h(x)=\sum\limits_{n=1}^{h}\chi_2(x+n)$$
 
-Given Lemma 1, which limits the sum of $\chi_2$ values of a polynomial over the entire interval $0$ to $p-1$, we would like to construct a square-free polynomial on which lemma 1 could be applied to successfully put a bound on the sum of $\chi_2$ values in a smaller interval. We do this by expanding the sum $\sum\limits_{x=0}^{p-1}(S_h(x))^{2r}$:
+Given Lemma 1, which limits the sum of $\chi_2$ values of a polynomial over the entire interval $0$ to $p-1$, we would like to construct square-free polynomials which are such that lemma 1 could be applied to successfully put a bound on the sum of $\chi_2$ values in a smaller interval. We do this by expanding the sum $\sum\limits_{x=0}^{p-1}(S_h(x))^{2r}$:
 
 $$(S_h(x))^{2r}= \bigg(\sum\limits_{n=1}^{h}\chi_2(x+n)\bigg)^{\mathclap{2r}} =\sum\limits_{m_1=1}^h\sum\limits_{m_2=1}^h...\sum\limits_{\mathclap{m_{2r}=1}}^h\chi_2(x+m_1)\chi_2(x+m_2)...\chi_2(x+m_{2r})$$
 $$\sum\limits_{x=0}^{p-1}(S_h(x))^{2r}=\sum\limits_{x=0}^{p-1}\sum\limits_{m_1=1}^h\sum\limits_{m_2=1}^h...\sum\limits_{m_{2r}=1}^h\chi_2(x+m_1)\chi_2(x+m_2)..\chi_2(x+m_{2r})$$
 \begin{equation} \label{sumpoly}
-\sum\limits_{x=0}^{p-1}(S_h(x))^{2r}=\sum\limits_{m_1=1}^h\sum\limits_{m_2=1}^h...\sum\limits_{m_{2r}=1}^h\sum\limits_{x=0}^{p-1}\chi_2\big((x+m_1)(x+m_2)..(x+m_{2r})\big)
+\sum\limits_{x=0}^{p-1} (S_h(x))^{2r} =\sum\limits_{m_1=1}^h \sum\limits_{m_2=1}^h... \sum\limits_{m_{2r}=1}^h\sum\limits_{x=0}^{p-1}\chi_2\big((x+m_1)(x+m_2)..(x+m_{2r})\big)
 \end{equation}
 
-To use lemma 1 to estimate the expression in equation \ref{sumpoly}, we need to separate the perfect square polynomials forming the sum from the rest. To achieve this, we separate the ordered sequences or `tuples' in (\ref{sumpoly}), $(m_1, m_2...m_{2r})$, into two sets based on the multiplicity of distinct values in the tuple:
+To use lemma 1 to estimate the expression in equation \ref{sumpoly}, we need to separate the perfect square polynomials of the form $\prod_{a=1}^{2r}(x+m_a)$ from the rest. To achieve this, we separate the ordered sequences or `tuples' in (\ref{sumpoly}), $(m_1, m_2...m_{2r})$, into two sets based on the multiplicity of distinct values in the tuple:
 \begin{itemize}
-  \item Set 1 consists of those tuples which contain an even count of each distinct number in them. This set forms a bijective correspondence with every perfect square polynomial contributing. Since there are $\frac{(2r)!}{r!}$ ways to choose pairs of positions in a tuple and there are $h^{r}$ ways of filling them with values from $1$ to $h$, so there are less than $(2r)^r h^{r}$ such polynomials. Since the maximum value contributed to the sum of $\chi_2$ values over all $p$ values of $x$ from each such polynomial is at most $p$, the contribution to the sum is at most $(2r)^r h^{r}p$.
-  \item Set 2 consists of the rest of the tuples after removing set 1, which similarly correspond bijectively to the leftover polynomials exactly. Since there are $h^{2r}$ polynomials in all, trivially at most $h^{2r}$ are not perfect square polynomials. These polynomials are of the form:
+  \item Set 1 consists of those tuples which contain an even count of each distinct number in them. This set forms a bijective correspondence with every perfect square polynomial among the polynomials considered. Since there are $\frac{(2r)!}{2^rr!}$ ways to choose pairs of positions in a tuple and there are $h^{r}$ ways of filling them with values from $1$ to $h$, so there are less than $(2r)^r h^{r}$ such polynomials. Since the maximum value contributed to the sum of $\chi_2$ values over all $p$ values of $x$ from each such polynomial is at most $p$, the contribution to the sum is at most $(2r)^r h^{r}p$.
+  \item Set 2 consists of the rest of the tuples after removing set 1, which similarly correspond bijectively to the leftover polynomials (i.e. not perfect squares) exactly. Since there are $h^{2r}$ polynomials in all, trivially at most $h^{2r}$ are not perfect square polynomials. These polynomials are of the form:
   $$(x+s_1)^{e_1}(x+s_2)^{o_2}...(x+s_k)^{e_k}$$
   Where $s_i, i\in 1...k$ are distinct members of the tuple corresponding to the polynomial and $e_i$ and $o_i$ are even or odd powers respectively of the $i^{th}$ term. Now, $\chi\big((x+s_1)^{e_1}(x+s_2)^{o_2}...(x+s_k)^{e_k}\big)$ evaluates the same as $\chi\big((x+s_2)^{o_2}...(x+s_{k'})^{o_{k'}}\big)$ (taking all odd-powered factors) for all except at most $r$ values of $x$ (corresponding to the even-powered factors evaluating to $0$). Thus, their contribution to the sum is not more than $h^{2r}(p^{\nicefrac{1}{2}}(2r-1)+r)$.
 \end{itemize}
@@ -114,11 +176,11 @@ Let $S_h(x)=\sum\limits_{n=1}^{h}\chi_2(x+n)$. Then,
 \end{lemma}
 %%
 \subsection*{The $O(p^{\nicefrac{1}{2}})$ bound}
-We prove the $O(p^{\nicefrac{1}{2}})$ bound on the longest interval of continuous quadratic residues or of quadratic non-residues, i.e., we prove the following claim:
+We prove the $O(p^{\nicefrac{1}{2}})$ bound on the longest interval of continuous quadratic residues or of continuous quadratic non-residues, i.e., we prove the following claim:
 \begin{claim*}
 Given a quadratic character $\chi_2$ modulo prime $p$, let $h$ be the greatest integer such that:
 \[\bigg\lvert\sum\limits_{n=x+1}^{x+h}\chi_2(n)\bigg\rvert=h\]
- for some $x\in\mathbb{F}_p$. Then $h\in O(p^{\nicefrac{1}{2}})$.
+ for any $x\in\mathbb{Z}$. Then $h\in O(p^{\nicefrac{1}{2}})$.
 \end{claim*}
 \begin{claimproof}
 We show that if the $O(p^{\nicefrac{1}{2}})$ bound is not true, then lemma \ref{lemma2statement} is contradicted for large enough $p$.\\
@@ -126,7 +188,7 @@ It is given that $\lvert S_h(z)\rvert=h$ for some $z\in \mathbb{F}_p$. Consider 
 \begin{equation} \label{intervcontr}
 \sum\limits_{x=0}^{p-1}\lvert S_h(x)\rvert^{2r}\geq\sum\limits_{x=z}^{z+\lfloor\nicefrac{h}{4}\rfloor}\lvert S_h(x)\rvert^{2r} \geq h^{2r}+(h-2)^{2r}+...+(h-2\lfloor\nicefrac{h}{4}\rfloor)^{2r} \geq \frac{h^{2r+1}}{2^{2r+2}}
 \end{equation}
-Thus, by considering sliding intervals starting from the original interval, we have increased the contribution to the sum from $h^{2r}$ of the lone interval to $O(h^{2r+1})$ of the cascade of sliding intervals. Now, from (\ref{lemma2}) in lemma \ref{lemma2statement} and (\ref{intervcontr}):
+Thus, by considering sliding intervals starting from the original interval starting at $z$, we have increased the contribution to the sum, from $h^{2r}$ of the lone interval, to $O(h^{2r+1})$ of the cascade of sliding intervals. Now, from (\ref{lemma2}) in lemma \ref{lemma2statement} and (\ref{intervcontr}):
 $$ \frac{h^{2r+1}}{2^{2r+2}} \leq h^{r}(2r)^{r}p+h^{2r}r(2p^{\nicefrac{1}{2}}+1)$$
 Now we set $r=1$ and divide both sides by $h^{2}$. We get:
 \begin{equation} \label{contreq1}
@@ -136,65 +198,66 @@ Substituting $cp^{\nicefrac{1}{2}}$ in place of $h$, we obtain the inequality
 \begin{equation} \label{contreq2}
 \frac{cp^{\nicefrac{1}{2}}}{16} \leq 2c^{-1}p^{\nicefrac{1}{2}}+2p^{\nicefrac{1}{2}}+1
 \end{equation}
-Comparing the coefficients of the highest power term $p^{\nicefrac{1}{2}}$ on each side, we see that there exists some constant $c_o$ such that $\nicefrac{c}{16}>2c^{-1}+2$ when $c>c_o$. Hence for $c>c_o$, (\ref{contreq2}) does not hold for large enough $p$. Hence, (\ref{contreq1}) cannot hold if $h=c_op^{\nicefrac{1}{2}}$ for large enough $p$. Since the LHS of (\ref{contreq1}) increases with increase in $h$, while the RHS decreases with increase in $h$, (\ref{contreq1}) cannot hold if $h>c_op{\nicefrac{1}{2}}$ for large enough $p$, which means $h\leq c_op^{\nicefrac{1}{2}}$ for large enough $p$, and thus $h\in O(p^{\nicefrac{1}{2}})$.
+Comparing the coefficients of the highest power term $p^{\nicefrac{1}{2}}$ on each side, we see that there exists some constant $c_o$ such that $\nicefrac{c}{16}>2c^{-1}+2$ when $c>c_o$. Hence for $c>c_o$, (\ref{contreq2}) does not hold for large enough $p$. Hence, (\ref{contreq1}) cannot hold if $h=cp^{\nicefrac{1}{2}}$ such that $c>c_o$ for large enough $p$. Since the LHS of (\ref{contreq1}) increases with increase in $h$, while the RHS decreases with increase in $h$, (\ref{contreq1}) cannot hold if $h=cp^{\nicefrac{1}{2}}$ such that $c>c_o$ for large enough $p$, which means $h\leq c_op^{\nicefrac{1}{2}}$ for large enough $p$, and thus $h\in O(p^{\nicefrac{1}{2}})$.
 \end{claimproof}
 %
 %
 \section{The amplification of an interval}
-We saw in the previous section how cascading an interval into many sliding intervals increased its contribution to the lower bound  of the sum-of-intervals used in lemma \ref{lemma2statement}. We now describe an additional process to increase the aforementioned contribution: We show in the following claim how an interval can be transformed into many smaller intervals which are equivalent to the original interval in terms of the distribution of quadratic residues and non-residues in them.
+We saw in the previous section how cascading an interval into many sliding intervals increased its contribution to a lower bound on the sum-expression which which was bounded above in lemma \ref{lemma2statement}, which lead to a contradiction for long enough intervals. We now describe an additional process to increase the aforementioned contribution: We show in the following claim how an interval can be transformed into many smaller intervals which are equivalent to the original interval in terms of the distribution of quadratic residues and non-residues in them.
 %We saw in the previous section how we split an interval in $\mathbb{F}_p$ of size $O(p^{\nicefrac{1}{2}})$ into smaller sliding intervals and used lemma 2 to obtain the bound. What we do in this section is one step further: we show that an interval is equivalent to several small intervals in terms of the number of quadratic residues and non-residues in it. This would be useful to further amplify the contribution of an interval when applying lemma 2.
 
 \begin{claim*}
-Let $I$ be an interval in $\mathbb{F}_p$ of size $H+1$. Then multiplying each element of $I$ by $q^{-1}$ ($q\in\mathbb{F}_p,q<p$), results in $q$ intervals of sizes $\big \lfloor \nicefrac{(H+1)}{q}\big\rfloor$ or $\big \lceil \nicefrac{(H+1)}{q}\big\rceil$ throughout $\mathbb{F}_p$, with any pair of starting elements of consecutive intervals having differences $\big \lfloor\nicefrac{p}{q}\big\rfloor$ or $\big \lceil\nicefrac{p}{q}\big\rceil$, such that the intervals cumulatively have either the same numbers of quadratic residues and non-residues as $I$, or the counts of quadratic residues and non-residues are interchanged.
+Let $I$ be an interval in $\mathbb{F}_p$ of size $H+1$. Then multiplying each element of $I$ by $q^{-1}$ ($q\in\mathbb{F}_p, q < p$), results in $q$ intervals of sizes $\big \lfloor \nicefrac{(H+1)}{q}\big\rfloor$ or $\big \lceil \nicefrac{(H+1)}{q}\big\rceil$ throughout $\mathbb{F}_p$, with any pair of starting elements of consecutive intervals having differences $\big \lfloor\nicefrac{p}{q}\big\rfloor$ or $\big \lceil\nicefrac{p}{q}\big\rceil$, such that the intervals cumulatively have either the same numbers of quadratic residues and of non-residues as $I$, or the counts of quadratic residues and of non-residues are interchanged.
 \end{claim*}
 
 \begin{claimproof}
-Let $I$ consist of the elements $\{N,N+1,...\text{ }N+H\}$. We multiply each element in $I$ by $q^{-1}$ resulting in the set of elements $\{Nq^{-1},(N+1)q^{-1}...(N+H)q^{-1}\}$, which we can refer to as $Iq^{-1}$. Let us work with the resulting numbers by now considering them in $\mathbb{Z}$. A general resulting element is:
+Let $I$ consist of the elements $\{N,N+1,...\text{ }N+H\}$. We multiply,in $\mathbb{F}_p$, each element in $I$ by $q^{-1}$ resulting in the set of elements $\{Nq^{-1},(N+1)q^{-1}...(N+H)q^{-1}\}$, which we can refer to as $Iq^{-1}$. A general resulting element is:
 \begin{equation} \label{smallinterval}
     (N+k)q^{-1}=(N+nq+s)q^{-1}=Nq^{-1}+sq^{-1}+n
 \end{equation}
-where $k=nq+s$ and $0\leq s<q$, where $n,s\in\mathbb{Z}$, by the quotient-remainder theorem. $n$ takes values from $0$ to $\lfloor\nicefrac{(H-s)}{q}\rfloor$ for a particular $s$, since $k$ varies from $0$ to $H$.
+where $k=nq+s$ and $0\leq s<q$, with $n,s\in\mathbb{Z}$, by the quotient-remainder theorem considering $k$'s properties as an element of $\mathbb{Z}$. $n$ takes values from $0$ to $\lfloor\nicefrac{(H-s)}{q}\rfloor$ for a particular $s$, since $k$ varies from $0$ to $H$ and thus $nq+s\leq H \Rightarrow n\leq \nicefrac{(H-s)}{q}$.
 
-We elucidate the $q$ constructed intervals as follows: To each $Nq^{-1}+sq^{-1}$, adding a value of $n$ from $\{0,1,...\lfloor\nicefrac{(H-s)}{q}\rfloor\}$ results in each element of $Iq^{-1}$ by (\ref{smallinterval}), thus there are $q$ small intervals of size $\lfloor\nicefrac{(H-s)}{q}\rfloor$ starting at $Nq^{-1}+sq^{-1}$ for each value of $s$. These intervals are disjoint because, being in a field, distinct $(N+k)$ result in different values of $(N+k)q^{-1}$.
+We elucidate the $q$ constructed intervals as follows: Adding to $Nq^{-1}+sq^{-1}$ a value of $n$ from $\{0,1,...\lfloor\nicefrac{(H-s)}{q}\rfloor\}$, for every possible $n$ for each $s$, results in all the elements of $Iq^{-1}$ as shown by (\ref{smallinterval}). Thus, there are $q$ small intervals of size $\lfloor\nicefrac{(H-s)}{q}\rfloor +1$ starting at $Nq^{-1}+sq^{-1}$ for each value of $s$. These intervals are disjoint because, being in a field, distinct $(N+k)$ result in different values of $(N+k)q^{-1}$.
 
-We arithmetically calculate the exact values of a small interval $\{(N+s)q^{-1},(N+s)q^{-1}+1, ...,(N+s)q^{-1}+\lfloor\nicefrac{(H-s)}{q}\rfloor\}$. Since $N+s\equiv N+s+up\pmod p, \forall u\in \mathbb{Z}$
-\[\chi((N+s)q^{-1})=\chi((N+s+up)q^{-1})\]
-For $t_1,t_2\in\{0, 1,... q-1\}$
-\[N+s+t_1p \equiv N+s+t_2p \pmod q\]
-\[\Rightarrow t_1=t_2\]
-Thus, for exactly one $t\in\{0, 1,... q-1\}$ for each $s$, $N+s+tp \equiv 0 \pmod q$, i.e. $q\divides N+s+tp$. Now,
+We now arithmetically calculate the exact values of a small interval $\{(N+s)q^{-1},(N+s)q^{-1}+1, ...,(N+s)q^{-1}+\lfloor\nicefrac{(H-s)}{q}\rfloor\}$, since these values are still in terms of $q^{-1}$. Since $N+s\equiv N+s+up\pmod p  \text{ } \forall u\in \mathbb{Z}$:
+\[\chi((N+s)q^{-1})=\chi((N+s+up)q^{-1}) \text{  } \forall u\in \mathbb{Z}\]
+For $t_1,t_2\in\{0, 1,... q-1\}$, we can say
+\[N+s+t_1p \equiv N+s+t_2p \pmod q \Rightarrow t_1=t_2\]
+Thus, for exactly one $t\in\{0, 1,... q-1\}$ for each $s$, $N+s+tp \equiv 0 \pmod q$, i.e. $q\divides N+s+tp$. Now, for such $t$,
 \[((N+s)q^{-1})q\equiv N+s \equiv N+s+tp \pmod p\]
 \[\Rightarrow (N+s)q^{-1} \equiv \frac{N+s+tp}{q} \pmod p\]
 since $q\divides N+s+tp$ and $\gcd (q,p)=1$. Thus,
 \[\Rightarrow (N+s)q^{-1} + m\equiv \frac{N+s+tp}{q} + m \pmod p\]
-Hence, the small interval from $Nq^{-1}+sq^{-1}$ to $Nq^{-1}+sq^{-1} + \lfloor\nicefrac{(H-s)}{q}\rfloor$ is equivalent modulo $p$ to the integers occurring in $[\nicefrac{(N+s+tp)}{q},\nicefrac{(N+s+tp+H-s)}{q}]$ which are the same as those in $[\nicefrac{(N+tp)}{q},\nicefrac{(N+tp+H)}{q}]$. Since for $s_1,s_2\in\{0, 1,... q-1\}$,
-\[N+s_1+tp \equiv N+s_2+tp \pmod q\]
-\[\Rightarrow s_1=s_2\]
-Thus each value of $s$ has a different corresponding value of $t$ which makes $q\divides N+s+tp$. Hence, all the $q$ intervals are equivalent modulo $p$ to the integers between $\nicefrac{(N+tp)}{q}$ and $\nicefrac{(N+tp+H)}{q}$ for each $t\in\{0,1,...q-1\}$.
+Hence, the small interval from $Nq^{-1}+sq^{-1}$ to $Nq^{-1}+sq^{-1} + \lfloor\nicefrac{(H-s)}{q}\rfloor$ is equivalent modulo $p$ to the integers occurring in $[\nicefrac{(N+s+tp)}{q},\nicefrac{(N+s+tp+H-s)}{q}]$, which are the same as those in $[\nicefrac{(N+tp)}{q},\nicefrac{(N+tp+H)}{q}]$. For $s_1,s_2\in\{0, 1,... q-1\}$,
+\[N+s_1+tp \equiv N+s_2+tp \pmod q \Rightarrow s_1=s_2\]
+Thus, each value of $s$ has a different corresponding value of $t$ which makes $ N+s+tp$ divisible by $q$. Hence, the set union of all $q$ integer intervals is equivalent, modulo $p$, to the integers in $\bigcup\limits_{t=0}^{q-1} [\nicefrac {(N+tp)} {q},\nicefrac {(N+tp+H)}{q}]$.
 
-The small intervals each start at $\frac{N+s+tp}{q}$ for some $s$ and $t$, thus consecutive intervals are of the form $\frac{N+s_1+tp}{q}$ and $\frac{N+s_2+(t+1)p}{q}$ since $s_i<q<p$. Thus the length between two consecutive intervals is of the form $\frac{p+\Delta s}{q}$, which can take values $\big \lfloor\nicefrac{p}{q}\big\rfloor$ and $\big \lceil\nicefrac{p}{q}\big\rceil$.
+The small intervals each start at $\frac{N+s+tp}{q}$ for some $s$ and $t$, thus consecutive intervals are of the form $\frac{N+s_1+tp}{q}$ and $\frac{N+s_2+(t+1)p}{q}$, where $s_1,s_2\in \{0,1,...q-1\}$, since
+\[0<s_i<q<p \ \forall s_i\! \in \! \{0,1,...q-1\}\Rightarrow s_1-s_2 < p \Rightarrow s_1 < p + s_2\]
+\[ \Rightarrow \frac{N+s_1+tp}{q}<\frac{N+s_2+(t+1)p}{q}\]
+Thus the length between two consecutive intervals is of the form $\frac{p+\Delta s}{q}$ ($\Delta s$ being the difference between two values of $s$). Since it can only take integer values, and $-q<\Delta s<q$, the values which $\frac{p+\Delta s}{q}$ can take are $\big \lfloor\nicefrac{p}{q}\big\rfloor$ and $\big \lceil \nicefrac {p}{q}\big\rceil$.
 
-Multiplying the entire interval $I$ by $q^{-1}$ preserves or interchanges the original cardinalities of quadratic residues and non-residues in $Iq^{-1}$, because $\chi((N+k)q^{-1})=\chi(q^{-1})\chi(N+k)\forall k \in \{0,1,...,H\}$ and $\chi(q^{-1})$ is a constant. The small intervals constructed are thus equivalent to the original interval $I$ in this sense.
+Multiplying the entire interval $I$ by $q^{-1}$ preserves or interchanges the original cardinalities of quadratic residues and non-residues, because $\chi((N+k)q^{-1})=\chi(q^{-1})\chi(N+k)\ \forall k \in \{0,1,...,H\}$ and $\chi(q^{-1})$ is a constant. The small intervals constructed are thus equivalent to the original interval $I$ in this sense.
 \end{claimproof}
-We now prove a lemma which allows to include many more such small intervals in a lower bound calculation of the sum-of-intervals in lemma \ref{lemma2statement} by proving that when multiplying $I$ by several different values of $q^{-1}$, many of the resulting small intervals are disjoint, which will further lower the possible maximum length of any interval of only quadratic residues or only quadratic non-residues.
+We now prove a lemma which allows us to include many more such small intervals as created in the claim above in a lower bound calculation of the sum-expression which is bound above in lemma \ref{lemma2statement} by proving that when multiplying $I$ by several different values of $q^{-1}$, many of the resulting small intervals are disjoint, which will further lower the possible maximum length of any interval of only quadratic residues or only quadratic non-residues.
 %
 \begin{lemma}
-\cite{burgess}Given are a set of $Q$ distinct natural numbers, whose general member is given by $q$, which are pairwise co-prime to each other, and any natural numbers $N$ and $H$ such that for any $q$:
+\textup{\cite{burgess}}Given is a set $\mathcal{Q}$ of $Q$ distinct natural numbers, whose general member is given by $q$, which are pairwise co-prime, and any natural numbers $N$ and $H$ such that for any $q\in\mathcal{Q}$:
 \begin{equation} \label{lemma3cond}
 2Hq<p
 \end{equation}
 Let us denote by $I(q,t)$ the real interval
-$$\frac{N+tp}{q} \leq z \leq \frac{N+H+tp}{q}$$
-Then it is possible to associate with each $q$ a set $T(q)\subseteq \{0,1,\ldots q-1\}$ of size at least $q-Q$, such that for each $q$, $\forall t\in T(q)$, $I(q,t)$ are disjoint.
+$$\frac{N+tp}{q} < z \leq \frac{N+H+tp}{q}$$
+Then it is possible to associate with each $q$ a set $T(q)\subseteq \{0,1,\ldots q-1\}$ of size at least $q-Q$, such that $\forall q_1,q_2\! \in\! \mathcal{Q} \ \forall t_1\! \in\! T(q_1)\  \forall t_2\! \in\! T(q_2)\  I(q_1,t_1)\cap I(q_2,t_2) = \phi$ provided $(q_1,t_1) \neq (q_2,t_2)$.
 \end{lemma}
 \begin{proof}
 For a given $q$, say $q_o$, we note that for consecutive $t$, $I(q_o,t)$ differ by $\nicefrac{p}{q_o}$ in their starting points. Since each $I(q_o,t)$ has a width of $\nicefrac{H}{q_o}$ and $H<p$, all $I(q_o,t)$ are disjoint for a given $q_o$. The $I(q_o,t)$ are in fact very narrow compared to the difference between their starting points, by a factor of $\nicefrac{\big(\frac{H}{q_o}\big)}{\big(\frac{p}{q_o}}\big)$ which is less than $\nicefrac{1}{2q_o}$ by (\ref{lemma3cond}). We can thus define for convenience in visualization, two terms:
 \begin{itemize}
-    \item Block: The closed interval between two points on the real line, the points being the 'edges' of the block. A '$q_o$-block" is the stretch between the starting points of two consecutive intervals $I(q_o,t)$ and $I(q_o,t+1)$, i.e. the closed interval with end points $\nicefrac{(N+pt)}{q_o}$ and $\nicefrac{(N+pt+p)}{q_o}$.
-    \item Fringe: A narrow interval at the start of a block. A $q_o$-fringe is the interval $I(q_o,t)$, with respect to the block formed by the points $\nicefrac{(N+pt)}{q_o}$ and $\nicefrac{(N+pt+p)}{q_o}$.
+    \item Block: The closed interval between two points on the real line, the points being the 'edges' of the block. A `$q_o$-block' is the stretch between the starting points of two consecutive intervals $I(q_o,t)$ and $I(q_o,t+1)$ for some $t\in\{0,1,...q_o-1\}$, i.e. the closed interval with end points $\nicefrac{(N+pt)}{q_o}$ and $\nicefrac{(N+pt+p)}{q_o}$.
+    \item Fringe: A narrow interval at the start of a block. A `$q_o$-fringe' is the interval $I(q_o,t)$ for some $t\in\{0,1,...q_o-1\}$, with respect to the block formed by the points $\nicefrac{(N+pt)}{q_o}$ and $\nicefrac{(N+pt+p)}{q_o}$.
 \end{itemize}
 \begin{figure}
-\includegraphics[width=\textwidth]{block_fringe}
+\includegraphics[scale=0.4]{block_fringe}
 \centering
 \caption{Visual representation in the number line of a block and a fringe}
 \label{fig:block_fringe}
@@ -202,25 +265,25 @@ For a given $q$, say $q_o$, we note that for consecutive $t$, $I(q_o,t)$ differ 
 They are illustrated in figure \ref{fig:block_fringe}. We make the following claim about two sets of blocks:
 %
 \begin{claim*}
-  Let $u$ and $v$ be two co-prime numbers. From a point, say $z$, on the real line, lay blocks of length $u$ consecutively in the positive direction of the real axis. Similarly, from $z$, lay blocks of size $v$ consecutively in the positive direction as in figure \ref{fig:block_align}.
+  Let $u$ and $v$ be two co-prime numbers. From a point, say $z$, on the real line, lay blocks of length $u$ consecutively in the positive direction of the real axis. Similarly, from $z$ again, lay blocks of size $v$ consecutively in the positive direction as in figure \ref{fig:block_align}.
   \begin{figure}
   \includegraphics[width=\textwidth]{block_align}
   \centering
   \caption{Laying blocks of co-prime sizes}
   \label{fig:block_align}
   \end{figure}
-  Then the first end point of blocks of size $u$ which coincides with an end point of a block of size $v$, after $z$, are after $v$ blocks of size $u$ and $u$ blocks of size $v$.
+  Then the first point of coincidence of an end points of any of the blocks of size $u$ and an end point of any of the blocks of size $v$, following $z$, is after $v$ blocks of size $u$ and $u$ blocks of size $v$.
 \end{claim*}
 \begin{claimproof}
   Since, $u$ and $v$ are co-prime, $lcm(u,v)=uv$. If, for the sake of contradiction, say the first coinciding point was after $s$ blocks of size $u$, where $s<v$, then $v \divides su\Rightarrow lcm(u,v) \leq su < uv$, which is a contradiction. Since $u\divides uv$ and $v \divides uv$, there is a coinciding point after $v$ blocks of size $u$ and $u$ blocks of size $v$, which is the first coinciding point after $z$.
 \end{claimproof}
 %
-Now take two values of $q$, $q_1$ and $q_2$, and without loss of generality assume $q_1<q_2$. The $q_1$-blocks are $\nicefrac{p}{q_1}$ in size, while the $q_2$-blocks are of size $\nicefrac{p}{q_2}$. If, assume, a $q_1$-fringe overlaps with a $q_2$-fringe. Then shifting the $q_1$-blocks by a maximum of $\nicefrac{H}{q_1}$ in either the positive or negative direction on the real axis will align an a $q_1$-block edge and a $q_2$-block edge. Let us scale the real line by multiplying it by $\nicefrac{q_1q_2}{p}$. The resulting scaled $q_1$-blocks and $q_2$-blocks thus formed are then of lengths $q_2$ and $q_1$ respectively. Thus the points at which a $q_1$-block edge coincides with a $q_2$-block edge are separated by $q_1$ $q_1$-blocks and $q_2$ $q_2$-blocks, and also the least distance between all other pairs of edges is at least $1$ in the new shifted and scaled real axis due the integer length blocks. Thus, after un-scaling the shifted real line, the point which they coincide is only after a length of $p$, and the length of $1$ becomes $\nicefrac{p}{q_1q_2}$. So in the original unshifted and unscaled real line, a length of $\nicefrac{p}{q_1q_2}$ between a $q_1$-block edge and a $q_2$-block edge becomes a minimum of $\nicefrac{p}{q_1q_2}-\nicefrac{H}{q_1}>\nicefrac{H}{q_1}$ which is greater than both fringe widths, and hence the fringes cannot overlap in that case. Thus intervals overlap at most once in a length of $p$.
+Now take two values of $q$, $q_1$ and $q_2$ such that  $q_1\neq q_2$, and without loss of generality assume $q_1<q_2$. The $q_1$-blocks are $\nicefrac{p}{q_1}$ in size, while the $q_2$-blocks are of size $\nicefrac{p}{q_2}$. If, assume, a $q_1$-fringe overlaps with a $q_2$-fringe, then, to align the start edges of the $q_1$-block and $q_2$-block whose fringes overlap, we shift the $q_1$-blocks along the real axis by the minimum possible distance, which is a maximum of $\nicefrac{H}{q_1}$ in either the positive or negative direction. Let us now scale the real line by multiplying it by $\nicefrac{q_1q_2}{p}$. The resulting scaled $q_1$-blocks and $q_2$-blocks thus formed are then of lengths $q_2$ and $q_1$ respectively. Thus the points at which a $q_1$-block edge coincides with a $q_2$-block edge are separated by $q_1$ $q_1$-blocks and $q_2$ $q_2$-blocks, and also the least distance between all other pairs of edges is at least $1$ in the new shifted-and-scaled real axis due the integer length blocks. Thus, after un-scaling the shifted real line, the point at which the $q_1$-block edges and $q_2$-block edges coincide is only after a length of $p$, and the length of $1$ becomes $\nicefrac{p}{q_1q_2}$. So in the original unshifted and unscaled real line, a length of $\nicefrac{p}{q_1q_2}$ between a $q_1$-block edge and a $q_2$-block edge becomes a minimum of $\nicefrac{p}{q_1q_2}-\nicefrac{H}{q_1}>\nicefrac{H}{q_1}$ which is greater than both fringe widths, and hence the fringes cannot overlap in that case. Thus the intervals overlap at most once in a length of $p$.
 
-Thus we can eliminate at most one $t$ from $T(q_1)$ and one $t$ from $T(q_2)$ while considering the intersections for the pair $(q_1,q_2)$. Hence, for each $q$, there are at least $q-Q$ values of $t\in \{0,1,\ldots q-1\}$ such that $I(q,t)$ are disjoint from all other intervals associated with all $q$.
+Thus, considering the intersections for a pair $(q_1,q_2)$, we can exclude at most one value $t_1\in\{0,1,...q_1-1\}$ from being included in $T(q_1)$ and at most one value $t_2\in\{0,1,...q_2-1\}$ from being included in $T(q_2)$. Hence, for each $q_o\in \mathcal{Q}$, there are at least $q-Q$ values of $t\in \{0,1,\ldots q-1\}$ such that $I(q_o,t)$ are disjoint from all intervals associated with $q'\in \mathcal{Q}-\{q_o\}$.
 
 \begin{comment}
-Thus the points at which a $q_1$-block edge coincides with a $q_2$-block edge are seperated by $q_1$ $q_1$-blocks and $q_2$ $q_2$-blocks. Thus, in the unscaled real line, the point which they coincide is after a length of $p$, due to rescaling by a factor of $\nicefrac{p}{q_1q_2}$. Now for $t \in \{ 0,1,...,q-1\}$, the range of all $I(q_1,t)$ is $[\nicefrac{N}{q_1}, \nicefrac{(N+pq_1)}{q_1}]$ and that of all $I(q_2,t)$ is $[\nicefrac{N}{q_2}, \nicefrac{(N+pq_2)}{q_2}]$. Since the overlapping region of the ranges is less than $p$, there can only be not more than one coincidence point. The fringes (intervals) being of maximum width $\nicefrac{H}{q_1}$, less than the least possible separation between a $q_1$-block edge and a $q_2$-block edge which are non-coinciding ($\nicefrac{p}{q_1q_2}$), the fringes cannot intersect anywhere else. %correct the seperation thing
+Thus the points at which a $q_1$-block edge coincides with a $q_2$-block edge are separated by $q_1$ $q_1$-blocks and $q_2$ $q_2$-blocks. Thus, in the unscaled real line, the point which they coincide is after a length of $p$, due to rescaling by a factor of $\nicefrac{p}{q_1q_2}$. Now for $t \in \{ 0,1,...,q-1\}$, the range of all $I(q_1,t)$ is $[\nicefrac{N}{q_1}, \nicefrac{(N+pq_1)}{q_1}]$ and that of all $I(q_2,t)$ is $[\nicefrac{N}{q_2}, \nicefrac{(N+pq_2)}{q_2}]$. Since the overlapping region of the ranges is less than $p$, there can only be not more than one coincidence point. The fringes (intervals) being of maximum width $\nicefrac{H}{q_1}$, less than the least possible separation between a $q_1$-block edge and a $q_2$-block edge which are non-coinciding ($\nicefrac{p}{q_1q_2}$), the fringes cannot intersect anywhere else. %correct the separation thing
 \end{comment}
 
 %The starting $I(q_o,t)$ are spread over an interval of size $p$, evenly spaced by $\nicefrac{p}{q_o}$
@@ -237,85 +300,91 @@ Hence, for each $q$, there are at least $q-Q$ values of $t\in \{0,1,\ldots q-1\}
 \end{comment}
 \end{proof}
 
-Hence, we can now see that multiplying an interval $I$ in $\mathbb{F}_p$ by many values of $q^{-1}$ for appropriate values of $q$, can lead to many non-intersecting small intervals in $\mathbb{F}_p$ which are very similar to the original interval $I$ in terms of the number of quadratic residues and non-residues in them. These non-intersecting intervals can be cascaded as in eq. \ref{intervcontr} and summed in a lower bound calculation of the sum-of-intervals in lemma \ref{lemma2statement}, to further lower the bound of $O(p^{\nicefrac{1}{2}})$. This leads to the $O(p^{\nicefrac{1}{4}+\delta})$ bound on the least quadratic residue, which we now proceed to prove in the next section.
+Hence, we can now see that multiplying an interval $I$ in $\mathbb{F}_p$ by many values of $q^{-1}$ for appropriate values of $q$, can lead to many non-intersecting small intervals in $\mathbb{F}_p$ which are very similar to the original interval $I$ in terms of the number of quadratic residues and non-residues in them. These non-intersecting intervals can be cascaded as in eq. \ref{intervcontr} and summed in a lower bound calculation of the sum-expression which is bounded above in lemma \ref{lemma2statement}, to further lower the bound from $O(p^{\nicefrac{1}{2}})$. This leads to the $O(p^{\nicefrac{1}{4}+\delta})$ bound on the least quadratic residue, which we now proceed to prove in the next section.
 %
 %
 \section{The $p^{\nicefrac{1}{4}+\delta}$ bound}
-We now proceed to proving the bound on the least quadratic non-residue, i.e. Theorem \ref{thm:p4bound}, using the results proven thus. We restate the theorem:
+We now proceed to proving the upper bound in theorem \ref{thm:p4bound} on the least quadratic non-residue, using the results proven thus. We restate the theorem:
 \begin{theorem*}
-Given a quadratic character $\chi_2$ modulo prime $p$, for any $x\in\mathbb{F}_p$ and $H>p^{\nicefrac{1}{4}+\delta}$, where $\delta>0$:
+Given a quadratic character $\chi_2$ modulo prime $p$, for any $H>p^{\nicefrac{1}{4}+\delta}$, where $\delta>0$:
 \[\sum\limits_{n=x+1}^{n+H}\lvert\chi_2(n)\rvert<H\]
-for large enough $p$.
+for any $x\in\mathbb{Z}$, for large enough $p$.
 \end{theorem*}
 \begin{proof}
-The proof is by means of contradiction. Let us assume there exists an $H>p^{\nicefrac{1}{4}+\delta}$ such that for some $\delta>0$, and $\Big \lvert \sum\limits_{x=N+1}^{N+H}\chi_2(x)\Big \rvert=H$. We already know that for $H>cp^{\nicefrac{1}{2}}$, where $c$ is some constant, there can be no interval of all quadratic residues or all non-residues. Thus, $H\leq cp^{\nicefrac{1}{2}}$.\\
-We take numbers given by $q$, pair-wise co-prime (as required for the application of lemma 3 later), to be the primes in the range:
-$$\frac{p^{\nicefrac{1}{4}}}{2} \leq q \leq p^{\nicefrac{1}{4}}$$
-This satisfies the constraint in (\ref{lemma3cond}) for large enough $p$. The number of primes $q$ is given by $Q=\pi(p^{\nicefrac{1}{4}})-\pi(\frac{p^{\nicefrac{1}{4}}}{2})=o(p^{\nicefrac{1}{4}})$ by the prime number theorem. Now, restating the assumption:
+The proof is by means of contradiction. Let us assume that for infinitely many values of $p$, there exists an $H>p^{\nicefrac{1}{4}+\delta}$ for some $\delta>0$, such that $\Big \lvert \sum\limits_{x=N+1}^{N+H}\chi_2(x)\Big \rvert=H$. We already know that for large enough $p$, $H>cp^{\nicefrac{1}{2}}$, where $c$ is some constant, there can be no interval of all quadratic residues or all non-residues. We take $p$ to be large enough that $H\leq cp^{\nicefrac{1}{2}}$.\\
+We take numbers in a set $\mathcal{Q}$, which are pair-wise co-prime (as required for the application of lemma 3 later), to be the primes in the range $[\nicefrac{p^{\nicefrac{1}{4}}}{2},p^{\nicefrac{1}{4}}]$.
+This satisfies the constraint in (\ref{lemma3cond}) for large enough $p$. The number of primes $\lvert\mathcal{Q}\rvert=Q$ is given by $Q=\pi(p^{\nicefrac{1}{4}})-\pi(\frac{p^{\nicefrac{1}{4}}}{2})=o(p^{\nicefrac{1}{4}})$ by the prime number theorem. Now, restating the assumption:
 \begin{equation} \label{eq:p4assum}
 \bigg \lvert\sum\limits_{x=N+1}^{N+H}\chi_2(x)\bigg \rvert=H
 \end{equation}
-In the next few steps, we proceed to transform the interval in eq. \ref{eq:p4assum} into several smaller intervals as discussed in the previous section. For a fixed $x$, $x+tp$ is divisible by $q$ for exactly one value of $t\in\{0,1,...q-1\}$. Also $\chi(x+tp)=\chi(x)$. Thus:
+In the next few steps, we proceed to transform the interval in eq. \ref{eq:p4assum} into several smaller intervals as discussed in the previous section. For a fixed $x$, $x+tp$ is divisible by a $q\in\mathcal{Q}$ for exactly one value of $t\in\{0,1,...q-1\}$. Also $\chi(x+tp)=\chi(x)$. Thus:
 \[
 \bigg \lvert\sum\limits_{x=N+1}^{N+H}\chi_2(x)\bigg \rvert=\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{\substack{x=N+1\\x+tp\divides q}}^{N+H}\chi_2(x+tp)\bigg \rvert=H
 \]
 Since $q\divides x+tp$, thus $x+tp=qz$ for some $z\in\mathbb{Z}$, $\Rightarrow z=\frac{x+tp}{q}$.\\
-For $N+1\leq x \leq N+H$, we see that all such corresponding $z$ obtained are the integer values in $I(q,t)$ according to lemma 3, $t$ being the corresponding values such that $q \divides x+tp$.
+For $N+1\leq x \leq N+H$, we see that all such corresponding $z$ obtained are the integer values in $I(q,t)$ according to lemma 3, $t$ being the corresponding values such that $q \divides x+tp$. We will refer to the set of integers in $I(q,t)$ by $I_o(q,t)$
 $$\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{\substack{x=N+1\\q\divides x+tp}}^{N+H} \chi_2 \Big(\frac{x+tp}{q}.q\Big)\bigg \rvert=H$$
-$$\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{z\in I(q,t)}\chi_2(z.q)\bigg \rvert=H$$
+$$\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{z\in I_o(q,t)}\chi_2(z.q)\bigg \rvert=H$$
 \begin{equation} \label{chapter3refeq}
-\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{z\in I(q,t)}\chi_2(z)\chi_2(q)\bigg \rvert=H
+\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{z\in I_o(q,t)}\chi_2(z)\chi_2(q)\bigg \rvert=H
 \end{equation}
-Now, since $\lvert a\rvert + \lvert b\rvert \geq \lvert a+b \rvert$
-$$\sum\limits_{t=0}^{t=q-1}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_2(z)\chi_2(q)\bigg \rvert \geq H$$
-$$\sum_q\sum\limits_{t=0}^{t=q-1}\bigg \lvert\chi_2(q)\sum\limits_{z\in I(q,t)}\chi_2(z)\bigg \rvert \geq HQ$$
-$$\sum_q\bigg \lvert\chi_2(q)\bigg\rvert\sum\limits_{t=0}^{t=q-1}\bigg\lvert\sum\limits_{z\in I(q,t)}\chi_2(z)\bigg \rvert \geq HQ$$
-$$\sum_q\sum\limits_{t=0}^{t=q-1}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_2(z)\bigg \rvert \geq HQ$$
+Now, since $\lvert a\rvert + \lvert b\rvert \geq \lvert a+b \rvert\  \forall a,b \in \mathbb{Z}$
+$$\sum\limits_{t=0}^{t=q-1}\bigg \lvert\sum\limits_{z\in I_o(q,t)}\chi_2(z)\chi_2(q)\bigg \rvert \geq H$$
+$$\sum_{q\in\mathcal{Q}}\sum\limits_{t=0}^{t=q-1}\bigg \lvert\chi_2(q)\sum\limits_{z\in I_o(q,t)}\chi_2(z)\bigg \rvert \geq HQ$$
+$$\sum_{q\in\mathcal{Q}}\bigg \lvert\chi_2(q)\bigg\rvert\sum\limits_{t=0}^{t=q-1}\bigg\lvert\sum\limits_{z\in I_o(q,t)}\chi_2(z)\bigg \rvert \geq HQ$$
+$$\sum_{q\in\mathcal{Q}}\sum\limits_{t=0}^{t=q-1}\bigg \lvert\sum\limits_{z\in I_o(q,t)}\chi_2(z)\bigg \rvert \geq HQ$$
 Separating the possibly overlapping intervals from the disjoint intervals:
-\begin{equation} \label{seperation}
-\sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_2(z)\bigg \rvert+\sum_q\sum\limits_{\substack{t=0\\t\not \in T(q)}}^{q-1}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_2(z)\bigg \rvert \geq HQ
+\begin{equation} \label{separation}
+\sum_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I_o(q,t)}\chi_2(z)\bigg \rvert+\sum_{q\in\mathcal{Q}}\sum\limits_{\substack{t=0\\t\not \in T(q)}}^{q-1}\bigg \lvert\sum\limits_{z\in I_o(q,t)}\chi_2(z)\bigg \rvert \geq HQ
 \end{equation}
 Now,
 \begin{equation} \label{overlapping}
-\sum_q\sum\limits_{\substack{t=0\\t\not \in T(q)}}^{q-1}\bigg\lvert\sum\limits_{z\in I(q,t) }\chi_2(z)\bigg \rvert \leq \sum\limits_q Q\bigg\lceil\frac{H}{q}\bigg\rceil \leq \sum\limits_q Q\frac{2H}{q} < 4Q^2 Hp^{\nicefrac{-1}{4}}
+\sum_{q\in\mathcal{Q}}\sum\limits_{\substack{t=0\\t\not \in T(q)}}^{q-1}\bigg\lvert\sum\limits_{z\in I_o(q,t) }\chi_2(z)\bigg \rvert \leq \sum\limits_{q\in\mathcal{Q}} Q\bigg\lceil\frac{H}{q}\bigg\rceil \leq \sum\limits_{q\in\mathcal{Q}} Q\frac{2H}{q} < 4Q^2 Hp^{\nicefrac{-1}{4}}
 \end{equation}
-since $\sum\limits_q q^{-1} < Q.\Big(\frac{p^{\nicefrac{1}{4}}}{2}\Big)^{-1}$. Using \ref{seperation} and \ref{overlapping},
+since $\sum\limits_{q_o\in\mathcal{Q}} \nicefrac{1}{q} < Q.\Big(\frac{p^{\nicefrac{1}{4}}}{2}\Big)^{-1}$. Using \ref{separation} and \ref{overlapping},
 \begin{equation} \label{eq:disjointintlimit}
-\sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_2(z)\bigg \rvert > HQ - 4Q^2 Hp^{\nicefrac{1}{4}}=HQ(1-4Qp^{\nicefrac{-1}{4}})>\frac{HQ}{2}
+\sum_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I_o(q,t)}\chi_2(z)\bigg \rvert > HQ - 4Q^2 Hp^{\nicefrac{1}{4}}=HQ(1-4Qp^{\nicefrac{-1}{4}})>\frac{HQ}{2}
 \end{equation}
-for large enough $p$, since $Q=o(p^{\nicefrac{1}{4}})$. Since all $I(q,t)$ such that $t\in T(q)$ are mutually disjoint, and $\bigcup\limits_q\bigcup\limits_{t\in T(q)} I(q,t) \subseteq \{0,1,...,p-1\}$, $\sum\limits_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h \rvert \leq \sum\limits_{x=0}^{p-1}\lvert S_h(x)\rvert ^{2r}$ according to lemma \ref{lemma2statement}. Thus, converting the left-most side of eq. \ref{eq:disjointintlimit} in a compatible form with lemma \ref{lemma2statement} can help put an upper bound on it, which we now aim to do.
-%$\sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\sum\limits_{m=0}^{h}\chi_2(z+m)\bigg \rvert \leq \sum\limits_{x=0}^{p-1}S_h)(x)$
-$$\sum\limits_{\mathclap {z\in I(q,t)}}\chi_2(z+m) = \sum\limits_{\mathclap{z\in I(q,t)}}\chi_2(z)- \phi_m$$
+for large enough $p$, since $Q=o(p^{\nicefrac{1}{4}})$. Since all $I(q,t)$ such that $t\in T(q)\ \forall q\in\mathcal{Q}$ are mutually disjoint, and $\bigcup\limits_{q\in\mathcal{Q}}\bigcup\limits_{t\in T(q)} I_o(q,t) \subseteq \{0,1,...,p-1\}$,
+\[\sum\limits_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\sum\limits_{z\in I_o(q,t)}\lvert S_h(z) \rvert ^{2r} \leq \sum\limits_{x=0}^{p-1}\lvert S_h(x)\rvert ^{2r}\]
+Thus, converting the left-most side of eq. \ref{eq:disjointintlimit} in a form compatible with lemma \ref{lemma2statement} can help put an upper bound on it, which we now aim to do.
+%$\sum_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I_o(q,t)}\sum\limits_{m=0}^{h}\chi_2(z+m)\bigg \rvert \leq \sum\limits_{x=0}^{p-1}S_h)(x)$
+$$\sum\limits_{\mathclap {z\in I_o(q,t)}}\chi_2(z+m) = \sum\limits_{\mathclap{z\in I_o(q,t)}}\chi_2(z)- \phi_m$$
 where $\phi_m\leq 2m$
-$$\sum\limits_{m=0}^{h-1}\sum\limits_{z\in I(q,t)}\chi_2(z+m) = \sum\limits_{m=0}^{h-1}\sum\limits_{z\in I(q,t)}\chi_2(z)- \sum\limits_{m=0}^{h-1}\phi_m$$
-$$\sum\limits_{m=0}^{h-1}\sum\limits_{z\in I(q,t)}\chi_2(z+m) + \sum\limits_{m=0}^{h-1}\phi_m= h\sum\limits_{z\in I(q,t)}\chi_2(z)$$
-$$\bigg \lvert\sum\limits_{m=0}^{h-1}\sum\limits_{z\in I(q,t)}\chi_2(z+m) + \sum\limits_{m=0}^{h-1}\phi_m \bigg \rvert= \bigg \lvert h\sum\limits_{z\in I(q,t)}\chi_2(z)\bigg \rvert$$
+$$\sum\limits_{m=0}^{h-1}\sum\limits_{z\in I_o(q,t)}\chi_2(z+m) = \sum\limits_{m=0}^{h-1}\sum\limits_{z\in I_o(q,t)}\chi_2(z)- \sum\limits_{m=0}^{h-1}\phi_m$$
+$$\sum\limits_{m=0}^{h-1}\sum\limits_{z\in I_o(q,t)}\chi_2(z+m) + \sum\limits_{m=0}^{h-1}\phi_m= h\sum\limits_{z\in I_o(q,t)}\chi_2(z)$$
+$$\bigg \lvert\sum\limits_{m=0}^{h-1}\sum\limits_{z\in I_o(q,t)}\chi_2(z+m) + \sum\limits_{m=0}^{h-1}\phi_m \bigg \rvert= \bigg \lvert h\sum\limits_{z\in I_o(q,t)}\chi_2(z)\bigg \rvert$$
 Since $\lvert a\rvert + \lvert b\rvert \geq \lvert a+b \rvert$,
-$$\sum\limits_{z\in I(q,t)}\bigg \lvert \sum\limits_{m=0}^{h-1}\chi_2(z+m) \bigg \rvert + \bigg\lvert\sum\limits_{m=0}^{h-1}\phi_m\bigg\rvert \geq h\bigg \lvert \sum\limits_{z\in I(q,t)}\chi_2(z)\bigg \rvert$$
-$$\sum\limits_{z\in I(q,t)}\bigg \lvert \sum\limits_{m=0}^{h-1}\chi_2(z+m) \bigg \rvert \geq h\bigg \lvert \sum\limits_{z\in I(q,t)}\chi_2(z)\bigg \rvert-h^2 $$
-\begin{equation} \label{eq:212}
-\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\bigg \lvert \sum\limits_{m=0}^{h-1}\chi_2(z+m) \bigg \rvert \geq h\sum_q\sum\limits_{t\in T(q)}\bigg \lvert \sum\limits_{z\in I(q,t)}\chi_2(z)\bigg \rvert-Qp^{\nicefrac{1}{4}}h^2
-\end{equation}
-since the number of the disjoint intervals $I(q,t)$ given by lemma 3 are less than $Qp^{\nicefrac{1}{4}}$. To estimate the RHS from eq. \ref{eq:disjointintlimit}:
-\begin{equation} \label{sliceineq}
-\sum\limits_{m=0}^{h-1}\sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_2(z)\bigg \rvert = h \sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi_2(z)\bigg \rvert > \frac{HhQ}{2}
-\end{equation}
-So from (\ref{sliceineq}) and (\ref{eq:212})
-$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\bigg \lvert \sum\limits_{m=0}^{h-1}\chi_2(z+m) \bigg \rvert > \frac{HhQ}{2}-Qp^{\nicefrac{1}{4}} h^2=Qh\big(\frac{H}{2}-hp^{\nicefrac{1}{4}}\big)$$
+$$\sum\limits_{z\in I_o(q,t)}\bigg \lvert \sum\limits_{m=0}^{h-1}\chi_2(z+m) \bigg \rvert + \bigg\lvert\sum\limits_{m=0}^{h-1}\phi_m\bigg\rvert \geq h\bigg \lvert \sum\limits_{z\in I_o(q,t)}\chi_2(z)\bigg \rvert$$
+$$\sum\limits_{z\in I_o(q,t)}\bigg \lvert \sum\limits_{m=0}^{h-1}\chi_2(z+m) \bigg \rvert \geq h\bigg \lvert \sum\limits_{z\in I_o(q,t)}\chi_2(z)\bigg \rvert-h^2 $$
+\[
+\sum_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\sum\limits_{z\in I_o(q,t)}\bigg \lvert \sum\limits_{m=0}^{h-1}\chi_2(z+m) \bigg \rvert \geq h\sum_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\bigg \lvert \sum\limits_{z\in I_o(q,t)}\chi_2(z)\bigg \rvert-Qp^{\nicefrac{1}{4}}h^2
+\]
+since the number of the disjoint intervals $I(q,t)$ given by lemma 3 are less than $Qp^{\nicefrac{1}{4}}$. From the estimate in eq. \ref{eq:disjointintlimit}:
+$$\sum_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\sum\limits_{z\in I_o(q,t)}\bigg \lvert \sum\limits_{m=0}^{h-1}\chi_2(z+m) \bigg \rvert > \frac{HhQ}{2}-Qp^{\nicefrac{1}{4}} h^2=Qh\big(\frac{H}{2}-hp^{\nicefrac{1}{4}}\big)$$
 Taking $h<\frac{1}{4}p^{\nicefrac{-1}{4}}H$, and using the the definition of $S_h$ from lemma 2,
-$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h(z) \rvert > \frac{HhQ}{4}$$
+$$\sum_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\sum\limits_{z\in I_o(q,t)}\lvert S_h(z-1) \rvert > \frac{HhQ}{4}$$
 Using Holder's inequality,
-$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h(z) \rvert \leq \bigg ( \sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h(z) \rvert^{2r} \bigg )^{\nicefrac{1}{2r}}\bigg ( \sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}1 \bigg )^{1-\nicefrac{1}{2r}}$$
-$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h(z) \rvert^{2r} \geq \bigg ( \sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h(z) \rvert \bigg )^{2r} \bigg ( \sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}1 \bigg )^{-(2r-1)}$$
-$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h(z) \rvert^{2r} > \Big( \frac{HhQ}{4}\Big)^{2r}\Big ( Qp^{\nicefrac{1}{4}}.2.\frac{H}{p^{\nicefrac{1}{4}}}\Big )^{-(2r-1)}$$
-$$\sum\limits_{z=0}^{p-1}\lvert S_h(z) \rvert^{2r}>\Big(\frac{1}{8}\Big)^{2r}HQh^{2r}$$
+$$\sum_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\sum\limits_{z\in I_o(q,t)}\lvert S_h(z-1) \rvert \leq \bigg ( \sum_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\sum\limits_{z\in I_o(q,t)}\lvert S_h(z) \rvert^{2r} \bigg )^{\nicefrac{1}{2r}}\bigg ( \sum_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\sum\limits_{z\in I_o(q,t)}1 \bigg )^{1-\nicefrac{1}{2r}}$$
+$$\sum_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\sum\limits_{z\in I_o(q,t)}\lvert S_h(z-1) \rvert^{2r} \geq \bigg ( \sum_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\sum\limits_{z\in I_o(q,t)}\lvert S_h(z) \rvert \bigg )^{2r} \bigg ( \sum_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\sum\limits_{z\in I_o(q,t)}1 \bigg )^{-(2r-1)}$$
+$$\sum_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\sum\limits_{z\in I_o(q,t)}\lvert S_h(z-1) \rvert^{2r} > \Big( \frac{HhQ}{4}\Big)^{2r}(QH)^{-(2r-1)}$$
+$$\sum\limits_{z=0}^{p-1}\lvert S_h(z-1) = \sum\limits_{z=0}^{p-1}\lvert S_h(z) \rvert^{2r}>\Big(\frac{1}{4}\Big)^{2r}HQh^{2r}$$
 From lemma 2,
-$$(2r)^{r}h^{r}p+h^{2r}r(2p^{\nicefrac{1}{2}}+1)>\Big(\frac{1}{8}\Big)^{2r}HQh^{2r}$$
-For large enough $p$, the second term of the LHS diminishes compared to the RHS, because:
-\[ \frac{h^{2r}r(2p^{\nicefrac{1}{2}}+1)}{\big(\frac{1}{8}\big)^{2r}HQh^{2r}} \leq c\frac{p^{\nicefrac{1}{2}}}{HQ} \leq c\frac{\log p}{p^{\delta}} < 1\]
-where $c$ is a placeholder for any constant, since $HQ\geq \frac{p^{\nicefrac{1}{2}+\delta}}{4\log p}$. Now, we take $h=\left \lfloor \frac{1}{5}p^{\nicefrac{-1}{4}}H \right \rfloor$. Taking some value of $r>\delta^{-1}$ results in the first term of the LHS diminishing with respect to the RHS, as:
-\[\frac{(2r)^{r}h^{r}p}{\big(\frac{1}{8}\big)^{2r}HQh^{2r}} \leq c \frac{p\log p}{p^{\nicefrac{1}{2}+\delta}h^r} < c\frac{p^{\nicefrac{1}{2}}\log p}{p^{\delta}.p} \leq c\frac{\log p}{p^{\nicefrac{1}{2}+\delta}} < 1\]
-since $h>(\nicefrac{1}{6})p^{\delta}$, for large enough $p$. Thus, we have arrived at a contradiction. Our assumption that $\Big \lvert \sum\limits_{x=N+1}^{N+H}\chi_2(x)\Big \rvert=H$ for $H>p^{\nicefrac{1}{4}+\delta}$ for large enough $p$ was wrong. Hence, the only possibility is that $\Big \lvert \sum\limits_{x=N+1}^{N+H}\chi_2(x)\Big \rvert<H$ for $H>p^{\nicefrac{1}{4}+\delta}$ for large enough $p$, for any $\delta>0$, proving Theorem \ref{thm:p4bound}.
+\begin{equation} \label{eq:finalineq}
+(2r)^{r}h^{r}p+h^{2r}r(2p^{\nicefrac{1}{2}}+1)>\Big(\frac{1}{4}\Big)^{2r}HQh^{2r}
+\end{equation}
+To analyse \ref{eq:finalineq}, we first estimate a lower bound on the value of $Q$. By the prime number theorem, for any $\varepsilon>0$ for large enough $p$:
+%\[Q = \pi(p^{\nicefrac{1}{4}})-\pi(\frac{p^{\nicefrac{1}{4}}}{2}\]
+\[\pi(p^{\nicefrac{1}{4}}) > (1-\varepsilon)\frac{p^{\nicefrac{1}{4}}}{\log (p^{\nicefrac{1}{4}})}\quad\text { and}\]
+\[\pi(\nicefrac{p^{\nicefrac{1}{4}}}{2}) < (1+\varepsilon)\frac{\nicefrac{p^{\nicefrac{1}{4}}}{2}}{\log (\nicefrac {p^{\nicefrac{1}{4}}}{2})} < (1+\varepsilon)\frac{p^{\nicefrac{1}{4}}}{2(\log (p^{\nicefrac{1}{4}}) - \log 2)} < (1+\varepsilon)\frac{p^{\nicefrac{1}{4}}}{2(1-\varepsilon)\log (p^{\nicefrac{1}{4}})}\]
+since $\varepsilon\log (p^{\nicefrac{1}{4}}) > \log 2$ for large enough $p$. Thus:
+\[Q > (1-\varepsilon)\frac{p^{\nicefrac{1}{4}}}{\log (p^{\nicefrac{1}{4}})} - (1+\varepsilon) \frac {p^{\nicefrac {1}{4}}} {2(1-\varepsilon)\log (p^{\nicefrac{1}{4}})} = \frac {p^{\nicefrac {1}{4}}}{2 \log (p^{\nicefrac {1}{4}})}.\Big(4-\varepsilon-\frac{3}{1-\varepsilon}\Big)\]
+\[ > \frac {p^{\nicefrac {1}{4}}}{2 \log (p^{\nicefrac {1}{4}})}.\frac {1}{2} = \frac {p^{\nicefrac {1}{4}}}{\log p} \text { for an appropriate }\varepsilon \text {, for large enough }p\]
+In inequation (\ref{eq:finalineq}), the second term of the LHS diminishes compared to the RHS for large enough $p$, because:
+\[ \frac{h^{2r}r(2p^{\nicefrac{1}{2}}+1)}{(\nicefrac{1}{4})^{2r}HQh^{2r}} \leq c\frac{p^{\nicefrac{1}{2}}}{HQ} \leq c\frac{\log p}{p^{\delta}} \in o(1)\]
+where $c$ is a placeholder for any constant. Now, we take $h=\left \lfloor \frac{1}{5}p^{\nicefrac{-1}{4}}H \right \rfloor$. Taking some value of $r>\delta^{-1}$ results in the first term of the LHS of (\ref{eq:finalineq}) diminishing with respect to the RHS, as:
+\[\frac{(2r)^{r}h^{r}p}{(\nicefrac{1}{4})^{2r}HQh^{2r}} \leq c \frac{p\log p}{p^{\nicefrac{1}{2}+\delta}h^r} < c\frac{p^{\nicefrac{1}{2}}\log p}{p^{\delta}.p} \leq c\frac{\log p}{p^{\nicefrac{1}{2}+\delta}} \in o(1)\]
+since $h>(\nicefrac{1}{6})p^{\delta}$, for large enough $p$. Thus, we have arrived at a contradiction. Our assumption that $\Big \lvert \sum\limits_{x=N+1}^{N+H}\chi_2(x)\Big \rvert=H$ for $H>p^{\nicefrac{1}{4}+\delta}$ for infinitely many $p$ was wrong as inequation (\ref{eq:finalineq}) thus derived for such $p$ cannot hold for large enough $p$. Hence, the only possibility is that $\Big \lvert \sum\limits_{x=N+1}^{N+H}\chi_2(x)\Big \rvert<H$ for $H>p^{\nicefrac{1}{4}+\delta}$ for large enough $p$, for any $\delta>0$, proving Theorem \ref{thm:p4bound}.
 \end{proof}
 %
 %
@@ -327,27 +396,28 @@ since $h>(\nicefrac{1}{6})p^{\delta}$, for large enough $p$. Thus, we have arriv
 %Literally the same p^(1/4) section with extra modulus symbols. Very compact proof
 Now we consider a natural extension of what we have proven so far: extending the result to general characters, i.e. finding an upper bound on the largest interval of elements in which a character assumes the same value. Formally,
 \begin{theorem} \label{thm:genp4bound}
-Given a character $\chi$ modulo prime $p$, for any $x\in\mathbb{F}_p$ and $H>p^{\nicefrac{1}{4}+\delta}$, where $\delta>0$:
+Given a character $\chi$ modulo prime $p$, for any $H>p^{\nicefrac{1}{4}+\delta}$, where $\delta>0$:
 \[\sum\limits_{n=x+1}^{n+H}\lvert\chi(n)\rvert<H\]
-for large enough $p$.
+for any $x\in\mathbb{Z}$, for large enough $p$.
 \end{theorem}
 Although a more general form of lemma 1 for general characters exists, a possible impediment in reapplying the former proof technique is dealing with the complex numbers involved in general characters. But as it turns out, we can easily extend the previously used techniques and theorems in the complex domain to obtain the same results for a general character.
 
 The general form of lemma 1 for any character is:
 \begin{lemma} \label{lemma4}
-\cite{schmidt}Let $\chi$ be a non-trivial character of order $d$. Let $f(x)$ be a polynomial which is not a perfect $d^{th}$ power, with coefficients from $\mathbb{Z}$. Let $f(x)$ have $\nu$ distinct zeroes. Then,
+\textup{\cite{schmidt}}Let $\chi$ be a non-trivial character of order $d$. Let $f(x)$ be a polynomial which is not a perfect $d^{th}$ power, with coefficients from $\mathbb{Z}$. Let $f(x)$ have $\nu$ distinct zeroes. Then,
 $$\Big\lvert\sum\limits_{x=0}^{p-1}\chi(f(x))\Big\rvert\leq (\nu -1)p^{\nicefrac{1}{2}}$$
 \end{lemma}
-We henceforth assume $d \divides p-1$, because since $\chi^{d}(x)=1$ and $\chi(x^{p-1})=\chi^{p-1}(x)=1$ for $x\neq0$, $\chi^{gcd(d,p-1)}(x)=1$ for $x\neq0$, and hence any character of order $d$ is also a character of order $gcd(d,p-1)$ using Euclid's algorithm, and hence we consider $gcd(d,p-1)$ as the character order.
+We note that $d \divides p-1$, because since $\chi^{d}(x)=1$ and $\chi(x^{p-1})=\chi^{p-1}(x)=1$ for $x\neq0$, $\chi^{gcd(d,p-1)}(x)=1$ for $x\neq0$ using Euclid's algorithm for calculating gcd\footnotemark, and since $gcd(d,p-1)\leq d$, $d$ is the order only if $gcd(d,p-1) = d$, which is only when $d \divides p-1$.
+
 We now use lemma \ref{lemma4} to derive lemma \ref{lemma2statement} for a general character.
 %%
 \subsection{Proving Lemma \ref{lemma2statement} for a General Character}
 We define
 \begin{equation} \label{definesh}
-S_h(x)=\sum\limits_{n=0}^{h-1}\chi(x+n)
+S_h(x)=\sum\limits_{n=1}^{h}\chi(x+n)
 \end{equation}
 We then expand the sum $\lvert S_h(x)\rvert^{2r}$:
-$$\lvert S_h(x)\rvert^{2r}= \Big\lvert\sum\limits_{n=0}^{h-1}\chi(x+n)\Big\rvert^{2r}= \Big(\sum\limits_{n=0}^{h-1}\chi(x+n)\Big)^r\Big(\overline{\sum\limits_{n=0}^{h-1}\chi(x+n)}\Big)^r$$
+$$\lvert S_h(x)\rvert^{2r}= \Big\lvert\sum\limits_{n=1}^{h}\chi(x+n)\Big\rvert^{2r}= \Big(\sum\limits_{n=1}^{h}\chi(x+n)\Big)^r\Big(\overline{\sum\limits_{n=1}^{h}\chi(x+n)}\Big)^r$$
 %\vspace*{-\baselineskip}
 \begin{multline*}
 \lvert S_h(x)\rvert^{2r} =\bigg(\sum\limits_{m_1=1}^h\sum\limits_{m_2=1}^h...\sum\limits_{\mathclap{m_{r}=1}}^h \chi(x+m_1)\chi(x+m_2)...\chi(x+m_{r})\bigg)
@@ -370,15 +440,23 @@ $$=\sum\limits_{m_1=1}^h\sum\limits_{m_2=1}^h...\sum\limits_{\mathclap{m_{2r}=1}
 \sum_{x=0}^{p-1}\lvert S_h(x)\rvert^{2r}= \sum\limits_{m_1=1}^h\sum\limits_{m_2=1}^h...\sum\limits_{m_{2r}=1}^h
 \sum_{x=0}^{p-1}\chi\Big(\prod_{i=1}^r(x+m_i)\prod_{i=r+1}^{2r}(x+m_{i})^{p-2}\Big)
 \end{equation}
-In equation \ref{generaltuple}, we must separate the perfect $d^{th}$ power polynomials formed in the sum from the rest. We do this, again as in the case of quadratic character, by examining the tuples formed by $(m_1, m_2...m_{2r})$:
+In equation \ref{generaltuple}, we must separate the perfect $d^{th}$ power polynomials formed in the sum from the rest. We do this, again as in the case of quadratic characters, by examining the tuples formed by $(m_1, m_2...m_{2r})$:
+\renewcommand{\labelitemii}{$\circ$}
 \begin{itemize}
-\item \textbf{Perfect $\boldsymbol{d^{th}}$ power polynomials:} Since $d \divides p-1\Rightarrow \gcd(d, p-2)=1$, no power of $(x+m)^{p-2}$ less than the $d^{th}$ power will form a perfect $d^{th}$ power polynomial. Thus, a tuple represents a perfect $d^{th}$ power polynomial if the occurrence of each element in $\{m_1, m_2...m_{r}\}$ can be paired bijectively with an occurrence of the same element in $\{m_{r+1}, m_{r+2}...m_{2r}\}$, and the rest of the occurrences of elements in $m_1, m_2,...,m_{r}$ are in a multiple of $d$, and the rest of the occurrences of elements in $m_{r+1}, m_{r+2}...m_{2r}$ are also in a multiple of $d$. Thus the total number of such polynomials is:
-$$\sum_{k=1}^{\lfloor\nicefrac{r}{d}\rfloor}\Bigg(\frac{\binom{r}{d}\binom{r-d}{d}...\binom{r-(k-1)d}{d}}{k!}\Bigg)^2\frac{\binom{r-kd}{1}^2\binom{r-kd-1}{1}^2...\binom{1}{1}^2}{(r-kd)!}h^{2k+r-kd}$$
+\item \textbf{Perfect $\boldsymbol{d^{th}}$ power polynomials:} Since $d \divides p-1\Rightarrow \gcd(d, p-2)=1$, no power of $\big((x+m)^{p-2}\big)$ less than the $d^{th}$ power will form a perfect $d^{th}$ power polynomial. Thus, a tuple represents a perfect $d^{th}$ power polynomial if:
+\begin{itemize}
+    \item For each distinct element occurring in the multiset\footnote{Multisets are an extension of the concept of sets, the only difference being that a multiset can contain duplicate elements, which hence also contribute to the cardinality. Thus, the multisets $\{a, a, b, b, b\}$ and $\{a, a, a, b, b\}$ are different, while the multisets $\{a, a, b\}$ and $\{a, b, a\}$ are equal.} $M_1=\{m_1,m_2,\ldots, m_r\}$, we remove the maximum possible multiple of $d$ occurrences of the element in $M_1$, from $M_1$. This results in multiset $R_1$ consisting of the remaining elements, with their remaining occurrences which are less than $d$.
+    \item Similarly for multiset $M_2=\{m_{r+1}, m_{r+2}, \ldots, m_{2r}\}$ we construct multiset $R_2$, as we did $R_1$ from $M_1$.
+    \item Now, each occurrence of an element in $R_1$ can be paired bijectively with an occurrence of the same element in $R_2$
+\end{itemize}
+Thus, the total number of such polynomials is not more than:
+\[ (r!)h^r+\sum_{k=1}^{\lfloor\nicefrac{r}{d}\rfloor}\Bigg(\frac{\binom{r-0.d}{d}\binom{r-1.d}{d}...\binom{r-(k-1)d}{d}}{k!}\Bigg)^2\frac{\binom{r-kd}{1}^2\binom{r-kd-1}{1}^2...\binom{1}{1}^2}{(r-kd)!}h^{2k+r-kd}\]
 \[
-\leq (r!)^2 h^{r}\sum_{k=1}^{\lfloor\nicefrac{r}{d}\rfloor}\max_k \frac{1}{(d!)^{2k}(r-kd)!(k!)^2} \leq \frac{r}{d}.(r!)^2 h^{r} \leq r^{2r}h^r
+\leq (r!)h^r+(r!)^2 h^{r}\sum_{k=1}^{\lfloor\nicefrac{r}{d}\rfloor}\max_k \frac{1}{(d!)^{2k}(r-kd)!(k!)^2} \leq (r!)h^r+ \frac{r}{d}(r!)^2 h^{r}
 \]
+\[ \leq 2r(r!)^2 h^{r} \leq r^{2r}h^r \]
 Thus, these polynomials contribute at most $r^{2r}h^rp$ to the sum in \ref{generaltuple}.
-\item \textbf {The remaining polynomials:} The total no. of the rest of the polynomials is trivially at most $h^{2r}$. Thus, these contribute at most $h^{2r}(2r-1)p^{\nicefrac{1}{2}}$.
+\item \textbf{The remaining polynomials:} The total no. of the rest of the polynomials is trivially at most $h^{2r}$. Thus, these contribute at most $h^{2r}(2r-1)p^{\nicefrac{1}{2}}$.
 \end{itemize}
 Hence, we arrive at the following lemma, which is a general version of lemma \ref{lemma2statement}:
 \begin{lemma*}
@@ -387,19 +465,19 @@ Let $S_h(x)=\sum\limits_{n=1}^{h}\chi(x+n)$. Then,
 \sum\limits_{x=0}^{p-1}\lvert S_h(x)\rvert^{2r}\leq h^{r}(2r)^{r}p+2h^{2r}rp^{\nicefrac{1}{2}}\leq h^{r}(2r)^{r}p+h^{2r}r(2p^{\nicefrac{1}{2}}+1)
 \end{equation}
 \end{lemma*}
-We will refer to this lemma as lemma \ref{lemma2statement}, and it being for a general character can be inferred from the context of usage.
+We will henceforth refer to this lemma as lemma \ref{lemma2statement}, as quadratic characters are just a special case of characters and thus the quadratic version immediately follows.
 
 Now, we can derive the $O(p^{\nicefrac{1}{2}})$ and $p^{\nicefrac{1}{4}+\delta}$ bounds for general characters using almost identical methods as those for quadratic residues. We derive both the $O(p^{\nicefrac{1}{2}})$ bound and the $p^{\nicefrac{1}{4}+\delta}$ bound by mimicking most steps with minor changes in assumptions and reasoning. We also eliminate many steps and accompanying explanations, for brevity and reducing repetitiveness.
 %%
 \subsection{The $O(p^{\nicefrac{1}{2}})$ bound for a general character}
 We prove the bound of $O(p^{\nicefrac{1}{2}})$ on the largest interval of elements in $\mathbb{F}_p$ on which $\chi$ assumes the same value. Formally:
 \begin{claim*}
-Given a character $\chi_2$ modulo prime $p$, let $h$ be the greatest integer such that:
+Given a character $\chi$ modulo prime $p$, let $h$ be the greatest integer such that:
 \[\bigg\lvert\sum\limits_{n=x+1}^{x+h}\chi(n)\bigg\rvert=h\]
- for some $x\in\mathbb{F}_p$. Then $h\in O(p^{\nicefrac{1}{2}})$.
+ for any $x\in\mathbb{Z}$. Then $h\in O(p^{\nicefrac{1}{2}})$.
 \end{claim*}
 \begin{claimproof}
-We arrive at the result by contradiction as in the case of quadratic characters. Let the largest interval of elements in $\mathbb{F}_p$, on which $\chi$ assumes the same value, be given by $h$. Then, using the definition in equation \ref{definesh}, $\lvert S_h(z)\rvert=h$. Then we can say,
+We arrive at the result by contradiction as in the case of quadratic characters. Let the largest interval of elements in $\mathbb{F}_p$, on which $\chi$ assumes the same value, be given by $h$. Then, using the definition in equation \ref{definesh}, $\lvert S_h(z)\rvert=h$ for some $x\in\mathbb{F}_p$. Then we can say,
 \begin{equation} \label{intervcontrgen}
 \sum\limits_{x=0}^{p-1}\lvert S_h(x)\rvert^{2r}\geq\sum\limits_{x=z}^{z+\lfloor\nicefrac{h}{4}\rfloor}\lvert S_h(x)\rvert^{2r} \geq h^{2r}+(h-2)^{2r}+...+(h-2\lfloor\nicefrac{h}{4}\rfloor)^{2r} \geq \frac{h^{2r+1}}{2^{2r+2}}
 \end{equation}
@@ -427,20 +505,20 @@ for large enough $p$.
 We prove the theorem by contradiction. Say for some $H>p^{\nicefrac{1}{4}+\delta}$, for some $\delta>0$, $\Big \lvert \sum\limits_{x=N+1}^{N+H}\chi(x)\Big \rvert=H$ for large enough $p$. We know that for $H>cp^{\nicefrac{1}{2}}$, where $c$ is some appropriate constant, there can be no interval where $\chi$ assumes the same value. Thus, $H\leq cp^{\nicefrac{1}{2}}$\\
 We take numbers given by $q$, pair-wise co-prime (as required for the application of lemma 3 later), to be the primes in the range:
 $$\frac{p^{\nicefrac{1}{4}}}{2} \leq q \leq p^{\nicefrac{1}{4}}$$
-This satisfies the constraint in (\ref{lemma3cond}) for large enough $p$. The number of primes $q$ is given by $Q=\pi(p^{\nicefrac{1}{4}})-\pi(\frac{p^{\nicefrac{1}{4}}}{2})=o(p^{\nicefrac{1}{4}})$ by the prime number theorem. Now proceeding with the proof:
+This satisfies the constraint in (\ref{lemma3cond}) for large enough $p$. The number of primes $q$ is given by $Q=\pi(p^{\nicefrac{1}{4}})-\pi(\frac{p^{\nicefrac{1}{4}}}{2})\in o(p^{\nicefrac{1}{4}})$ by the prime number theorem. Now proceeding with the proof:
 \[\bigg \lvert\sum\limits_{x=N+1}^{N+H}\chi(x)\bigg \rvert=\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{\substack{x=N+1\\x+tp\divides q}}^{N+H}\chi(x+tp)\bigg \rvert=H \]
 $$\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{\substack{x=N+1\\x+tp\divides q}}^{N+H} \chi \Big(\frac{x+tp}{q}.q\Big)\bigg \rvert=H$$
 $$\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{z\in I(q,t)}\chi(z)\chi(q)\bigg \rvert=H$$
 $$\sum\limits_{t=0}^{t=q-1}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi(z)\chi(q)\bigg \rvert \geq H$$
 $$\sum_q\sum\limits_{t=0}^{t=q-1}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi(z)\bigg \rvert \geq HQ$$
-\begin{equation} \label{seperationgen}
+\begin{equation} \label{separationgen}
 \sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi(z)\bigg \rvert+\sum_q\sum\limits_{\substack{t=0\\t\not \in T(q)}}^{q-1}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi(z)\bigg \rvert \geq HQ
 \end{equation}
 Now,
 \begin{equation} \label{overlappinggen}
 \sum_q\sum\limits_{\substack{t=0\\t\not \in T(q)}}^{q-1}\bigg\lvert\sum\limits_{z\in I(q,t) }\chi(z)\bigg \rvert < 4Q^2 Hp^{\nicefrac{-1}{4}}
 \end{equation}
-Using \ref{seperationgen} and \ref{overlappinggen},
+Using \ref{separationgen} and \ref{overlappinggen},
 $$\sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi(z)\bigg \rvert >\frac{HQ}{2}$$
 \begin{equation}
 \sum\limits_{m=0}^{h-1}\sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi(z)\bigg \rvert > \frac{HhQ}{2}
@@ -507,7 +585,7 @@ We describe a straightforward proof of a $p^{\nicefrac{1}{2}}\log p$ upper bound
 \begin{lemma*}
 Given a quadratic character $\chi_2$ modulo prime $p$ and a square-free polynomial $f(x)=(x+a)(x+b)$ in $\mathbb{F}_p[x]$, let $h$ be the greatest integer such that:
 \[\sum\limits_{n=x+1}^{x+h}\chi_2(f(n))=h\]
- for some $x\in\mathbb{F}_p$. Then $h \in O(p^{\nicefrac{1}{2}}\log p)$.
+ for any $x\in\mathbb{Z}$. Then $h \in O(p^{\nicefrac{1}{2}}\log p)$.
 \end{lemma*}
 \begin{proof}
 Suppose there is an interval $I$ in $\mathbb{F}_p$, and we are interested in whether $f$ evaluates to quadratic residues $\mod p$ in the entire interval. Since $\chi_2(v)=1$ if $v$ is a residue and $\chi_2(v)=-1$ if $v$ is not, $\nicefrac{(\chi_2(v)+1)}{2}$ evaluates to $1$ or $0$ if $v$ is a quadratic residue or non-residue respectively. Hence, $f$ evaluates entirely to quadratic residues in $I$ if the product $\prod_{i\in I}\nicefrac{(\chi_2(f(i))+1}{2}$ evaluates to $1$, however $f$ evaluates to atleast one quadratic non-resdue in $I$ if the product evaluates to $0$. Hence the number of intervals of size $t$ in $\mathbb{F}_p$ which consist only of quadratic residues is:
@@ -581,7 +659,7 @@ The $O(p^{\nicefrac{1}{2}})$ bound follows from lemma \ref{lemma5statement} usin
 \begin{lemma*}
 Given a quadratic character $\chi_2$ modulo prime $p$ and a square-free factorizable quadratic polynomial function $f$ in $\mathbb{F}_p$, let $h$ be the greatest integer such that:
 \[\bigg\lvert\sum\limits_{n=x+1}^{x+h}\chi_2(f(n))\bigg\rvert=h\]
- for some $x\in\mathbb{F}_p$. Then $h\in O(p^{\nicefrac{1}{2}})$.
+ for any $x\in\mathbb{Z}$. Then $h\in O(p^{\nicefrac{1}{2}})$.
 \end{lemma*}
 In other words, the smallest whole number $y$ such $\chi_2((q+y)(r+y))=1$ is in $O(p^{\nicefrac{1}{2}})$, which places an upper bound on our factorisation method.
 We cannot obtain the bound of $O(p^{\nicefrac{1}{4}+\delta})$ as for $\chi_2$ of linear function intervals due to the fact that in e.q. \ref{chapter3refeq}, $\chi_2(z.q)=\chi_2(z)\chi_2(q)$, but if the function on the interval becomes $f(x)$ instead of $x$, then $\chi_2(f(q.z))\neq \chi_2(f(q))\chi_2(f(q))$. Due to this, the proof cannot proceed involving residuosity of a quadratic function of an interval in $\mathbb{F}_p$ as in the case of simply finding the first quadratic residue/non-residue in an interval. In conclusion, we can easily obtain a $O(p^{\nicefrac{1}{2}})$, but since the multiplicity of $\chi(x)$ does not imply multiplicity of $\chi(f(x))$, we cannot translate a given interval into many smaller equivalent intervals using Lemma 3 to obtain a $O(p^{\nicefrac{1}{4}+\delta})$ bound.
@@ -592,15 +670,15 @@ We cannot obtain the bound of $O(p^{\nicefrac{1}{4}+\delta})$ as for $\chi_2$ of
 %We next describe a method of factorizing square-free quadratic univariate polynomials in $\mathbb{F}_p$.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Quantitative Analysis}
+%\chapter{Quantitative Analysis}
 %Aim:
-\section{Energy}
+%\section{Energy}
 %
 %
-\section{Sieving}
+%\section{Sieving}
 %
 %
-\section{}
+%\section{}
 \begin{thebibliography}{9}
 
 \bibitem{burgess}

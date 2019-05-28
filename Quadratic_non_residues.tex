@@ -477,21 +477,17 @@ Given a character $\chi$ modulo prime $p$, let $h$ be the greatest integer such 
  for any $x\in\mathbb{Z}$. Then $h\in O(p^{\nicefrac{1}{2}})$.
 \end{claim*}
 \begin{claimproof}
-We arrive at the result by contradiction as in the case of quadratic characters. Let the largest interval of elements in $\mathbb{F}_p$, on which $\chi$ assumes the same value, be given by $h$. Then, using the definition in equation \ref{definesh}, $\lvert S_h(z)\rvert=h$ for some $x\in\mathbb{F}_p$. Then we can say,
+We arrive at the result by contradiction as in the case of quadratic characters. Let the largest interval of elements in $\mathbb{F}_p$, on which $\chi$ assumes the same value, be given by $h$. Then, using the definition in equation \ref{definesh}, we can say:
+\[ S_h(x+k) + \sum\limits_{n=1}^k \chi(n)= S_h(x) +\  \sum\limits_{\mathclap{n=x+h+1}}^{x+k}\:\chi(n)\]
+\[ S_h(x+k) + \Bigg(\sum\limits_{n=1}^k \chi(n) -\  \sum\limits_{\mathclap{n=x+h+1}}^{x+k}\:\chi(n) \Bigg) = S_h(x)\]
+\[ \lvert S_h(x+k) \rvert + \Bigg\lvert\sum\limits_{n=1}^k \chi(n) -\  \sum\limits_ {\mathclap {n=x+h+1}}^{x+k} \:\chi(n) \Bigg\rvert \geq  \Bigg\lvert S_h(x+k) + \Bigg(\sum\limits_{n=1}^k \chi(n) -\  \sum\limits_ {\mathclap {n=x+h+1}}^{x+k} \:\chi(n) \Bigg) \Bigg\rvert= \lvert S_h(x)\rvert \]
+by the triangle inequality for complex numbers. Thus,
+\[ \lvert S_h(x+k)\rvert \geq  \lvert S_h(x)\rvert - \Bigg\lvert\sum\limits_{n=1}^k \chi(n) -\  \sum\limits_ {\mathclap {n=x+h+1}}^{x+k} \:\chi(n) \Bigg\rvert \geq \lvert S_h(x)\rvert-2k\]
+Since $\lvert S_h(z)\rvert=h$ for some $x\in\mathbb{F}_p$:
 \begin{equation} \label{intervcontrgen}
 \sum\limits_{x=0}^{p-1}\lvert S_h(x)\rvert^{2r}\geq\sum\limits_{x=z}^{z+\lfloor\nicefrac{h}{4}\rfloor}\lvert S_h(x)\rvert^{2r} \geq h^{2r}+(h-2)^{2r}+...+(h-2\lfloor\nicefrac{h}{4}\rfloor)^{2r} \geq \frac{h^{2r+1}}{2^{2r+2}}
 \end{equation}
-as $\lvert S_h(x+k)\rvert \geq \lvert S_h(x)\rvert-2k$. Then from equations \ref{lemma2gen} and \ref{intervcontrgen}:
-$$ \frac{h^{2r+1}}{2^{2r+2}} \leq h^{r}(2r)^{r}p+h^{2r}r(2p^{\nicefrac{1}{2}}+1)$$
-Take $r=1$ and divide both sides by $h^{2}$. We get:
-\begin{equation} \label{contreqgen}
-\frac{h}{2^{4}} \leq 2h^{-1}p+(2p^{\nicefrac{1}{2}}+1)
-\end{equation}
-Substituting $cp^{\nicefrac{1}{2}}$ in place of $h$, we obtain the inequality
-\begin{equation} \label{contreqgen2}
-\frac{cp^{\nicefrac{1}{2}}}{16} \leq 2c^{-1}p^{\nicefrac{1}{2}}+2p^{\nicefrac{1}{2}}+1
-\end{equation}
-Comparing the coefficients of the highest power term $p^{\nicefrac{1}{2}}$ on each side, we see that there exists some constant $c_o$ such that $\nicefrac{c}{16}>2c^{-1}+2$ when $c>c_o$. Hence for $c>c_o$, (\ref{contreqgen}) does not hold for large enough $p$. Hence, (\ref{contreqgen2}) cannot hold if $h=c_op^{\nicefrac{1}{2}}$ for large enough $p$. Since the LHS of (\ref{contreqgen}) increases with increase in $h$, while the RHS decreases with increase in $h$, (\ref{contreqgen}) cannot hold if $h>c_op{\nicefrac{1}{2}}$ for large enough $p$, which means $h\leq c_op^{\nicefrac{1}{2}}$ for large enough $p$, and thus $h\in O(p^{\nicefrac{1}{2}})$.
+We can now proceed exactly as in the proof of the quadratic version of the $O(p^ {\nicefrac{1}{2}})$ bound, by taking $r=1$ and showing that equations \ref{lemma2gen} and \ref{intervcontrgen} cannot hold for $h=cp ^{\nicefrac {1}{2}}$ for any $c$ greater than some fixed $c_o$, for large enough $p$.
 \end{claimproof}
 %%
 \subsection{The $p^{\nicefrac{1}{4}+\delta}$ bound for a general character}

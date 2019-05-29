@@ -311,7 +311,7 @@ Given a quadratic character $\chi_2$ modulo prime $p$, for any $H>p^{\nicefrac{1
 for any $x\in\mathbb{Z}$, for large enough $p$.
 \end{theorem*}
 \begin{proof}
-The proof is by means of contradiction. Let us assume that for infinitely many values of $p$, there exists an $H>p^{\nicefrac{1}{4}+\delta}$ for some $\delta>0$, such that $\Big \lvert \sum\limits_{x=N+1}^{N+H}\chi_2(x)\Big \rvert=H$. We already know that for large enough $p$, $H>cp^{\nicefrac{1}{2}}$, where $c$ is some constant, there can be no interval of all quadratic residues or all non-residues. We take $p$ to be large enough that $H\leq cp^{\nicefrac{1}{2}}$.\\
+The proof is by means of contradiction. Let us assume that for infinitely many values of $p$, there exists an $H>p^{\nicefrac{1}{4}+\delta}$ for some $\delta>0$, such that $\Big \lvert \sum\limits_{x=N+1}^{N+H}\chi_2(x)\Big \rvert=H$, for some $N\in \mathbb{Z}$. We already know that for large enough $p$, $H>cp^{\nicefrac{1}{2}}$, where $c$ is some constant, there can be no interval of all quadratic residues or all non-residues. We take $p$ to be large enough that $H\leq cp^{\nicefrac{1}{2}}$.\\
 We take numbers in a set $\mathcal{Q}$, which are pair-wise co-prime (as required for the application of lemma 3 later), to be the primes in the range $[\nicefrac{p^{\nicefrac{1}{4}}}{2},p^{\nicefrac{1}{4}}]$.
 This satisfies the constraint in (\ref{lemma3cond}) for large enough $p$. The number of primes $\lvert\mathcal{Q}\rvert=Q$ is given by $Q=\pi(p^{\nicefrac{1}{4}})-\pi(\frac{p^{\nicefrac{1}{4}}}{2})=o(p^{\nicefrac{1}{4}})$ by the prime number theorem. Now, restating the assumption:
 \begin{equation} \label{eq:p4assum}
@@ -368,7 +368,7 @@ Using Holder's inequality,
 $$\sum_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\sum\limits_{z\in I_o(q,t)}\lvert S_h(z-1) \rvert \leq \bigg ( \sum_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\sum\limits_{z\in I_o(q,t)}\lvert S_h(z) \rvert^{2r} \bigg )^{\nicefrac{1}{2r}}\bigg ( \sum_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\sum\limits_{z\in I_o(q,t)}1 \bigg )^{1-\nicefrac{1}{2r}}$$
 $$\sum_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\sum\limits_{z\in I_o(q,t)}\lvert S_h(z-1) \rvert^{2r} \geq \bigg ( \sum_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\sum\limits_{z\in I_o(q,t)}\lvert S_h(z) \rvert \bigg )^{2r} \bigg ( \sum_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\sum\limits_{z\in I_o(q,t)}1 \bigg )^{-(2r-1)}$$
 $$\sum_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\sum\limits_{z\in I_o(q,t)}\lvert S_h(z-1) \rvert^{2r} > \Big( \frac{HhQ}{4}\Big)^{2r}(QH)^{-(2r-1)}$$
-$$\sum\limits_{z=0}^{p-1}\lvert S_h(z-1) = \sum\limits_{z=0}^{p-1}\lvert S_h(z) \rvert^{2r}>\Big(\frac{1}{4}\Big)^{2r}HQh^{2r}$$
+$$\sum\limits_{z=0}^{p-1}\lvert S_h(z-1) \rvert^{2r} = \sum\limits_{z=0}^{p-1}\lvert S_h(z) \rvert^{2r}>\Big(\frac{1}{4}\Big)^{2r}HQh^{2r}$$
 From lemma 2,
 \begin{equation} \label{eq:finalineq}
 (2r)^{r}h^{r}p+h^{2r}r(2p^{\nicefrac{1}{2}}+1)>\Big(\frac{1}{4}\Big)^{2r}HQh^{2r}
@@ -483,62 +483,60 @@ We arrive at the result by contradiction as in the case of quadratic characters.
 \[ \lvert S_h(x+k) \rvert + \Bigg\lvert\sum\limits_{n=1}^k \chi(n) -\  \sum\limits_ {\mathclap {n=x+h+1}}^{x+k} \:\chi(n) \Bigg\rvert \geq  \Bigg\lvert S_h(x+k) + \Bigg(\sum\limits_{n=1}^k \chi(n) -\  \sum\limits_ {\mathclap {n=x+h+1}}^{x+k} \:\chi(n) \Bigg) \Bigg\rvert= \lvert S_h(x)\rvert \]
 by the triangle inequality for complex numbers. Thus,
 \[ \lvert S_h(x+k)\rvert \geq  \lvert S_h(x)\rvert - \Bigg\lvert\sum\limits_{n=1}^k \chi(n) -\  \sum\limits_ {\mathclap {n=x+h+1}}^{x+k} \:\chi(n) \Bigg\rvert \geq \lvert S_h(x)\rvert-2k\]
-Since $\lvert S_h(z)\rvert=h$ for some $x\in\mathbb{F}_p$:
+Since $\lvert S_h(z)\rvert=h$ for some $z\in\mathbb{F}_p$:
 \begin{equation} \label{intervcontrgen}
 \sum\limits_{x=0}^{p-1}\lvert S_h(x)\rvert^{2r}\geq\sum\limits_{x=z}^{z+\lfloor\nicefrac{h}{4}\rfloor}\lvert S_h(x)\rvert^{2r} \geq h^{2r}+(h-2)^{2r}+...+(h-2\lfloor\nicefrac{h}{4}\rfloor)^{2r} \geq \frac{h^{2r+1}}{2^{2r+2}}
 \end{equation}
-We can now proceed exactly as in the proof of the quadratic version of the $O(p^ {\nicefrac{1}{2}})$ bound, by taking $r=1$ and showing that equations \ref{lemma2gen} and \ref{intervcontrgen} cannot hold for $h=cp ^{\nicefrac {1}{2}}$ for any $c$ greater than some fixed $c_o$, for large enough $p$.
+We can now proceed exactly as in the proof of the quadratic character version of the $O(p^ {\nicefrac{1}{2}})$ bound, by taking $r=1$ and showing that equations \ref{lemma2gen} and \ref{intervcontrgen} cannot hold for $h=cp ^{\nicefrac {1}{2}}$ for any $c$ greater than some fixed $c_o$, for large enough $p$.
 \end{claimproof}
 %%
 \subsection{The $p^{\nicefrac{1}{4}+\delta}$ bound for a general character}
 We prove the upper bound of $p^{\nicefrac{1}{4}+\delta}$, where $\delta>0$, on the largest interval of elements in $\mathbb{F}_p$ on which $\chi$ assumes the same value, i.e. Theorem \ref{thm:genp4bound}. We restate the theorem:
 \begin{theorem*}
-Given a character $\chi$ modulo prime $p$, for any $x\in\mathbb{F}_p$ and $H>p^{\nicefrac{1}{4}+\delta}$, where $\delta>0$:
+Given a character $\chi$ modulo prime $p$, for any $H>p^{\nicefrac{1}{4}+\delta}$, where $\delta>0$:
 \[\sum\limits_{n=x+1}^{n+H}\lvert\chi(n)\rvert<H\]
-for large enough $p$.
+for any $x\in\mathbb{Z}$, for large enough $p$.
 \end{theorem*}
 \begin{proof}
-We prove the theorem by contradiction. Say for some $H>p^{\nicefrac{1}{4}+\delta}$, for some $\delta>0$, $\Big \lvert \sum\limits_{x=N+1}^{N+H}\chi(x)\Big \rvert=H$ for large enough $p$. We know that for $H>cp^{\nicefrac{1}{2}}$, where $c$ is some appropriate constant, there can be no interval where $\chi$ assumes the same value. Thus, $H\leq cp^{\nicefrac{1}{2}}$\\
-We take numbers given by $q$, pair-wise co-prime (as required for the application of lemma 3 later), to be the primes in the range:
-$$\frac{p^{\nicefrac{1}{4}}}{2} \leq q \leq p^{\nicefrac{1}{4}}$$
-This satisfies the constraint in (\ref{lemma3cond}) for large enough $p$. The number of primes $q$ is given by $Q=\pi(p^{\nicefrac{1}{4}})-\pi(\frac{p^{\nicefrac{1}{4}}}{2})\in o(p^{\nicefrac{1}{4}})$ by the prime number theorem. Now proceeding with the proof:
+The proof proceeds very similarly to the proof of theorem \ref{thm:p4bound}. In order to not seem repetitive, we will only explain the parts which are not already covered in the proof of \ref{thm:p4bound}.
+
+We prove the theorem by contradiction as in the quadratic character version of the theorem. Assume that for infinitely many values of $p$, there exists an $H>p^{\nicefrac{1}{4}+\delta}$ for some $\delta>0$, such that $\Big \lvert \sum\limits_{x=N+1}^{N+H}\chi(x)\Big \rvert=H$, for some $N\in \mathbb{Z}$. We take $p$ to be large enough that $H\leq cp^{\nicefrac{1}{2}}$.\\
+We take a set of numbers $\mathcal{Q}$ which are the primes in the range $[\nicefrac {p^{\nicefrac {1}{4}}}{2}, p^{\nicefrac {1}{4}}]$, so as to satisfy the constraint in (\ref{lemma3cond}) for large enough $p$. We denote $\lvert \mathcal{Q}\rvert$ by $Q=\pi(p^{\nicefrac{1}{4}})-\pi(\frac{p^ {\nicefrac{1}{4}}}{2})$. We proceed to manipulate $\ \sum\limits_{\mathclap{x=N+1}}^{\mathclap{N+H}}\ \chi(x)$, to apply lemma 3.
 \[\bigg \lvert\sum\limits_{x=N+1}^{N+H}\chi(x)\bigg \rvert=\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{\substack{x=N+1\\x+tp\divides q}}^{N+H}\chi(x+tp)\bigg \rvert=H \]
 $$\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{\substack{x=N+1\\x+tp\divides q}}^{N+H} \chi \Big(\frac{x+tp}{q}.q\Big)\bigg \rvert=H$$
-$$\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{z\in I(q,t)}\chi(z)\chi(q)\bigg \rvert=H$$
-$$\sum\limits_{t=0}^{t=q-1}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi(z)\chi(q)\bigg \rvert \geq H$$
-$$\sum_q\sum\limits_{t=0}^{t=q-1}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi(z)\bigg \rvert \geq HQ$$
+$$\bigg \lvert\sum\limits_{t=0}^{t=q-1}\sum\limits_{z\in I_o(q,t)}\chi(z)\chi(q)\bigg \rvert=H$$
+where $I_o(q,t)$ is the set of integers contained in $I(q,t)$. Using the complex triangle inequality:
+$$\sum\limits_{t=0}^{t=q-1}\bigg \lvert\sum\limits_{z\in I_o(q,t)}\chi(z)\chi(q)\bigg \rvert \geq H$$
+$$\sum_{q\in\mathcal{Q}}\sum\limits_{t=0}^{t=q-1}\bigg \lvert\sum\limits_{z\in I_o(q,t)}\chi(z)\bigg \rvert \geq HQ$$
 \begin{equation} \label{separationgen}
-\sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi(z)\bigg \rvert+\sum_q\sum\limits_{\substack{t=0\\t\not \in T(q)}}^{q-1}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi(z)\bigg \rvert \geq HQ
+\sum_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I_o(q,t)}\chi(z)\bigg \rvert+\sum_{q\in\mathcal{Q}}\sum\limits_{\substack{t=0\\t\not \in T(q)}}^{q-1}\bigg \lvert\sum\limits_{z\in I_o(q,t)}\chi(z)\bigg \rvert \geq HQ
 \end{equation}
 Now,
 \begin{equation} \label{overlappinggen}
-\sum_q\sum\limits_{\substack{t=0\\t\not \in T(q)}}^{q-1}\bigg\lvert\sum\limits_{z\in I(q,t) }\chi(z)\bigg \rvert < 4Q^2 Hp^{\nicefrac{-1}{4}}
+\sum_{q\in\mathcal{Q}}\sum\limits_{\substack{t=0\\t\not \in T(q)}}^{q-1}\bigg\lvert\sum\limits_{z\in I_o(q,t) }\chi(z)\bigg \rvert < 4Q^2 Hp^{\nicefrac{-1}{4}}
 \end{equation}
 Using \ref{separationgen} and \ref{overlappinggen},
-$$\sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi(z)\bigg \rvert >\frac{HQ}{2}$$
-\begin{equation}
-\sum\limits_{m=0}^{h-1}\sum_q\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I(q,t)}\chi(z)\bigg \rvert > \frac{HhQ}{2}
-\end{equation} \label{sliceineqgen}
+\begin{equation} \label{sliceineqgen}
+\sum_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\bigg \lvert\sum\limits_{z\in I_o(q,t)}\chi(z)\bigg \rvert > \frac{HQ}{2}
+\end{equation}
 for large enough $p$. Now, we have
-$$\sum\limits_{\mathclap {z\in I(q,t)}}\chi(z+m)= \sum\limits_{\mathclap{z\in I(q,t)}}\chi(z) + \sum\limits_{i=1}^m\chi(b_i)-\sum\limits_{i=1}^m\chi(d_i)$$
-where $b_i,d_i\in\mathbb{F}_p$. This implies
-$$\sum\limits_{m=0}^{h-1}\sum\limits_{z\in I(q,t)}\chi(z+m)= \sum\limits_{m=0}^{h-1}\sum\limits_{z\in I(q,t)}\chi(z) + \sum\limits_{m=0}^{h-1}\Big(\sum\limits_{i=1}^m\chi(b_i)-\sum\limits_{i=1}^m\chi(d_i)\Big)$$
-$$\Bigg\lvert\sum\limits_{m=0}^{h-1}\sum\limits_{z\in I(q,t)}\chi(z+m)\Bigg\rvert= \Bigg\lvert\sum\limits_{m=0}^{h-1} \sum\limits_{z\in I(q,t)}\chi(z) + \sum\limits_{m=0}^{h-1}\Big(\sum\limits_{i=1}^m\chi(b_i)-\sum\limits_{i=1}^m \chi(d_i)\Big)\Bigg\rvert$$
-$$\Bigg\lvert\sum\limits_{m=0}^{h-1}\sum\limits_{z\in I(q,t)}\chi(z+m)\Bigg\rvert \geq h\big\lvert\sum\limits_{\mathclap{ z\in I(q,t)}}\chi(z)\big\rvert -\Bigg\lvert\sum\limits_{m=0}^{h-1}\Big(\sum\limits_{i=1}^m\chi(b_i)-\sum\limits_{i=1}^m \chi(d_i)\Big)\Bigg\rvert$$
-$$\sum\limits_{m=0}^{h-1}\Bigg\lvert\sum\limits_{z\in I(q,t)}\chi(z+m)\Bigg\rvert \geq h\big\lvert\sum\limits_{\mathclap{ z\in I(q,t)}}\chi(z)\big\rvert -\Bigg\lvert\sum\limits_{m=0}^{h-1}2m\Bigg\rvert \geq h\big\lvert\sum\limits_{\mathclap{z\in I(q,t)}}\chi(z)\big\rvert -h^2$$
-$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\bigg \lvert \sum\limits_{m=0}^{h-1}\chi(z+m) \bigg \rvert \geq h\sum_q\sum\limits_{t\in T(q)}\bigg \lvert \sum\limits_{z\in I(q,t)}\chi(z)\bigg \rvert-Qp^{\nicefrac{1}{4}}h^2$$
+$$\sum\limits_{\mathclap {z\in I_o(q,t)}}\chi(z+m) + \sum\limits_{i=1}^m\chi(b_i)= \sum\limits_{\mathclap{z\in I_o(q,t)}}\chi(z) + \sum\limits_{i=1}^m\chi(d_i)$$
+where $b_i,d_i\in\mathbb{Z}$. This implies
+$$\sum\limits_{m=0}^{h-1}\sum\limits_{z\in I_o(q,t)}\chi(z+m) + \sum\limits_{m=0}^{h-1}\Big(\sum\limits_{i=1}^m\chi(b_i)-\sum\limits_{i=1}^m\chi(d_i)\Big)= \sum\limits_{m=0}^{h-1}\sum\limits_{z\in I_o(q,t)}\chi(z)$$
+\[ \Bigg\lvert\sum \limits_{m=0}^{h-1}\sum\limits_{z\in I_o(q,t)}\chi(z+m) + \sum\limits_{m=0}^{h-1}\Big(\sum\limits_{i=1}^m\chi(b_i)-\sum\limits_{i=1}^m\chi(d_i)\Big)\Bigg\rvert = \Bigg\lvert \sum\limits_{m=0}^{h-1}\sum\limits_{z\in I_o(q,t)}\chi(z) \Bigg\rvert \]
+Using the complex triangle inequality,
+\[
+\Bigg\lvert\sum\limits_{m=0}^{h-1}\sum\limits_{z\in I_o(q,t)}\chi(z+m) \Bigg\rvert + \Bigg\lvert\sum\limits_{m=0}^{h-1}\Big(\sum \limits_{i=1}^m\chi(b_i) - \sum\limits_{i=1}^m\chi(d_i)\Big)\Bigg\rvert \geq \Bigg\lvert \sum\limits_ {m=0}^{h-1} \sum\limits_{z\in I_o(q,t)}\chi(z) \Bigg\rvert
+\]
+$$\Bigg\lvert\sum\limits_{m=0}^{h-1}\sum\limits_{z\in I_o(q,t)}\chi(z+m)\Bigg\rvert \geq \sum\limits_ {m=0}^{h-1} \Bigg\lvert \sum\limits_{z\in I_o(q,t)}\chi(z) \Bigg\rvert -\Bigg\lvert\sum\limits_{m=0}^{h-1}\Big(\sum\limits_{i=1}^m\chi(b_i)-\sum\limits_{i=1}^m \chi(d_i)\Big)\Bigg\rvert$$
+Again by the complex triangle inequality,
+$$\sum\limits_{z\in I_o(q,t)} \Bigg\lvert \sum\limits_{m=0}^{h-1} \chi(z+m)\Bigg\rvert \geq h\big\lvert\sum\limits_{\mathclap{ z\in I_o(q,t)}}\chi(z)\big\rvert -\Bigg\lvert\sum\limits_{m=0}^{h-1}2m\Bigg\rvert \geq h\big\lvert\sum\limits_{\mathclap{z\in I_o(q,t)}}\chi(z)\big\rvert -h^2$$
+$$\sum_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\sum\limits_{z\in I_o(q,t)}\bigg \lvert \sum\limits_{m=0}^{h-1}\chi(z+m) \bigg \rvert \geq h\sum_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\bigg \lvert \sum\limits_{z\in I_o(q,t)}\chi(z)\bigg \rvert-Qp^{\nicefrac{1}{4}}h^2$$
 So from equation \ref{sliceineqgen}
-$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\bigg \lvert \sum\limits_{m=0}^{h-1}\chi(z+m) \bigg \rvert > Qh\big(\frac{H}{2}-hp^{\nicefrac{1}{4}}\big)$$
+$$\sum_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\sum\limits_{z\in I_o(q,t)}\bigg \lvert \sum\limits_{m=0}^{h-1}\chi(z+m) \bigg \rvert > Qh\big(\frac{H}{2}-hp^{\nicefrac{1}{4}}\big)$$
 Taking $h<\frac{1}{4}p^{\nicefrac{-1}{4}}H$, and using the terminology from \ref{definesh},
-$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h(z) \rvert > \frac{HhQ}{4}$$
-Using Holder's inequality,
-$$\sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h(z) \rvert \leq \bigg ( \sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h(z) \rvert^{2r} \bigg )^{\nicefrac{1}{2r}}\bigg ( \sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}1 \bigg )^{1-\nicefrac{1}{2r}}$$
-$$\sum\limits_{z=0}^{p-1}\lvert S_h(z) \rvert^{2r}> \sum_q\sum\limits_{t\in T(q)}\sum\limits_{z\in I(q,t)}\lvert S_h(z) \rvert^{2r}> \Big(\frac{1}{8}\Big)^{2r}HQh^{2r}$$
-From lemma 2,
-$$(2r)^{r}h^{r}p+h^{2r}r(2p^{\nicefrac{1}{2}}+1)>\Big(\frac{1}{8}\Big)^{2r}HQh^{2r}$$
-For large enough $p$, the second term of the LHS diminishes compared to the RHS as $HQ\geq \frac{p^{\nicefrac{1}{2}+\delta}}{4\log p}$. Now, we take $h=\left \lfloor \frac{1}{5}p^{\nicefrac{-1}{4}}H \right \rfloor$. We take $r>\delta^{-1}$, which results in the first term of the LHS diminishing with respect to the RHS for large enough $p$.
-
-Thus, we have arrived at a contradiction. Our assumption that $\Big \lvert \sum\limits_{x=N+1}^{N+H}\chi(x)\Big \rvert=H$ for $H>p^{\nicefrac{1}{4}+\delta}$ for large enough $p$ was wrong. Hence, the only possibility is that $\Big \lvert \sum\limits_{x=N+1}^{N+H}\chi(x)\Big \rvert<H$ for $H>p^{\nicefrac{1}{4}+\delta}$ for large enough $p$, for any $\delta>0$, proving Theorem \ref{thm:genp4bound}.
+$$\sum_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\sum\limits_{z\in I_o(q,t)}\lvert S_h(z-1) \rvert > \frac{HhQ}{4}$$
+From this point, we proceed exactly as in the case of theorem \ref{thm:p4bound}, by applying Holder's inequality to the above inequation and using the fact that $\sum\limits_{z=0}^{p-1}\lvert S_h(z) \rvert^{2r} \geq \sum\limits_{q\in\mathcal{Q}}\sum\limits_{t\in T(q)}\sum\limits_{z\in I_o(q,t)}\lvert S_h(z-1) \rvert^{2r}$. This will contradict (\ref{lemma2gen}) for large enough $p$ when we take $r>\delta^{-1}$, proving our assumption wrong.
 \end{proof}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

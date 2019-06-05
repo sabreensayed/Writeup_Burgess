@@ -41,9 +41,9 @@
 
 \chapter{Introduction}
 %
-The underlying concept of the modulo operation, the uniqueness of the remainder for a given whole number when dividing it by a fixed number, is integral to something as widespread and important as the Hindu-Arabic numeral system we use. The decimal representation of a whole number $n$ is, from right to left, just the remainder removed before dividing the resulting number by $10$, successively till the quotient is zero. Thus every whole number can be represented uniquely in this way. The modulo operation with respect to $n$ results in equivalence classes\footnote {Formed by the relation on whole numbers which relates two numbers with same remainder modulo $n$} structured as a finite ring $\mathbb{Z}_n$ under addition \& multiplication modulo $n$.  In case of $n$ being a prime $p$, a finite field is formed under addition \& multiplication modulo $p$ which is, in fact, the only field possible of size $p$. Since arithmetic operations on whole numbers extend in such a natural and structured way under modulus, we will see how another operation, squaring, behaves under modulus.
+The underlying concept of the modulo operation, the uniqueness of the remainder for a given whole number when dividing it by a fixed number, is integral to something as widespread and important as the Hindu-Arabic numeral system we use. The decimal representation of a whole number $n$ is, from right to left, just the remainder removed before dividing the resulting number by $10$, successively till the quotient is zero. Thus every whole number can be represented uniquely in this way. The modulo operation with respect to $n$ results in equivalence classes\footnote[2] {Formed by the relation on whole numbers which relates two numbers with same remainder modulo $n$} structured as a finite ring $\mathbb{Z}_n$ under addition \& multiplication modulo $n$.  In case of $n$ being a prime $p$, $\mathbb{Z}_p$ a finite field and is, in fact, the only field possible of size $p$. Since arithmetic operations on whole numbers extend in such a natural and structured way under modulus, we will see how another operation, squaring, behaves under modulus.
 
-In whole numbers, consecutive squares differ by $1,3,5,7 \ldots$, and thus the density of squares decreases along the number line. However, in the case of modulo, we would expect that many of the elements of $\mathbb{Z}_n$ to be squares, due to the wrapping around of the integer multiplication after a length of $n$ when considering a square integer. Are there any elements in $\mathbb{Z}_n$ which are not squares? In case of the decimal representation on integers, we see that squares only end in $0,1,4,5,6\  \& \ 9$, and never in $2,3,7 \  \& \  8$ and thus $\mathbb {Z}_{10}$ contains non-square elements, so we see that not all elements of $\mathbb{Z}_n$ can guaranteed to be squares. The elements of $\mathbb{Z}_n$ which are squares are referred to as quadratic residues, while those which are not squares are referred to as quadratic non-residues.
+In whole numbers, consecutive squares differ by $1,3,5,7 \ldots$, and thus the density of squares decreases along the number line. However, in the case of modulo, we would expect that many of the elements of $\mathbb{Z}_n$ to be squares, due to the wrapping around of the integer multiplication after a length of $n$ when considering a square integer. Are there any elements in $\mathbb{Z}_n$ which are not squares? In case of the decimal representation on integers, we see that squares only end in $0,1,4,5,6\  \& \ 9$, and never in $2,3,7 \  \& \  8$ and thus $\mathbb {Z}_{10}$ contains non-square elements, so we see that not all elements of $\mathbb{Z}_n$ can guaranteed to be squares. The elements of $\mathbb{Z}_n$ which are squares are referred to as quadratic residues, while those which are not squares are referred to as quadratic non-residues. This definition can be extended to higher powers modulo $p$, e.g. cubes modulo $p$ are called cubic residues, and higher powers modulo $p$ are called higher residues. However, for the sake of simplicity we will now discuss quadratic residues.
 
 Let us estimate the number of quadratic residues in $\mathbb{Z}_n$: Since $(n-x)^2\equiv(-x)^2\equiv x^2 \mod n)$, thus $x$ and its additive inverse have the same square in $\mathbb{Z}_n$. The additive inverse of an element in $\mathbb{Z}_n$ is itself only if $-x=x \Rightarrow 2x=0 \Rightarrow n \divides 2x$. $n \divides 2x$ has only has solution $x=0$ in $\mathbb{Z}_n$ if $n$ is odd, in which case $x^2=0$. Thus, there are at least 2 distinct elements in $1\ldots n-1$ which map to each quadratic residue in $1\ldots n-1$, and thus at most half of $1\ldots n-1$ are quadratic residues. If $n$ is even, $x=0$ and $x=\nicefrac{n}{2}$ are the only two solutions for $n \divides 2x$. If $n$ is of the form $4m$, $x^2=(\nicefrac{n}{2})^2=0$, and thus again at most half of $1\ldots n-1$ are quadratic residues. If $n$ is of the form $4m+2$, $x^2=0$ and $(\nicefrac{n}{2})^2=\nicefrac{n}{2}$, and thus at most half of $\{1,2,\ldots n-1\}-\{ \nicefrac{n}{2} \}$ are quadratic residues. Thus there are at least $\lceil \nicefrac{n}{2}-1\rceil$ non-residues for any $n$. In case of $\mathbb{Z}_p$, where $p$ is prime, exactly half of $1\ldots p-1$ are quadratic residues, because: if $y^2\equiv z^2 (\mod p)$, then $(y-z)(y+z)\equiv 0(\mod p)$. Thus, $y-z\divides p$ or $y+z\divides p$ $\Rightarrow y\equiv \pm z (\mod p)$, which means only additive inverses can have the same square modulo $p$.
 
@@ -58,13 +58,29 @@ $$x^2+2^{-1}bx+2^{-1}bx+2^{-2}b^{2}=2^{-2}b^{2}-c$$
 $$(x+2^{-1}b)^2=2^{-2}b^{2}-c$$
 %$$x=-2^{-1}b+\sqrt{2^{-2}b^{2}-c}$$
 
-$2^{-2}b^{2}-c$ is called the discriminant, $D$, of the equation. Thus the equation has roots in $\mathbb{F}_p$ if $D$ is a quadratic residue. If $D$ is a quadratic residue, we would also need to know its square roots to solve the equation. For finding a square root of a quadratic residue, we have the Tonelli-Shanks algorithm. The algorithm, seemingly peculiarly, requires us to find a quadratic non-residue for computing a square root \ignore{find probabilistically. The existing efficient algorithms for finding a quadratic non-residue are all probabilistic}. We will explain the algorithm after we explain a crucial mathematical tool in the next sections to understand squares and even higher powers in $\mathbb{F}_p$.
+$2^{-2}b^{2}-c$ is called the discriminant, $D$, of the equation. Thus the equation has roots in $\mathbb{F}_p$ if $D$ is a quadratic residue. If $D$ is a quadratic residue, we would also need to know its square roots to solve the equation. Thus, the scope of finding out if a given element of $\mathbb{F}_p$ is a quadratic residue, and finding its square extend beyond the problems themselves.
 
+In this thesis we look at two major problems involving the residuousity of numbers mod $p$. We number them for easy reference anywhere in the thesis.
+\begin{itemize}
+    \item Problem 1: Given large enough prime $p$, what is the largest number of consecutive quadratic residues or consecutive non-residues in $0,1,2...p-1$? About general residues, in $0,1,2...p-1$, what is the maximum number of consecutive $r^{th}$ residues, or consecutive non-residues from a class of non-residues which are the equivalent powers of a fixed generator of $\mathbb{F}^*_p$ modulo $r$?
+    \item Problem 2: Given large enough prime $p$, what is the maximum number of consecutive values in $0,1,2...p-1$ such that a square-free monic polynomial $f(x)$ evaluates to quadratic residues for all of them?
+\end{itemize}
+Our aim in this thesis is to present simple and accessible proofs for known deterministic upper bounds for these problems. We also describe the experiment we ran to obtain approximate actual bounds for the second problem, for some large values of $p$ (approximately in the range $10^7-10^8$)
+For problem 1, we present a simple version of Davenport \& Erd\H os's proof of an $O(p^{\nicefrac{1}{2}}$ bound in \cite{davenport}, and also present a simpler version of Burgess's proof for an $O(p^{\nicefrac{1}{4}+\delta})$ bound in \cite{burgess} for the quadratic residuosity version, and extend both results to the general residuosity version by adapting our proof to complex numbers.
+For problem 2, we first present Shoup's proof in \cite{shoup} for a bound of $O(p^{\nicefrac{1}{2}}\log p)$. We then improve the bound to $O(p^{\nicefrac{1}{2}}$ by adapting our simple version of Davenport \& Erd\H os's proof for the first problem to problem 2. We also explain why Burgess's bound cannot be extended to this problem.
+
+\ignore{ in a simple and accessible way to undergraduate sophomore; one way of determinsitically, reduced to finding a quadratic non-residue, a method of factorisation involves this problem 1: finding sqrt by finding quadratic non-residue: problem 2: finding qnr in polynomial function of intervals as required by a factoring algorithm by Shoup}
+For finding a square root of a quadratic residue, we have the Tonelli-Shanks algorithm. The algorithm, seemingly peculiarly, requires us to find a quadratic non-residue for computing a square root\ignore{find probabilistically. The existing efficient algorithms for finding a quadratic non-residue are all probabilistic}. We will explain the algorithm after we explain a crucial mathematical tool in the next section to understand squares and even higher powers in $\mathbb{F}_p$.
+%
+\section{Motivation}
+%
+
+%
 \section{Dirichlet characters modulo $p$}
 %
 A Dirichlet character $\chi$, simply referred to as a character henceforth, to the prime modulus $p$, is a function $\mathbb{Z} \rightarrow \mathbb{C}$ such that
 \begin{enumerate}
-    \item $\chi_{|\mathbb{Z}^*_p}$\footnote{This is just the function $\chi$ considering its domain restricted to only members of $\mathbb{Z}^*_p$ in $\mathbb{Z}$} is a homomorphism from $\mathbb{Z}^*_p$ to $\mathbb{C}$.
+    \item $\chi_{|\mathbb{Z}^*_p}$\footnote[2]{This is just the function $\chi$ considering its domain restricted to only members of $\mathbb{Z}^*_p$ in $\mathbb{Z}$} is a homomorphism from $\mathbb{Z}^*_p$ to $\mathbb{C}$.
     \item $\chi(0)=0$, except when the above homomorphism is the trivial homomorphism mapping only to $1_{\mathbb {C}}$, in which case $\chi(0)=1$. We call $\chi$ the trivial character in this case.
     \item If $a \equiv b\  (\!\mod p)$, where $a,b\in\mathbb{Z}$, then $\chi(a)=\chi(b)$.
 \end{enumerate}
@@ -151,16 +167,17 @@ We are concerned, in this thesis, with the distribution of quadratic residues an
 In this chapter we will explore the background and preliminaries needed for the rest of the thesis.
 \end{comment}
 
-\begin{comment}
-\subsection*{Deterministic versus probabilistic algorithms}
 
-The problems of finding a square root and of factoring square-free quadratic polynomials in $\mathbb{F}_p$, are equivalent to finding a quadratic non-residue and to computing a shifted polynomial such that its constant term is a quadratic residue, respectively. Since half of elements in $1$ to $p-1$ are quadratic non-residues, a simple probabilistic approach would be to randomly select an element of $\mathbb{F}_p*$ and check if it is a quadratic non-residue for finding a quadratic non-residue, or computing a random shifted polynomial and check if its constant term is a non-residue for the respective problems. The former will be successful with probability $\nicefrac{1}{2}$. However, in the worst case, we need to check $\frac{p-1}{2}+1$ elements to get a quadratic non-residue by this method, and thus there is no guaranteed upper bound lesser than $O(p)$ on the time taken, using this method. The latter problem will also be successful with an approximate probability of about $~\nicefrac{1}{2}$, which we will see later in the thesis after we are acquainted with Lemma 1. Thus, we would also like efficient deterministic approaches to the problems because, apart from the theoretical interest in the problems, we would also like to theoretically bound their solving time.
+\subsection*{Deterministic versus probabilistic solutions}
 
-We will explore deterministic approaches to the problems in this thesis. Our overall approach to the problems is seriate: we de-randomise the respective random algorithms by checking consecutive candidates. In the first problem of finding a quadratic non-residue, we check consecutive elements of $\mathbb{F}_p*$ from $1,2,3...$ onwards for a quadratic non residue. For the second problem of computing a shifted polynomial such that its constant term is a quadratic residue, we check the polynomials shifted by $1,2,3..$ onwards to see if their constant terms are quadratic non-residues. This relies on the the null hypothesis for correlation between proximity of numbers and their quadratic residuosity. In any case, it is the most straightforward efficiently computable deterministic pattern, and unless there is reason to consider a non-seriate approach, we consider it good enough for our purposes.
+As we saw previously, the quadratic residuousity version of problem 1 is equivalent to finding a quadratic non-residue in $\mathbb{F}_p$. Since half of elements in $1$ to $p-1$ are quadratic non-residues, a simple probabilistic approach would be to randomly select an element of $\mathbb{F}_p*$ and check if it is a quadratic non-residue. Each such attempt will be successful with probability $\nicefrac{1}{2}$ and thus it is solvable in polynomial time probabilistically. However, in the rare worst case, we need to check $\frac{p-1}{2}+1$ elements to get a quadratic non-residue by this method, that too assuming we keep track of numbers already checked for their residousity, otherwise thus there is no guaranteed upper bound on the time taken using this method.
 
+Similarly, problem 2 with regards to separating a polynomial $f(x)$ is equivalent to computing a shifted polynomial $f(x+i)$ which has any two factors separable by computing its gcd with $x^{\frac{p-1}{2}}-1$. By Weil's theorem, $\forall\ j\neq k \Big\lvert\sum\limits_{j=0}^{p-1}\chi_2\big((j+a)(j+b)\big)\Big\rvert\leq p^{\nicefrac{1}{2}}$, and thus if $f(x)$ has any two factors $(x+a)\ \& \ (x+b)$, the probability that they will be separated by a random shifted polynomial $f(x+k)$ is between $\frac{\nicefrac{p}{2}-\nicefrac{\sqrt{p}}{2}}{p}= \frac{1-p^{-\nicefrac{1}{2}}}{2}$ and $\frac{1+p^{-\nicefrac{1}{2}}}{2}$, which is reaches nearer to $\nicefrac{1}{2}$ as $p$ grows. Thus, in this case too, each attempt will be successful in separating $f(x)$ with a probability of about $\nicefrac{1}{2}$. But again, there is no guaranteed running time for it.
+
+Thus, we would also like efficient deterministic approaches to the problems because, apart from the theoretical interest in the problems, we would also like to a definite upper bound on their solving time. We will explore best deterministic approaches known to the problems in this thesis, which are not yet proven to be efficient in terms of the size of p, i.e. $log p$. The overall approach to the problems is seriate: we de-randomise the respective random algorithms by checking consecutive candidates. In the first problem of finding a quadratic non-residue, we check consecutive elements of $\mathbb{F}_p*$ from $1,2,3...$ onwards for a quadratic non residue. For the second problem of computing a separable shifted polynomial such that its constant term is a quadratic residue, we check the polynomials shifted by $1,2,3..$ onwards to see if their constant terms are quadratic non-residues. This relies on the absence of a definite disproof, in our awareness, of the null hypothesis for a strong correlation between proximity of numbers and their quadratic residuosity being the same. In any case, it is a very straightforward efficiently computable deterministic pattern, and unless there is reason to consider a non-seriate approach, we consider it good enough for our purposes.
 
 \section{Symbols and conventions}
-\end{comment}
+
 
 %Character is
 %
@@ -451,7 +468,7 @@ The general form of lemma 1 for any character is:
 \textup{\cite{schmidt}}Let $\chi$ be a non-trivial character of order $d$. Let $f(x)$ be a polynomial which is not a perfect $d^{th}$ power, with coefficients from $\mathbb{Z}$. Let $f(x)$ have $\nu$ distinct zeroes. Then,
 $$\Big\lvert\sum\limits_{x=0}^{p-1}\chi(f(x))\Big\rvert\leq (\nu -1)p^{\nicefrac{1}{2}}$$
 \end{lemma}
-We note that $d \divides p-1$, because since $\chi^{d}(x)=1$ and $\chi(x^{p-1})=\chi^{p-1}(x)=1$ for $x\neq0$, $\chi^{gcd(d,p-1)}(x)=1$ for $x\neq0$ using Euclid's algorithm for calculating gcd\footnote{According to Euclid's algorithm for calculating gcd, $\gcd(a,b)$ can always be expressed as $\gcd(a,b)=am+bn$, where $m,n\in \mathbb{Z}$.}, and since $gcd(d,p-1)\leq d$, $d$ is the order only if $gcd(d,p-1) = d$, which is only when $d \divides p-1$.
+We note that $d \divides p-1$, because since $\chi^{d}(x)=1$ and $\chi(x^{p-1})=\chi^{p-1}(x)=1$ for $x\neq0$, $\chi^{gcd(d,p-1)}(x)=1$ for $x\neq0$ using Euclid's algorithm for calculating gcd\footnote[2]{According to Euclid's algorithm for calculating gcd, $\gcd(a,b)$ can always be expressed as $\gcd(a,b)=am+bn$, where $m,n\in \mathbb{Z}$.}, and since $gcd(d,p-1)\leq d$, $d$ is the order only if $gcd(d,p-1) = d$, which is only when $d \divides p-1$.
 
 We now use lemma \ref{lemma4} to derive lemma \ref{lemma2statement} for a general character.
 %%
@@ -588,7 +605,7 @@ From this point, we proceed exactly as in the case of theorem \ref{thm:p4bound},
 
 %we will deal with the solution to factorisibg quadratic poilynomials by finbding the longest interval of qrs in z/ we will first prove shoups bound
 
-We saw, in the last chapter. upper bounds on the length of the longest interval in $\mathbb{Z}$ uniformly containing quadratic residues or quadratic non-residues. These upper bounds also apply to the longest interval in $\mathbb{Z}$ throughout which any linear polynomial evaluates uniformly to quadratic residues or to non-residues. This is because: Say the longest such interval is $m, m+1,\ldots,m+h$ throughout which polynomial $ax+b$ evaluates to uniform quadratic residuosity. Since $\chi_2(ax+b)=\chi_2(a)\chi_2(x+ba^{-1})$, $m, m+1,\ldots,m+h$ is also the longest interval in which $x+ba^{-1}$ has uniform residuosity, i.e. $m+ba^{-1}, m+1+ba^{-1},\ldots,m+h+ba^{-1}$ is the longest interval with uniform quadratic residuosity, which is the same length $h+1$ as $m, m+1,\ldots,m+h$.
+We saw, in the last chapter, upper bounds on the length of the longest interval in $\mathbb{Z}$ uniformly containing quadratic residues or quadratic non-residues. These upper bounds also apply to the longest interval in $\mathbb{Z}$ throughout which any linear polynomial evaluates uniformly to quadratic residues or to non-residues. This is because: Say the longest such interval is $m, m+1,\ldots,m+h$ throughout which polynomial $ax+b$ evaluates to uniform quadratic residuosity. Since $\chi_2(ax+b)=\chi_2(a)\chi_2(x+ba^{-1})$, $m, m+1,\ldots,m+h$ is also the longest interval in which $x+ba^{-1}$ has uniform residuosity, i.e. $m+ba^{-1}, m+1+ba^{-1},\ldots,m+h+ba^{-1}$ is the longest interval with uniform quadratic residuosity, which is the same length $h+1$ as $m, m+1,\ldots,m+h$.
 
 In this chapter we will derive upper bounds on the longest interval in $\mathbb{Z}$ throughout which any factorable monic square-free quadratic polynomial uniformly evaluates to a quadratic residue. First we will discuss a proof by Victor Shoup in \cite{shoup} of an $O(p^{\nicefrac{1}{2}}\log p)$ bound, and then we will prove an $O(p^ {\nicefrac {1}{2}})$ bound using the method of the previous chapter. We will also look at the experimental results of calculating the actual bounds on some numbers in the range $10^{7}-10^{8}$.
 %
@@ -677,8 +694,49 @@ Given the quadratic character $\chi_2$ modulo prime $p$ and a square-free factor
 In other words, the smallest whole number $y$ such $\chi_2((q+y)(r+y))=1, q\neq r$ is in $O(p^{\nicefrac{1}{2}})$.
 
 \renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\section{Attempt to extend Burgess's bound}
 We cannot obtain the bound of $O(p^{\nicefrac{1}{4}+\delta})$ as for $\chi_2$ of linear function intervals, due to the fact that: in e.q. \ref{chapter3refeq}, $\chi_2(z.q)=\chi_2(z)\chi_2(q)$, but if the function on the interval becomes $f(x)$ instead of $x$, then $\chi_2(f(q.z))\neq \chi_2(f(q))\chi_2(f(z))$. Due to this, the proof cannot proceed involving residuosity of a quadratic function of an interval in $\mathbb{F}_p$, as in the case of simply finding the first quadratic residue/non-residue in an interval. In conclusion, we can easily obtain a $O(p^{\nicefrac{1}{2}})$ bound, but since $\chi$ being multiplicative does not imply $\chi.f$\footnote[2]{The operation $.$ stands for function composition here} being multiplicative, we cannot transform a given interval into many smaller equivalent (in term of the number of quadratic residues and of non-residues) intervals by multiplying it with $q^{-1}$, and thus Lemma 3 cannot be used to obtain a $O(p^{\nicefrac{1}{4}+\delta})$ bound.
 
+\begin{comment}
+~~~ Show that small bucket size will not change distribution density. Initial test for some numbers gave log^2/3 for some number, so we checked log^2/2 to reduce clashes and test a large number of values at it is only a fraction of log^2p thus reasonable constatnt multiple
+\end{comment}
+%
+\section{Experimental results}
+%
+Our aim in this chapter can be formalised as follows: Given the quadratic character $\chi_2$ modulo prime $p$ and a monic square-free factorable quadratic polynomial function $f$ in $\mathbb{F}_p$, let $h(p)$ be the greatest integer such that $\sum\limits_{n=x+1}^{x+h}\chi_2(f(n))t=h(p)$ for some $x\in\mathbb{Z}$. Then determine the asymptotically lowest function $\beta$ of $p$ such that $\beta(p)\in \Omega(h(p))$. Right now, the best asymptotic upper bound we have on $\beta$ is what has been proven by us, i.e. $\beta \in O(p^{\nicefrac{1}{2}})$. We would like to see if there is any significant gap between this bound and the actual upper $h(p)$ observed for large numbers.
+
+Our first attempt at calculating $h(p)$ was this: Our aim is finding the size $h(p)$ of longest interval $I$ for any square-free quadratic polynomial $f(x)=(x+m_1)(x+m_2)$, such that $\chi_2(x+m_1)\chi_2(x+m_2)=\chi_2 \big(f(x)\big)$ evaluates to $1$ throughout $I$. This is the same as finding
+\begin{align*}
+  \max\ & h \\
+  \text{subject to}\  & \\
+  &\exists m_1,m_2 \in \mathbb{F}_p \\
+  & m_1 \neq m_2 \\
+  &\chi_2(m_1+a)=\chi_2(m_2+a)\ \forall a \in \{0,1,2,\ldots, h-1\}
+\end{align*}
+
+% equivalent to find matching substrings with the same string shifted, which we do naively by comparing all places in the string for each shift
+%O(n^2), so took too long time for even 1 more than 8 hours
+% so next we tried rabin-karp string matching algorith, still took long for each number ~ 10 minutes, and we observed none of the few values (~50).
+%Assuming the GRH, Ankeny proved in \cite{ankeny} that the least quadratic residue is log^2 p, so we tried the same thing for this. and modified rabin-carp and implemented buckets for the hash values. we tuned hash and buckets sizes to reduce the time of two opposing factors- time to empty hash etc. and  collision between buckets(implemented by link list) for long iteration throw linked list. since the values for which we got results were had none above log^2 p/2. we Checked for log^2 p/2 to catch exception.if it did find a string of this matching , it would check *1 *2....
+
+This bound is separated by a wide gulf from the experimental results of checking the longest interval length where any monic factorable square-free quadratic polynomial evaluates uniformly to quadratic residues. For the prime numbers (a general number given by $p$) we checked, where $p$ is the prime size of the finite field in question, the longest such interval was less than $\log^2 p$ in all cases. We experimentally checked two ranges of numbers:
+\begin{enumerate}
+    \item All primes in the range $1.2\times10^7$ to $12,711,485$, which were $43,573$ in number.
+    \item Random primes in the range $9\times10^7$ to $10^8$, $1247$ in number.
+\end{enumerate}
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\[ \max_{}\ \exists m_1,m_2 \in \mathbb{F}_p m_1 \neq m_2 \quad \chi_2(m_1+a)=\chi_2(m_2+a)\ \forall a \in \{0,1,2,\ldots, h-1\]
+ if there exists $m_1$ and $m_2$ such that $m_1 \neq m_2$ and $\chi_2(m_1+a)=\chi_2(m_2+a)\ \forall a \in \{1,2,\ldots, \frac{\log^2 p}{2}\}$.
+
+ for a number of size about $10^7$.
+
+
+Since the complexity of shoup's factoring
+
+
+%
+%
+%%%%
 This bound is separated by a wide gulf from the experimental results of checking the longest interval length where any monic factorable square-free quadratic polynomial evaluates uniformly to quadratic residues. For the prime numbers (a general number given by $p$) we checked, where $p$ is the prime size of the finite field in question, the longest such interval was less than $\log^2 p$ in all cases. We experimentally checked two ranges of numbers:
 \begin{enumerate}
     \item All primes in the range $1.2\times10^7$ to $12,711,485$, which were $43,573$ in number.
